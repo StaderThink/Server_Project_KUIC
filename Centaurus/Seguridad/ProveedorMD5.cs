@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Unicode;
 
 namespace Centaurus.Seguridad {
     public sealed class ProveedorMD5: Proveedor {

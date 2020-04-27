@@ -2,6 +2,7 @@ D:\repos\aurelia\orion\Centaurus\bin\Debug\netcoreapp3.1\Centaurus.deps.json
 D:\repos\aurelia\orion\Centaurus\bin\Debug\netcoreapp3.1\Centaurus.dll
 D:\repos\aurelia\orion\Centaurus\bin\Debug\netcoreapp3.1\Centaurus.pdb
 D:\repos\aurelia\orion\Centaurus\obj\Debug\netcoreapp3.1\Centaurus.csprojAssemblyReference.cache
+D:\repos\aurelia\orion\Centaurus\obj\Debug\netcoreapp3.1\Centaurus.csproj.CoreCompileInputs.cache
 D:\repos\aurelia\orion\Centaurus\obj\Debug\netcoreapp3.1\Centaurus.AssemblyInfoInputs.cache
 D:\repos\aurelia\orion\Centaurus\obj\Debug\netcoreapp3.1\Centaurus.AssemblyInfo.cs
 D:\repos\aurelia\orion\Centaurus\obj\Debug\netcoreapp3.1\Centaurus.dll
