@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Corvus", "Corvus\Corvus.csproj", "{FFCC5F96-1E00-4C94-8851-37646694ACFD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Centaurus", "Centaurus\Centaurus.csproj", "{7884EA7A-A344-4C17-AE30-1DE2D3D89339}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FFCC5F96-1E00-4C94-8851-37646694ACFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFCC5F96-1E00-4C94-8851-37646694ACFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFCC5F96-1E00-4C94-8851-37646694ACFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFCC5F96-1E00-4C94-8851-37646694ACFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7884EA7A-A344-4C17-AE30-1DE2D3D89339}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7884EA7A-A344-4C17-AE30-1DE2D3D89339}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7884EA7A-A344-4C17-AE30-1DE2D3D89339}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7884EA7A-A344-4C17-AE30-1DE2D3D89339}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {404373E5-D1AB-4EF3-9AE9-F8C2431A55AE}
+	EndGlobalSection
+EndGlobal
