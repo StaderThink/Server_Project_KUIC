@@ -1,5 +1,4 @@
 ﻿using Centaurus.Modelo;
-using Centaurus.Repositorio;
 using System.Collections.Generic;
 
 namespace Corvus.Caso.Crud {

@@ -1,13 +1,10 @@
 ﻿using Centaurus.Modelo;
+using System;
 using System.Collections.Generic;
+using System.Text;
 
 namespace Centaurus.Repositorio {
 	public sealed class RepoCargo: IRepo<Cargo> {
-		public bool Insertar(Cargo entidad) {
-			using var conexion = new Conexion();
-			return conexion.Insertar(entidad);
-		}
-
 		public bool Editar(Cargo entidad) {
 			using var conexion = new Conexion();
 			return conexion.Editar(entidad);
@@ -18,6 +15,11 @@ namespace Centaurus.Repositorio {
 			return conexion.Eliminar(entidad);
 		}
 
+		public bool Insertar(Cargo entidad) {
+			using var conexion = new Conexion();
+			return conexion.Insertar(entidad);
+		}
+
 		public IEnumerable<Cargo> Listar() {
 			using var conexion = new Conexion();
 			return conexion.Seleccionar<Cargo>("select * from cargo");
@@ -25,11 +27,7 @@ namespace Centaurus.Repositorio {
 
 		public Cargo PorId(int id) {
 			using var conexion = new Conexion();
-
-			var consulta = "select * from cargo where id = @id";
-			var resultado = conexion.Obtener<Cargo>(consulta, new { id });
-
-			return resultado;
+			return conexion.Obtener<Cargo>($"select * from cargo where id = @id", new { id });
 		}
 	}
 }

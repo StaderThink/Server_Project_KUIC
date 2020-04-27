@@ -2,16 +2,13 @@
 using Corvus.Caso.Crud;
 using Corvus.Modelo.Sesiones;
 using System;
-using System.Linq;
 
 namespace Corvus.Caso.Proceso {
 	public sealed class ProcesoSesion: ITraductor<Credencial, Sesion> {
 		private bool ValidarCredencial(Credencial credencial) {
 			var crud = new CrudUsuario();
 
-			var consulta = crud.Listar()
-				.Where(usuario => usuario.Documento == credencial.Documento)
-				.First();
+			var consulta = crud.PorDocumento(credencial.Documento);
 
 			if (consulta is Usuario usuario) {
 				if (usuario.Activo && usuario.Clave == credencial.Clave) {

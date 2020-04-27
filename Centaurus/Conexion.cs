@@ -26,7 +26,7 @@ namespace Centaurus {
 			=> _conexion.Query<T>(consulta, carga);
 
 		public T Obtener<T>(string consulta, object carga = null)
-			=> _conexion.QueryFirst<T>(consulta, carga);
+			=> _conexion.QuerySingleOrDefault<T>(consulta, carga);
 		#endregion
 
 		#region CRUD

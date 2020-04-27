@@ -50,9 +50,7 @@ namespace Pegasus.Extension {
 			return null;
 		}
 		private bool TienePermiso(Credencial credencial) {
-			return true;
-
-			/* var crudUsuario = new CrudUsuario();
+			var crudUsuario = new CrudUsuario();
 			var usuario = crudUsuario.PorDocumento(credencial.Documento);
 
 			if (usuario is Usuario) {
@@ -70,7 +68,7 @@ namespace Pegasus.Extension {
 				}
 			}
 
-			return false; */
+			return false;
 		}
 
 		#endregion
