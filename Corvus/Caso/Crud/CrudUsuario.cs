@@ -1,12 +1,11 @@
 ﻿using Centaurus.Modelo;
 using Centaurus.Repositorio;
-using Centaurus.Seguridad;
 using System;
 using System.Collections.Generic;
 
 namespace Corvus.Caso.Crud {
 	public sealed class CrudUsuario: Crud<Usuario> {
-		protected override IRepo<Usuario> Repo { get; set; }
+		private RepoUsuario Repo { get; set; }
 
 		public CrudUsuario() {
 			Repo = new RepoUsuario();
@@ -30,5 +29,11 @@ namespace Corvus.Caso.Crud {
 
 		public override IEnumerable<Usuario> Listar()
 			=> Repo.Listar();
+
+		public override Usuario PorId(int id)
+			=> Repo.PorId(id);
+
+		public Usuario PorDocumento(string documento)
+			=> Repo.PorDocumento(documento);
 	}
 }

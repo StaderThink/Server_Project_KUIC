@@ -9,7 +9,6 @@ namespace Corvus.Caso.Proceso {
 		private bool ValidarCredencial(Credencial credencial) {
 			var crud = new CrudUsuario();
 
-
 			var consulta = crud.Listar()
 				.Where(usuario => usuario.Documento == credencial.Documento)
 				.First();

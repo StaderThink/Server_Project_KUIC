@@ -7,5 +7,6 @@ namespace Centaurus.Repositorio {
 		bool Editar(Modelo entidad);
 		bool Eliminar(Modelo entidad);
 		IEnumerable<Modelo> Listar();
+		Modelo PorId(int id);
 	}
 }

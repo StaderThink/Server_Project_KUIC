@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Centaurus {
-	public sealed class Conexion: IDisposable {
+	internal sealed class Conexion: IDisposable {
 		private readonly MySqlConnection _conexion;
 
 		public Conexion() {
@@ -24,6 +24,9 @@ namespace Centaurus {
 
 		public IEnumerable<T> Seleccionar<T>(string consulta, object carga = null)
 			=> _conexion.Query<T>(consulta, carga);
+
+		public T Obtener<T>(string consulta, object carga = null)
+			=> _conexion.QueryFirst<T>(consulta, carga);
 		#endregion
 
 		#region CRUD
@@ -40,8 +43,6 @@ namespace Centaurus {
 			var id = _conexion.Insert(entidad);
 			return id is int;
 		}
-
-		public IEnumerable<T> Listar<T>() => _conexion.GetList<T>();
 		#endregion
 	}
 }

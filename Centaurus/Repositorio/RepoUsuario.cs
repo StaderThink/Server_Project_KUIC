@@ -20,7 +20,25 @@ namespace Centaurus.Repositorio {
 
 		public IEnumerable<Usuario> Listar() {
 			using var conexion = new Conexion();
-			return conexion.Listar<Usuario>();
+			return conexion.Seleccionar<Usuario>("select * from usuario");
+		}
+
+		public Usuario PorId(int id) {
+			using var conexion = new Conexion();
+
+			var consulta = "select * from usuario where id = @id";
+			var resultado = conexion.Obtener<Usuario>(consulta, new { id });
+
+			return resultado;
+		}
+
+		public Usuario PorDocumento(string documento) {
+			using var conexion = new Conexion();
+
+			var consulta = "select * from usuario where documento = @documento";
+			var resultado = conexion.Obtener<Usuario>(consulta, new { documento });
+
+			return resultado;
 		}
 	}
 }
