@@ -1,4 +1,5 @@
-﻿using Centaurus.Seguridad;
+﻿using Centaurus.Modelo;
+using Centaurus.Seguridad;
 using Corvus.Caso.Proceso;
 using Corvus.Modelo.Sesiones;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +9,7 @@ namespace Pegasus.Controlador.Usuarios {
 	[Route("api/[controller]")]
 	public class SesionController: Controller {
 		[HttpPost]
-		public IActionResult Post([FromBody] Credencial credencial) {
+		public IActionResult Iniciar([FromBody] Credencial credencial) {
 			var proceso = new ProcesoSesion();
 
 			if (proceso.Generar(credencial) is Sesion sesion) {
@@ -25,9 +26,21 @@ namespace Pegasus.Controlador.Usuarios {
 
 		[HttpDelete]
 		[Autenticado]
-		public IActionResult Delete() {
+		public IActionResult Cerrar() {
 			HttpContext.Response.Cookies.Delete("token");
 			return Ok("sesion finalizada");
+		}
+
+		[HttpGet]
+		[Autenticado]
+		public IActionResult QuienSoy() {
+			var carga = HttpContext.Items["usuario"];
+
+			if (carga is Usuario usuario) {
+				return Ok(usuario);
+			}
+
+			return NoContent();
 		}
 	}
 }

@@ -1,21 +1,19 @@
 ﻿using Centaurus.Modelo;
 using System.Collections.Generic;
+using System;
 
 namespace Centaurus.Repositorio {
 	public sealed class RepoUsuario: IRepo<Usuario> {
 		public bool Insertar(Usuario entidad) {
-			using var conexion = new Conexion();
-			return conexion.Insertar(entidad);
+			throw new NotImplementedException();
 		}
 
 		public bool Editar(Usuario entidad) {
-			using var conexion = new Conexion();
-			return conexion.Editar(entidad);
+			throw new NotImplementedException();
 		}
 
 		public bool Eliminar(Usuario entidad) {
-			using var conexion = new Conexion();
-			return conexion.Eliminar(entidad);
+			throw new NotImplementedException();
 		}
 
 		public IEnumerable<Usuario> Listar() {

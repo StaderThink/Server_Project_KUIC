@@ -1,5 +1,5 @@
 ﻿namespace Pegasus.Extension {
 	public enum Permiso {
-		Pedidos, Usuarios, Logistica, Clientes, Solicitar
+		Basico, Pedidos, Usuarios, Logistica, Clientes, Solicitar
 	}
 }

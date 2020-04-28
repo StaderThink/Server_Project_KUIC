@@ -6,9 +6,9 @@ using System.Text;
 namespace Centaurus.Modelo {
 	public sealed class Notificacion: IEntidad {
 		public int Id { get; set; }
-		[Required] public string Texto { get; set; }
-		[Required] public DateTime FechaInicio { get; set; }
+		public string Texto { get; set; }
+		public DateTime FechaInicio { get; set; }
 		public DateTime FechaFin { get; set; }
-		[Required] public int Autor { get; set; }
+		public int Autor { get; set; }
 	}
 }

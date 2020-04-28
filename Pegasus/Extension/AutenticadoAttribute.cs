@@ -15,7 +15,9 @@ namespace Pegasus.Extension {
 	public sealed class AutenticadoAttribute: Attribute, IAsyncActionFilter {
 		private readonly Permiso permiso;
 
-		public AutenticadoAttribute() {}
+		public AutenticadoAttribute() {
+			this.permiso = Permiso.Basico;
+		}
 
 		public AutenticadoAttribute(Permiso permiso) {
 			this.permiso = permiso;
@@ -24,7 +26,7 @@ namespace Pegasus.Extension {
 		private async Task BorrarCookie(ActionExecutingContext contexto, string mensaje) {
 			var respuesta = contexto.HttpContext.Response;
 
-			respuesta.StatusCode = 401;
+			respuesta.StatusCode = 403;
 			respuesta.Cookies.Delete("token");
 
 			await respuesta.WriteAsync(mensaje);
@@ -49,7 +51,8 @@ namespace Pegasus.Extension {
 
 			return null;
 		}
-		private bool TienePermiso(Credencial credencial) {
+
+		private Usuario ObtenerUsuario(Credencial credencial) {
 			var crudUsuario = new CrudUsuario();
 			var usuario = crudUsuario.PorDocumento(credencial.Documento);
 
@@ -57,51 +60,45 @@ namespace Pegasus.Extension {
 				var repoCargo = new RepoCargo();
 
 				if (repoCargo.PorId(usuario.Cargo) is Cargo cargo) {
-					return permiso switch {
+					var tienePermiso = permiso switch {
 						Permiso.Pedidos => cargo.Pedidos,
 						Permiso.Usuarios => cargo.Usuarios,
 						Permiso.Logistica => cargo.Logistica,
 						Permiso.Clientes => cargo.Clientes,
 						Permiso.Solicitar => cargo.Solicitar,
-						_ => false,
+						_ => true,
 					};
+
+					return tienePermiso ? usuario : null;
 				}
 			}
 
-			return false;
+			return null;
 		}
-
 		#endregion
 
 		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
 			var cookies = context.HttpContext.Request.Cookies;
+			cookies.TryGetValue("token", out string token);
 
-			if (cookies.TryGetValue("token", out string token)) {
-				if (ObtenerSesion(token) is Sesion sesion) {
-					var proceso = new ProcesoSesion();
+			if (ObtenerSesion(token) is Sesion sesion) {
+				var proceso = new ProcesoSesion();
 
-					if (proceso.Traducir(sesion) is Credencial credencial) {
-						// validar permisos
+				if (proceso.Traducir(sesion) is Credencial credencial) {
+					if (ObtenerUsuario(credencial) is Usuario usuario) {
+						context.HttpContext.Items["usuario"] = usuario; // establecer usuario
+						await next();
+					}
 
-						if (TienePermiso(credencial)) {
-							context.HttpContext.Items["sesion"] = sesion;
-
-							await next();
-							return;
-						}
-
-						else {
-							context.Result = new UnauthorizedObjectResult("no tienes permisos");
-							return;
-						}
+					else {
+						context.Result = new UnauthorizedObjectResult("no tienes permisos necesarios");
 					}
 				}
-
-				await BorrarCookie(context, "traduccion fallida, token invalido");
-				return;
 			}
 
-			await BorrarCookie(context, "sesión invalida");
+			else {
+				await BorrarCookie(context, "sesión invalida, intenta iniciar sesión");
+			}
 		}
 	}
 }

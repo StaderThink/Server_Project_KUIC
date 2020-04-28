@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.35" />
-    <PackageReference Include="Dapper.SimpleCRUD" Version="2.2.0.1" />
     <PackageReference Include="jose-jwt" Version="2.5.0" />
     <PackageReference Include="MySql.Data" Version="8.0.19" />
   </ItemGroup>

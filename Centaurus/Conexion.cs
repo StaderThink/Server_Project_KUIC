@@ -18,31 +18,13 @@ namespace Centaurus {
 			_conexion.Dispose();
 		}
 
-		#region Base
 		public int Ejecutar(string consulta, object carga = null)
-			=>  _conexion.Execute(consulta, carga);
+			=> _conexion.Execute(consulta, carga);
 
 		public IEnumerable<T> Seleccionar<T>(string consulta, object carga = null)
 			=> _conexion.Query<T>(consulta, carga);
 
 		public T Obtener<T>(string consulta, object carga = null)
 			=> _conexion.QuerySingleOrDefault<T>(consulta, carga);
-		#endregion
-
-		#region CRUD
-		public bool Insertar<T>(T entidad) where T : IEntidad {
-			var id = _conexion.Insert(entidad);
-			return id is int;
-		}
-		public bool Editar<T>(T entidad) where T : IEntidad {
-			var filasAfectadas = _conexion.Update(entidad);
-			return filasAfectadas > 0;
-		}
-
-		public bool Eliminar<T>(T entidad) where T : IEntidad {
-			var id = _conexion.Insert(entidad);
-			return id is int;
-		}
-		#endregion
 	}
 }
