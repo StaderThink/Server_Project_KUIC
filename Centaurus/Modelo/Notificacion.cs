@@ -1,7 +1,4 @@
-﻿using Dapper;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System;
 
 namespace Centaurus.Modelo {
 	public sealed class Notificacion: IEntidad {

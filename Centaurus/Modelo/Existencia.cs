@@ -1,7 +1,4 @@
-﻿using System;
-using Dapper;
-
-namespace Centaurus.Modelo {
+﻿namespace Centaurus.Modelo {
 	public sealed class Existencia: IEntidad {
 		public int Id { get; set;  }
 		public int Producto { get; set; }

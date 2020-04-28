@@ -1,8 +1,4 @@
-﻿using Dapper;
-using System;
-using System.Text.Json.Serialization;
-
-namespace Centaurus.Modelo {
+﻿namespace Centaurus.Modelo {
 	public sealed class Producto: IEntidad {
 		public int Id { get; set; }
 		public string Nombre { get; set; }

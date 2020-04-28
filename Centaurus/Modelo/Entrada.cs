@@ -1,5 +1,4 @@
-﻿using Dapper;
-using System;
+﻿using System;
 
 namespace Centaurus.Modelo {
 	public sealed class Entrada: IEntidad { 
