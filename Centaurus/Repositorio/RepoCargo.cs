@@ -47,7 +47,9 @@ namespace Centaurus.Repositorio {
 
 		public Cargo PorId(int id) {
 			using var conexion = new Conexion();
-			return conexion.Obtener<Cargo>($"select * from cargo where id = @id", new { id });
+			var consulta = "select * from cargo where id = @id";
+
+			return conexion.Obtener<Cargo>(consulta, new { id });
 		}
 	}
 }

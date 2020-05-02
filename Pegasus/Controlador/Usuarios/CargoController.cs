@@ -16,7 +16,6 @@ namespace Pegasus.Controlador.Usuarios {
 		[HttpGet]
 		public IActionResult Listar() {
 			var lista = _repo.Listar();
-
 			return Ok(lista);
 		}
 

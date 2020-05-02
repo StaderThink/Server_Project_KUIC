@@ -1,14 +1,13 @@
 ﻿using Centaurus.Modelo;
-using Corvus.Caso.Crud;
+using Centaurus.Repositorio;
 using Corvus.Modelo.Sesiones;
 using System;
 
 namespace Corvus.Caso.Proceso {
 	public sealed class ProcesoSesion: ITraductor<Credencial, Sesion> {
 		private bool ValidarCredencial(Credencial credencial) {
-			var crud = new CrudUsuario();
-
-			var consulta = crud.PorDocumento(credencial.Documento);
+			var repo = new RepoUsuario();
+			var consulta = repo.PorDocumento(credencial.Documento);
 
 			if (consulta is Usuario usuario) {
 				if (usuario.Activo && usuario.Clave == credencial.Clave) {

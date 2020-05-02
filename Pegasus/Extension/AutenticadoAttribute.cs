@@ -1,7 +1,6 @@
 ﻿using Centaurus.Modelo;
 using Centaurus.Repositorio;
 using Centaurus.Seguridad;
-using Corvus.Caso.Crud;
 using Corvus.Caso.Proceso;
 using Corvus.Modelo.Sesiones;
 using Microsoft.AspNetCore.Http;
@@ -34,18 +33,18 @@ namespace Pegasus.Extension {
 
 		#region Procesos
 		private Sesion ObtenerSesion(string token) {
-			if (!string.IsNullOrEmpty(token)) {
-				var criptografo = new ProveedorToken();
-				var carga = criptografo.Traduccir<Sesion>(token);
+			if (string.IsNullOrEmpty(token)) return null;
 
-				// validar sesion
+			var criptografo = new ProveedorToken();
+			var carga = criptografo.Traduccir<Sesion>(token);
 
-				if (carga is Sesion sesion) {
-					var proceso = new ProcesoSesion();
+			// validar sesion
 
-					if (proceso.Traducir(sesion) is Credencial) {
-						return sesion;
-					}
+			if (carga is Sesion sesion) {
+				var proceso = new ProcesoSesion();
+
+				if (proceso.Traducir(sesion) is Credencial) {
+					return sesion;
 				}
 			}
 
@@ -53,8 +52,8 @@ namespace Pegasus.Extension {
 		}
 
 		private Usuario ObtenerUsuario(Credencial credencial) {
-			var crudUsuario = new CrudUsuario();
-			var usuario = crudUsuario.PorDocumento(credencial.Documento);
+			var repoUsuario = new RepoUsuario();
+			var usuario = repoUsuario.PorDocumento(credencial.Documento);
 
 			if (usuario is Usuario) {
 				var repoCargo = new RepoCargo();
@@ -66,7 +65,7 @@ namespace Pegasus.Extension {
 						Permiso.Logistica => cargo.Logistica,
 						Permiso.Clientes => cargo.Clientes,
 						Permiso.Solicitar => cargo.Solicitar,
-						_ => true,
+						_ => true, // no necesita permiso especifico
 					};
 
 					return tienePermiso ? usuario : null;
@@ -85,13 +84,17 @@ namespace Pegasus.Extension {
 				var proceso = new ProcesoSesion();
 
 				if (proceso.Traducir(sesion) is Credencial credencial) {
-					if (ObtenerUsuario(credencial) is Usuario usuario) {
-						context.HttpContext.Items["usuario"] = usuario; // establecer usuario
+					var usuario = ObtenerUsuario(credencial);
+
+					if (usuario is Usuario) {
+						// establecer usuario
+
+						context.HttpContext.Items["usuario"] = usuario;
 						await next();
 					}
 
 					else {
-						context.Result = new UnauthorizedObjectResult("no tienes permisos necesarios");
+						context.Result = new UnauthorizedObjectResult("no se logro asociar el usuario con la sesión");
 					}
 				}
 			}

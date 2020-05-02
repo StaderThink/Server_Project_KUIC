@@ -1,7 +1,5 @@
 ﻿using Centaurus.Modelo;
 using Centaurus.Repositorio;
-using System;
-using System.Collections.Generic;
 
 namespace Corvus.Caso.Crud {
 	public sealed class CrudUsuario: Crud<Usuario> {
@@ -17,23 +15,7 @@ namespace Corvus.Caso.Crud {
 		public override bool Eliminar(Usuario entidad)
 			=> Repo.Eliminar(entidad);
 
-		public override bool Insertar(Usuario entidad) {
-			// valores por defecto
-
-			entidad.Creado = DateTime.Now;
-			entidad.Actualizado = DateTime.Now;
-			entidad.Activo = false;
-
-			return Repo.Insertar(entidad);
-		}
-
-		public override IEnumerable<Usuario> Listar()
-			=> Repo.Listar();
-
-		public override Usuario PorId(int id)
-			=> Repo.PorId(id);
-
-		public Usuario PorDocumento(string documento)
-			=> Repo.PorDocumento(documento);
+		public override bool Insertar(Usuario entidad)
+			=> Repo.Insertar(entidad);
 	}
 }

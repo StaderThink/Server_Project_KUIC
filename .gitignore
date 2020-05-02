@@ -38,3 +38,8 @@ _[Ss]cripts
 *.dll.config
 *.cache
 *.suo
+
+# log
+
+.log/
+*.log

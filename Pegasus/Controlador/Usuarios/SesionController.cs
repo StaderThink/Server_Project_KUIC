@@ -36,11 +36,8 @@ namespace Pegasus.Controlador.Usuarios {
 		public IActionResult QuienSoy() {
 			var carga = HttpContext.Items["usuario"];
 
-			if (carga is Usuario usuario) {
-				return Ok(usuario);
-			}
-
-			return NoContent();
+			if (carga is Usuario usuario) return Ok(usuario);
+			else return NoContent();
 		}
 	}
 }
