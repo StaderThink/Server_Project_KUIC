@@ -1,5 +1,4 @@
 ﻿using Centaurus.Modelo;
-using System;
 using System.Collections.Generic;
 
 namespace Centaurus.Repositorio {

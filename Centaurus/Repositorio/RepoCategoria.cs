@@ -1,11 +1,9 @@
 ﻿using Centaurus.Modelo;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Centaurus.Repositorio {
 	public sealed class RepoCategoria: IRepo<Categoria> {
-		public bool Insertar (Categoria entidad) {
+		public bool Insertar(Categoria entidad) {
 			using var conexion = new Conexion();
 
 			var consulta = "insert into categoria (nombre, descripcion) values (@Nombre, @Descripcion)";

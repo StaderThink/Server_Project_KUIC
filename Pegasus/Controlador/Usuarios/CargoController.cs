@@ -7,62 +7,55 @@ namespace Pegasus.Controlador.Usuarios {
 	[Autenticado(Permiso.Usuarios)]
 	[Route("api/[controller]")]
 	public class CargoController: Controller {
-		private RepoCargo _repo;
+		private readonly RepoCargo repo;
 
 		public CargoController() {
-			_repo = new RepoCargo();
+			repo = new RepoCargo();
 		}
 
 		[HttpGet]
 		public IActionResult Listar() {
-			var lista = _repo.Listar();
-			return Ok(lista);
+			return Ok(repo.Listar());
 		}
 
 		[HttpPost]
 		public IActionResult Insertar([FromBody] Cargo datos) {
-			if (_repo.Insertar(datos)) {
-				return Ok("el cargo fue creado con exito");
+			if (repo.Insertar(datos)) {
+				return Accepted();
 			}
 
-			return BadRequest("no fue insertado el cargo");
+			return BadRequest();
 		}
 
 		[HttpGet("{id}")]
-		public IActionResult Obtener(int id) {
-			if (_repo.PorId(id) is Cargo cargo) {
-				return Ok(cargo);
+		public ActionResult<Cargo> Obtener(int id) {
+			if (repo.PorId(id) is Cargo cargo) {
+				return cargo;
 			}
 
-			return NotFound("no se encontro el cargo");
+			return NotFound();
 		}
 
 		[HttpPut("{id}")]
 		public IActionResult Editar(int id, [FromBody] Cargo datos) {
-			if (_repo.PorId(id) is Cargo) {
+			if (repo.PorId(id) is Cargo) {
 				datos.Id = id;
 
-				if (_repo.Editar(datos)) {
-					return Ok("editado correctamente");
-				}
-
-				else return BadRequest("no fue posible editar el cargo");
+				if (repo.Editar(datos)) return Accepted();
+				else return BadRequest();
 			}
 
-			return NotFound("no se encontro el cargo");
+			return NotFound();
 		}
 
 		[HttpDelete("{id}")]
 		public IActionResult Eliminar(int id) {
-			if (_repo.PorId(id) is Cargo cargo) {
-				if (_repo.Eliminar(cargo)) {
-					return Ok("eliminado correctamente");
-				}
-
-				else return BadRequest("no fue posible eliminar el cargo");
+			if (repo.PorId(id) is Cargo cargo) {
+				if (repo.Eliminar(cargo)) return Accepted();
+				else return BadRequest();
 			}
 
-			return NotFound("no se encontro el cargo");
+			return NotFound();
 		}
 	}
 }

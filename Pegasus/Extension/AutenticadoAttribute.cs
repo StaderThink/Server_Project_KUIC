@@ -1,8 +1,8 @@
 ﻿using Centaurus.Modelo;
 using Centaurus.Repositorio;
-using Centaurus.Seguridad;
 using Corvus.Caso.Proceso;
 using Corvus.Modelo.Sesiones;
+using Corvus.Seguridad;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -35,7 +35,7 @@ namespace Pegasus.Extension {
 		private Sesion ObtenerSesion(string token) {
 			if (string.IsNullOrEmpty(token)) return null;
 
-			var criptografo = new ProveedorToken();
+			var criptografo = new ProveedorJWT();
 			var carga = criptografo.Traduccir<Sesion>(token);
 
 			// validar sesion
@@ -59,7 +59,8 @@ namespace Pegasus.Extension {
 				var repoCargo = new RepoCargo();
 
 				if (repoCargo.PorId(usuario.Cargo) is Cargo cargo) {
-					var tienePermiso = permiso switch {
+					var tienePermiso = permiso switch
+					{
 						Permiso.Pedidos => cargo.Pedidos,
 						Permiso.Usuarios => cargo.Usuarios,
 						Permiso.Logistica => cargo.Logistica,

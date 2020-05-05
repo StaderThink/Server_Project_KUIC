@@ -32,7 +32,7 @@ namespace Corvus.Caso.Proceso {
 		public Credencial Traducir(Sesion datos) {
 			if (ValidarCredencial(datos.Credencial)) {
 				var diasUso = (DateTime.Now - datos.Fecha).Days;
-				
+
 				if (diasUso < 3) {
 					return datos.Credencial;
 				}

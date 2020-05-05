@@ -1,7 +1,7 @@
 ﻿using Centaurus.Modelo;
-using Centaurus.Seguridad;
 using Corvus.Caso.Proceso;
 using Corvus.Modelo.Sesiones;
+using Corvus.Seguridad;
 using Microsoft.AspNetCore.Mvc;
 using Pegasus.Extension;
 
@@ -14,29 +14,29 @@ namespace Pegasus.Controlador.Usuarios {
 
 			if (proceso.Generar(credencial) is Sesion sesion) {
 				var cookies = HttpContext.Response.Cookies;
-				var proveedor = new ProveedorToken();
+				var proveedor = new ProveedorJWT();
 
 				cookies.Append("token", proveedor.Encriptar(sesion));
 
-				return Ok("sesion iniciada");
+				return Accepted();
 			}
 
-			return BadRequest("revisa tus credenciales");
+			return BadRequest();
 		}
 
 		[HttpDelete]
 		[Autenticado]
 		public IActionResult Cerrar() {
 			HttpContext.Response.Cookies.Delete("token");
-			return Ok("sesion finalizada");
+			return Accepted();
 		}
 
 		[HttpGet]
 		[Autenticado]
-		public IActionResult QuienSoy() {
+		public ActionResult<Usuario> QuienSoy() {
 			var carga = HttpContext.Items["usuario"];
 
-			if (carga is Usuario usuario) return Ok(usuario);
+			if (carga is Usuario usuario) return usuario;
 			else return NoContent();
 		}
 	}

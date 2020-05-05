@@ -1,7 +1,5 @@
 ﻿using Centaurus.Modelo;
-using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace Centaurus.Repositorio {
 	public sealed class RepoSalida: IRepo<Salida> {

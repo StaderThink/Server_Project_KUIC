@@ -1,6 +1,5 @@
 ﻿using Centaurus.Modelo;
 using System.Collections.Generic;
-using System;
 
 namespace Centaurus.Repositorio {
 	public sealed class RepoUsuario: IRepo<Usuario> {
@@ -9,8 +8,8 @@ namespace Centaurus.Repositorio {
 
 			var consulta = @$"
 				update usuario set
-					nombre = @Nombre, apellido = @Apellido,
-					tipo_documento = '${entidad.TipoDocumento}',
+					nombre = @Nombre,
+					apellido = @Apellido,
 					correo = @Correo,
 					clave = @Clave,
 					telefono = @Telefono,
@@ -18,6 +17,12 @@ namespace Centaurus.Repositorio {
 					activo = @Activo
 				where id = @Id
 			";
+
+			var temporal = PorId(entidad.Id);
+
+			if (entidad.Clave == null) {
+				entidad.Clave = temporal.Clave;
+			}
 
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
@@ -48,7 +53,7 @@ namespace Centaurus.Repositorio {
 
 		public IEnumerable<Usuario> Listar() {
 			using var conexion = new Conexion();
-			return conexion.Seleccionar<Usuario>("select * from cargo");
+			return conexion.Seleccionar<Usuario>("select * from usuario");
 		}
 
 		public Usuario PorId(int id) {

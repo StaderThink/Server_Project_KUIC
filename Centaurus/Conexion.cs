@@ -1,5 +1,4 @@
-﻿using Centaurus.Modelo;
-using Dapper;
+﻿using Dapper;
 using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;

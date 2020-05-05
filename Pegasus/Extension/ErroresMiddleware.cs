@@ -15,7 +15,9 @@ namespace Pegasus.Extension {
 			var rutaArchivo = rutaDirectorio + $"/{error.GetHashCode()}.log";
 			var rutaFinal = Path.Combine(rutaDirectorio, rutaArchivo);
 
-			File.AppendAllText(rutaFinal, error.ToString());
+			string contenido = $"{DateTime.Now}\n{error}";
+
+			File.AppendAllText(rutaFinal, contenido);
 			return error.GetHashCode().ToString();
 		}
 

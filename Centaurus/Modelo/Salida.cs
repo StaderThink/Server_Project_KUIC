@@ -1,7 +1,7 @@
 ﻿using System;
 
 namespace Centaurus.Modelo {
-	public sealed class Salida:IEntidad {
+	public sealed class Salida: IEntidad {
 		public int Id { get; set; }
 		public DateTime fecha { get; set; }
 		public string Observacion { get; set; }
