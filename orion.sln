@@ -9,11 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Centaurus", "Centaurus\Cent
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A7B66164-12D4-429E-8E10-D88AAB99E5BB}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
 		.gitignore = .gitignore
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pegasus", "Pegasus\Pegasus.csproj", "{6A40A391-EC01-4856-95C8-5DF8B7385381}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Pegasus", "Pegasus\Pegasus.csproj", "{6A40A391-EC01-4856-95C8-5DF8B7385381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

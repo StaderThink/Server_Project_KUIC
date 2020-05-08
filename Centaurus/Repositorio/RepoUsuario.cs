@@ -42,7 +42,7 @@ namespace Centaurus.Repositorio {
 
 			var consulta = @$"
 				call crear_usuario(
-					@Nombre, @Apellido, @Documento, '${entidad.TipoDocumento}',
+					@Nombre, @Apellido, @Documento, '{entidad.TipoDocumento}',
 					@Expedicion, @Correo, @Clave, @Cargo, @Telefono, @Nacimiento
 				)
 			";

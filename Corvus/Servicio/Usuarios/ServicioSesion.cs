@@ -1,15 +1,17 @@
-﻿using Centaurus.Modelo;
-using Centaurus.Repositorio;
+﻿using Centaurus.Repositorio;
 using Corvus.Modelo.Sesiones;
 using System;
 
-namespace Corvus.Caso.Proceso {
-	public sealed class ProcesoSesion: ITraductor<Credencial, Sesion> {
+namespace Corvus.Servicio.Usuarios {
+	using ModeloUsuario = Centaurus.Modelo.Usuario;
+
+	public sealed class ServicioSesion: Traductor<Credencial, Sesion> {
+		#region Validacion
 		private bool ValidarCredencial(Credencial credencial) {
 			var repo = new RepoUsuario();
 			var consulta = repo.PorDocumento(credencial.Documento);
 
-			if (consulta is Usuario usuario) {
+			if (consulta is ModeloUsuario usuario) {
 				if (usuario.Activo && usuario.Clave == credencial.Clave) {
 					return true;
 				}
@@ -17,8 +19,9 @@ namespace Corvus.Caso.Proceso {
 
 			return false;
 		}
+		#endregion
 
-		public Sesion Generar(Credencial datos) {
+		public override Sesion Generar(Credencial datos) {
 			if (ValidarCredencial(datos)) {
 				return new Sesion {
 					Credencial = datos,
@@ -29,7 +32,7 @@ namespace Corvus.Caso.Proceso {
 			return null;
 		}
 
-		public Credencial Traducir(Sesion datos) {
+		public override Credencial Traducir(Sesion datos) {
 			if (ValidarCredencial(datos.Credencial)) {
 				var diasUso = (DateTime.Now - datos.Fecha).Days;
 

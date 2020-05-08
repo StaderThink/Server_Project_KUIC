@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Corvus.Seguridad {
 	public abstract class Proveedor {
-		internal readonly byte[] _llave;
+		protected readonly byte[] _llave;
 
 		public Proveedor() {
 			var texto = Environment.GetEnvironmentVariable("SECRET_TOKEN");

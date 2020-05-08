@@ -1,4 +1,5 @@
 ﻿using Centaurus.Modelo;
+using System;
 using System.Collections.Generic;
 
 namespace Centaurus.Repositorio {
@@ -10,6 +11,7 @@ namespace Centaurus.Repositorio {
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}
+
 		public bool Editar(Producto entidad) {
 			using var conexion = new Conexion();
 			var consulta = @"
@@ -20,20 +22,27 @@ namespace Centaurus.Repositorio {
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}
+
 		public bool Eliminar(Producto entidad) {
 			using var conexion = new Conexion();
 			var consulta = "delete from producto from id = @Id";
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}
+
 		public IEnumerable<Producto> Listar() {
 			using var conexion = new Conexion();
 			return conexion.Seleccionar<Producto>("select * from producto");
 		}
+
 		public Producto PorId(int id) {
 			using var conexion = new Conexion();
 			var consulta = "select * from producto where id = @id";
 			return conexion.Obtener<Producto>(consulta, new { id });
+		}
+
+		public Producto PorCodigo(string codigo) {
+			throw new NotImplementedException(); // #1
 		}
 	}
 }

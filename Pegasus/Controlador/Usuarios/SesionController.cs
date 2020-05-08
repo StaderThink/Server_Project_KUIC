@@ -1,18 +1,23 @@
 ﻿using Centaurus.Modelo;
-using Corvus.Caso.Proceso;
+using Centaurus.Repositorio;
 using Corvus.Modelo.Sesiones;
 using Corvus.Seguridad;
+using Corvus.Servicio.Usuarios;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pegasus.Extension;
+using System;
 
 namespace Pegasus.Controlador.Usuarios {
+	using FormularioReestablecer = Corvus.Modelo.Formularios.FormularioReestablecerClave;
+
 	[Route("api/[controller]")]
 	public class SesionController: Controller {
 		[HttpPost]
 		public IActionResult Iniciar([FromBody] Credencial credencial) {
-			var proceso = new ProcesoSesion();
+			var servicio = new ServicioSesion();
 
-			if (proceso.Generar(credencial) is Sesion sesion) {
+			if (servicio.Generar(credencial) is Sesion sesion) {
 				var cookies = HttpContext.Response.Cookies;
 				var proveedor = new ProveedorJWT();
 
@@ -23,6 +28,31 @@ namespace Pegasus.Controlador.Usuarios {
 
 			return BadRequest();
 		}
+
+		#region Reestablecer clave
+
+		[HttpGet("reestablecer")]
+		public IActionResult PuedeReestablecer([FromBody] FormularioReestablecer formulario) {
+			var servicio = new ServicioReestablecerClave();
+			
+			if (servicio.UsuarioDesdeFormulario(formulario) is Usuario) {
+				return Accepted();
+			}
+
+			return BadRequest();
+		}
+
+		[HttpPost("reestablecer")]
+		public IActionResult ReestablecerClave([FromBody] FormularioReestablecer formulario) {
+			var servicio = new ServicioReestablecerClave();
+
+			if (servicio.ReestablecerClave(formulario)) {
+				return Accepted();
+			}
+
+			return BadRequest();
+		}
+		#endregion
 
 		[HttpDelete]
 		[Autenticado]

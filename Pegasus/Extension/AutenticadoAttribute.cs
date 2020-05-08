@@ -1,9 +1,8 @@
 ﻿using Centaurus.Modelo;
 using Centaurus.Repositorio;
-using Corvus.Caso.Proceso;
 using Corvus.Modelo.Sesiones;
 using Corvus.Seguridad;
-using Microsoft.AspNetCore.Http;
+using Corvus.Servicio.Usuarios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
@@ -22,13 +21,11 @@ namespace Pegasus.Extension {
 			this.permiso = permiso;
 		}
 
-		private async Task BorrarCookie(ActionExecutingContext contexto, string mensaje) {
+		private void BorrarCookie(ActionExecutingContext contexto) {
 			var respuesta = contexto.HttpContext.Response;
 
 			respuesta.StatusCode = 403;
 			respuesta.Cookies.Delete("token");
-
-			await respuesta.WriteAsync(mensaje);
 		}
 
 		#region Procesos
@@ -41,9 +38,9 @@ namespace Pegasus.Extension {
 			// validar sesion
 
 			if (carga is Sesion sesion) {
-				var proceso = new ProcesoSesion();
+				var servicio = new ServicioSesion();
 
-				if (proceso.Traducir(sesion) is Credencial) {
+				if (servicio.Traducir(sesion) is Credencial) {
 					return sesion;
 				}
 			}
@@ -59,8 +56,7 @@ namespace Pegasus.Extension {
 				var repoCargo = new RepoCargo();
 
 				if (repoCargo.PorId(usuario.Cargo) is Cargo cargo) {
-					var tienePermiso = permiso switch
-					{
+					var tienePermiso = permiso switch {
 						Permiso.Pedidos => cargo.Pedidos,
 						Permiso.Usuarios => cargo.Usuarios,
 						Permiso.Logistica => cargo.Logistica,
@@ -82,9 +78,9 @@ namespace Pegasus.Extension {
 			cookies.TryGetValue("token", out string token);
 
 			if (ObtenerSesion(token) is Sesion sesion) {
-				var proceso = new ProcesoSesion();
+				var servicio = new ServicioSesion();
 
-				if (proceso.Traducir(sesion) is Credencial credencial) {
+				if (servicio.Traducir(sesion) is Credencial credencial) {
 					var usuario = ObtenerUsuario(credencial);
 
 					if (usuario is Usuario) {
@@ -95,13 +91,13 @@ namespace Pegasus.Extension {
 					}
 
 					else {
-						context.Result = new UnauthorizedObjectResult("no se logro asociar el usuario con la sesión");
+						context.Result = new UnauthorizedResult();
 					}
 				}
 			}
 
 			else {
-				await BorrarCookie(context, "sesión invalida, intenta iniciar sesión");
+				BorrarCookie(context);
 			}
 		}
 	}

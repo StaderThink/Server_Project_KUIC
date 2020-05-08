@@ -2,6 +2,7 @@
 using Centaurus.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using Pegasus.Extension;
+using System.Linq;
 
 namespace Pegasus.Controlador.Usuarios {
 	[Route("api/[controller]")]
@@ -11,8 +12,12 @@ namespace Pegasus.Controlador.Usuarios {
 
 		[HttpGet]
 		public IActionResult Listar() {
-			return Ok(repo.Listar());
+			var todos = repo.Listar();
+			return Ok(todos.Where(usuario => usuario.Activo));
 		}
+
+		[HttpGet("todos")]
+		public IActionResult ListarTodos() => Ok(repo.Listar());
 
 		[HttpGet("{id}")]
 		public ActionResult<Usuario> Obtener(int id) {
