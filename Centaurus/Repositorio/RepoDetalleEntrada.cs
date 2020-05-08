@@ -19,7 +19,7 @@ namespace Centaurus.Repositorio {
 		}
 		public bool Eliminar(DetalleEntrada entidad) {
 			using var conexion = new Conexion();
-			var consulta = "delete from detalle_entrada from id = @Id";
+			var consulta = "delete from detalle_entrada where id = @Id";
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}

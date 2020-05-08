@@ -20,7 +20,7 @@ namespace Centaurus.Repositorio {
 		}
 		public bool Eliminar(Notificacion entidad) {
 			using var conexion = new Conexion();
-			var consulta = "delete from notificacion from id = @Id";
+			var consulta = "delete from notificacion where id = @Id";
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}

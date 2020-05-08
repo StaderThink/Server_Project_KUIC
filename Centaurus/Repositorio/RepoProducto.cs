@@ -25,7 +25,7 @@ namespace Centaurus.Repositorio {
 
 		public bool Eliminar(Producto entidad) {
 			using var conexion = new Conexion();
-			var consulta = "delete from producto from id = @Id";
+			var consulta = "delete from producto where id = @Id";
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}
