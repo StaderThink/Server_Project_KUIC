@@ -42,7 +42,9 @@ namespace Centaurus.Repositorio {
 		}
 
 		public Producto PorCodigo(string codigo) {
-			throw new NotImplementedException(); // #1
+			using var conexion = new Conexion();
+			var consulta = "select * from producto where codigo = @codigo";
+			return conexion.Obtener<Producto>(consulta, new { codigo });
 		}
 	}
 }
