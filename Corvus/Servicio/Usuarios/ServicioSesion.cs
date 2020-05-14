@@ -1,17 +1,21 @@
-﻿using Centaurus.Repositorio;
+﻿using Centaurus.Modelo;
+using Centaurus.Repositorio;
 using Corvus.Modelo.Sesiones;
+using Corvus.Seguridad;
 using System;
 
 namespace Corvus.Servicio.Usuarios {
-	using ModeloUsuario = Centaurus.Modelo.Usuario;
+	public sealed class ServicioSesion: Traductor<Sesion, string> {
+		private bool ValidarSesion(Sesion sesion) {
+			var dias = (DateTime.Now - sesion.Fecha).Days;
+			if (dias > 3) return false;
 
-	public sealed class ServicioSesion: Traductor<Credencial, Sesion> {
-		#region Validacion
-		private bool ValidarCredencial(Credencial credencial) {
+			var credencial = sesion.Credencial;
+
 			var repo = new RepoUsuario();
-			var consulta = repo.PorDocumento(credencial.Documento);
+			var usuario = repo.PorDocumento(sesion.Credencial.Documento);
 
-			if (consulta is ModeloUsuario usuario) {
+			if (usuario is Usuario) {
 				if (usuario.Activo && usuario.Clave == credencial.Clave) {
 					return true;
 				}
@@ -19,26 +23,22 @@ namespace Corvus.Servicio.Usuarios {
 
 			return false;
 		}
-		#endregion
 
-		public override Sesion Generar(Credencial datos) {
-			if (ValidarCredencial(datos)) {
-				return new Sesion {
-					Credencial = datos,
-					Fecha = DateTime.Now
-				};
+		public override string Generar(Sesion carga) {
+			if (ValidarSesion(carga)) {
+				var criptografo = new ProveedorJWT();
+				return criptografo.Encriptar(carga);
 			}
 
 			return null;
 		}
 
-		public override Credencial Traducir(Sesion datos) {
-			if (ValidarCredencial(datos.Credencial)) {
-				var diasUso = (DateTime.Now - datos.Fecha).Days;
+		public override Sesion Traducir(string carga) {
+			var criptografo = new ProveedorJWT();
+			var sesion = criptografo.Traduccir<Sesion>(carga);
 
-				if (diasUso < 3) {
-					return datos.Credencial;
-				}
+			if (sesion is Sesion) {
+				if (ValidarSesion(sesion)) return sesion;
 			}
 
 			return null;

@@ -1,0 +1,74 @@
+﻿@page "/login"
+
+@inject HttpClient Http
+
+<main class="container">
+	<h1 class="title is-1">Aurelia</h1>
+
+	@if (mensaje is string) {
+		<div class="notification @(error ? "is-error" : "is-success")">
+			<p>@mensaje</p>
+		</div>
+	}
+
+	<fieldset>
+		<legend>Iniciar sesion</legend>
+
+		<div class="form">
+			<div class="field has-">
+				<label>Documento</label>
+				<div class="field has-addons">
+					<div class="control">
+						<span class="button is-static">CC</span>
+					</div>
+					<div class="control is-expanded">
+						<input type="text" pattern="[0-9]*" @bind-value="documento" class="input is-fullwidth" />
+					</div>
+				</div>
+				<p class="help">Número de cédula de ciudadanía</p>
+			</div>
+
+			<div class="field">
+				<label>Clave</label>
+				<input type="password" @bind-value="clave" class="input is-fullwidth" />
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<button @onclick="IniciarSesion" class="button is-primary" disabled="@cargando">
+						@(cargando ? "..." : "Ingresar")
+					</button>
+				</div>
+			</div>
+		</div>
+	</fieldset>
+</main>
+
+@code {
+	private string documento;
+	private string clave;
+
+	private string mensaje;
+	private bool error = true;
+
+	private bool cargando;
+
+	private async Task IniciarSesion() {
+		mensaje = null;
+		cargando = true;
+
+		var respuesta = await Http.PostAsJsonAsync("/api/sesion", new { documento, clave });
+
+		if (respuesta.IsSuccessStatusCode) {
+			mensaje = "Sesion iniciada";
+			error = false;
+		}
+
+		else {
+			mensaje = $"La respuesta fue: {respuesta.StatusCode}";
+			error = true;
+		}
+
+		cargando = false;
+	}
+}
