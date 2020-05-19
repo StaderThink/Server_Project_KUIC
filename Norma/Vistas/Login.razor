@@ -1,72 +1,71 @@
 ﻿@page "/login"
 
-@inject HttpClient Http
+@inject HttpClient http
+@inject ILocalStorageService localStorage
+@inject NavigationManager navegador
+@layout BaseLayout
 
-<main class="container">
-	<h1 class="title is-1">Aurelia</h1>
+<h1>Login</h1>
 
-	@if (mensaje is string) {
-		<div class="notification @(error ? "is-error" : "is-success")">
-			<p>@mensaje</p>
+@if (mensaje is string) {
+	<blockquote>
+		<p>@mensaje</p>
+	</blockquote>
+}
+
+<div class="grid has-gap">
+	<div class="field">
+		<label>Documento</label>
+
+		<div class="control is-attached">
+			<span class="button is-static">CC</span>
+			<input type="text" pattern="[0-9]*" @bind="documento" placeholder="###" class="input" />
 		</div>
-	}
 
-	<fieldset>
-		<legend>Iniciar sesion</legend>
+		<small>Número de cédula de ciudadanía</small>
+	</div>
 
-		<div class="form">
-			<div class="field has-">
-				<label>Documento</label>
-				<div class="field has-addons">
-					<div class="control">
-						<span class="button is-static">CC</span>
-					</div>
-					<div class="control is-expanded">
-						<input type="text" pattern="[0-9]*" @bind-value="documento" class="input is-fullwidth" />
-					</div>
-				</div>
-				<p class="help">Número de cédula de ciudadanía</p>
-			</div>
+	<div class="field">
+		<label>Clave</label>
+		<input type="password" @bind="clave" placeholder="###" class="input" />
+	</div>
 
-			<div class="field">
-				<label>Clave</label>
-				<input type="password" @bind-value="clave" class="input is-fullwidth" />
-			</div>
+	<div class="field">
+		<div class="control is-grouped">
+			@if (cargando) {
+				<button class="is-prime is-loading" disabled>Ingresar</button>
+			}
 
-			<div class="field">
-				<div class="control">
-					<button @onclick="IniciarSesion" class="button is-primary" disabled="@cargando">
-						@(cargando ? "..." : "Ingresar")
-					</button>
-				</div>
-			</div>
+			else {
+				<button class="is-prime" @onclick="IniciarSesion">Ingresar</button>
+			}
 		</div>
-	</fieldset>
-</main>
+	</div>
+</div>
 
 @code {
-	private string documento;
-	private string clave;
+	string documento;
+	string clave;
 
-	private string mensaje;
-	private bool error = true;
-
-	private bool cargando;
+	string mensaje;
+	bool cargando;
 
 	private async Task IniciarSesion() {
 		mensaje = null;
 		cargando = true;
 
-		var respuesta = await Http.PostAsJsonAsync("/api/sesion", new { documento, clave });
+		var respuesta = await http.PostAsJsonAsync("/api/sesion", new { documento, clave });
 
 		if (respuesta.IsSuccessStatusCode) {
+			var token = await respuesta.Content.ReadAsStringAsync();
+			await localStorage.SetItemAsync("token", token);
+
 			mensaje = "Sesion iniciada";
-			error = false;
+			navegador.NavigateTo("/");
 		}
 
 		else {
-			mensaje = $"La respuesta fue: {respuesta.StatusCode}";
-			error = true;
+			mensaje = "Ooops... revisa tus credenciales";
 		}
 
 		cargando = false;

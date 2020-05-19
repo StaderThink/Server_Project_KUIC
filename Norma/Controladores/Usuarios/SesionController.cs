@@ -18,18 +18,10 @@ namespace Norma.Controladores.Usuarios {
 			var servicio = new ServicioSesion();
 
 			if (servicio.Generar(sesion) is string token) {
-				Response.Cookies.Append("token", token);
-				return Accepted();
+				return Ok(token);
 			}
 
 			return BadRequest();
-		}
-
-		[Autenticado]
-		[HttpDelete]
-		public IActionResult CerrarSesion() {
-			Response.Cookies.Delete("token");
-			return Accepted();
 		}
 
 		[Autenticado]

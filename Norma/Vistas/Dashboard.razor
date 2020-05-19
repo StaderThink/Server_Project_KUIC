@@ -1,0 +1,22 @@
+﻿@page "/"
+@layout BaseLayout
+
+<h2>@tiempo</h2>
+
+@code {
+	string tiempo {
+		get {
+			int hora = DateTime.Now.Hour;
+
+			if (hora < 12) {
+				return "Buenos dias";
+			}
+			else if (hora < 19) {
+				return "Buenas tardes";
+			}
+			else {
+				return "Buenas noches";
+			}
+		}
+	}
+}

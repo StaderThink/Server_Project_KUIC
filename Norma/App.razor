@@ -1,11 +1,48 @@
-﻿
+﻿@using System.Net.Http.Headers
+
+@inject ILocalStorageService localStorage
+@inject HttpClient http
+@inject NavigationManager navegador
+
 <Router AppAssembly="@typeof(Program).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData"/>
-    </Found>
+	<Found Context="routeData">
+		@if (cargando) {
+			<div>Cargando...</div>
+		}
+
+		else {
+			<RouteView RouteData="@routeData" />
+		}
+	</Found>
     <NotFound>
-        <LayoutView Layout="@typeof(MainLayout)">
+        <LayoutView Layout="@typeof(BaseLayout)">
             <p>Sorry, there's nothing at this address.</p>
         </LayoutView>
     </NotFound>
 </Router>
+
+
+@code {
+	bool cargando = true;
+
+	protected override async Task OnInitializedAsync() {
+		cargando = true;
+
+		if (await localStorage.ContainKeyAsync("token")) {
+			var token = await localStorage.GetItemAsync<string>("token");
+			http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+
+			var respuesta = await http.GetAsync("/api/sesion");
+
+			if (!respuesta.IsSuccessStatusCode) {
+				navegador.NavigateTo("/login");
+			}
+		}
+
+		else {
+			navegador.NavigateTo("/login");
+		}
+
+		cargando = false;
+	}
+}

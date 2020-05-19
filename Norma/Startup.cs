@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -17,6 +18,7 @@ namespace Norma {
 			services.AddControllers();
 			services.AddRazorPages().WithRazorPagesRoot("/Vistas");
 			services.AddServerSideBlazor();
+			services.AddBlazoredLocalStorage();
 
 			services.AddTransient(service => // agregar cliente http
 				new HttpClient {

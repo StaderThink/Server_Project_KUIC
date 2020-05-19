@@ -4,7 +4,9 @@ using Corvus.Modelo.Sesiones;
 using Corvus.Servicio.Usuarios;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Primitives;
 using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Norma.Extensiones {
@@ -46,26 +48,41 @@ namespace Norma.Extensiones {
 		}
 		#endregion
 
-		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-			var cookies = context.HttpContext.Request.Cookies;
-			cookies.TryGetValue("token", out string token);
+		private string ExtraerToken(string cabecera) {
+			if (!string.IsNullOrWhiteSpace(cabecera)) {
+				var regex = new Regex("^[bB]earer (.*)$");
+				var resultado = regex.Match(cabecera);
 
-			var servicio = new ServicioSesion();
-
-			if (servicio.Traducir(token) is Sesion sesion) {
-				var repo = new RepoUsuario();
-				var usuario = repo.PorDocumento(sesion.Credencial.Documento);
-
-				if (usuario is Usuario) {
-					if (ValidarPermisos(usuario)) {
-						context.HttpContext.Items["usuario"] = usuario;
-						await next();
-					}
+				if (resultado.Success && resultado.Groups.Count > 1) {
+					return resultado.Groups[1].Value;
 				}
-
-				context.Result = new BadRequestResult();
 			}
-			
+
+			return null;
+		}
+
+		public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
+			var cookies = context.HttpContext.Request.Headers;
+			cookies.TryGetValue("Authorization", out StringValues cabecera);
+
+			if (ExtraerToken(cabecera) is string token) {
+				var servicio = new ServicioSesion();
+
+				if (servicio.Traducir(token) is Sesion sesion) {
+					var repo = new RepoUsuario();
+					var usuario = repo.PorDocumento(sesion.Credencial.Documento);
+
+					if (usuario is Usuario) {
+						if (ValidarPermisos(usuario)) {
+							context.HttpContext.Items["usuario"] = usuario;
+							await next();
+						}
+					}
+
+					context.Result = new BadRequestResult();
+				}
+			}
+
 			context.Result = new UnauthorizedResult();
 		}
 	}
