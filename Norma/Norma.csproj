@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="Compartido\Componentes\" />
+    <Folder Include="Controladores\Clientes\" />
     <Folder Include="Servicios\" />
     <Folder Include="wwwroot\css\" />
   </ItemGroup>
