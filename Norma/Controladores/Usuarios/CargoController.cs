@@ -2,6 +2,7 @@
 using Centaurus.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using Norma.Extensiones;
+using System.Collections.Generic;
 
 namespace Norma.Controladores.Usuarios {
 	[Autenticado(Permiso.Usuarios)]
@@ -14,14 +15,14 @@ namespace Norma.Controladores.Usuarios {
 		}
 
 		[HttpGet]
-		public IActionResult Listar() {
-			return Ok(repo.Listar());
+		public IEnumerable<Cargo> Listar() {
+			return repo.Listar();
 		}
 
 		[HttpPost]
 		public IActionResult Insertar([FromBody] Cargo datos) {
 			if (repo.Insertar(datos)) {
-				return Accepted();
+				return Ok();
 			}
 
 			return BadRequest();
@@ -41,7 +42,7 @@ namespace Norma.Controladores.Usuarios {
 			if (repo.PorId(id) is Cargo) {
 				datos.Id = id;
 
-				if (repo.Editar(datos)) return Accepted();
+				if (repo.Editar(datos)) return Ok();
 				else return BadRequest();
 			}
 
@@ -51,7 +52,7 @@ namespace Norma.Controladores.Usuarios {
 		[HttpDelete("{id}")]
 		public IActionResult Eliminar(int id) {
 			if (repo.PorId(id) is Cargo cargo) {
-				if (repo.Eliminar(cargo)) return Accepted();
+				if (repo.Eliminar(cargo)) return Ok();
 				else return BadRequest();
 			}
 

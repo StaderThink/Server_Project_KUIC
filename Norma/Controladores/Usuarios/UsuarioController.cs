@@ -41,7 +41,7 @@ namespace Norma.Controladores.Usuarios {
 				usuario.Id = id;
 
 				if (repo.Editar(usuario)) {
-					return Accepted();
+					return Ok();
 				}
 
 				return BadRequest();

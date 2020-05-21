@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 namespace Centaurus {
-	internal sealed class Conexion: IDisposable {
+	public sealed class Conexion: IDisposable {
 		private readonly MySqlConnection _conexion;
 
 		public Conexion() {

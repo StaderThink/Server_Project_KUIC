@@ -5,7 +5,7 @@ using dotenv.net;
 namespace Norma {
 	public class Program {
 		public static void Main(string[] args) {
-			DotEnv.Config();
+			DotEnv.Config(); // injectar el .env globalmente
 			CreateHostBuilder(args).Build().Run();
 		}
 
