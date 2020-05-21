@@ -1,4 +1,5 @@
 ﻿using Centaurus.Modelo;
+using Corvus.Modelo.Formularios;
 using Corvus.Modelo.Sesiones;
 using Corvus.Servicio.Usuarios;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,14 @@ namespace Norma.Controladores.Usuarios {
 
 			if (carga is Usuario usuario) return usuario;
 			else return NoContent();
+		}
+
+		[HttpPost("reestablecer")]
+		public IActionResult ReestablecerClave([FromBody] FormularioReestablecerClave formulario) {
+			var servicio = new ServicioReestablecerClave();
+			
+			if (servicio.ReestablecerClave(formulario)) return Ok();
+			else return BadRequest();
 		}
 	}
 }

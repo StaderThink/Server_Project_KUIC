@@ -2,21 +2,23 @@
 using Centaurus.Repositorio;
 using Microsoft.AspNetCore.Mvc;
 using Norma.Extensiones;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Norma.Controladores.Usuarios {
 	[Route("api/[controller]")]
+	[Autenticado(Permiso.Usuarios)]
 	public class UsuarioController: Controller {
 		private readonly RepoUsuario repo = new RepoUsuario();
 
 		[HttpGet]
-		public IActionResult Listar() {
+		public IEnumerable<Usuario> Listar() {
 			var todos = repo.Listar();
-			return Ok(todos.Where(usuario => usuario.Activo));
+			return todos.Where(usuario => usuario.Activo);
 		}
 
 		[HttpGet("todos")]
-		public IActionResult ListarTodos() => Ok(repo.Listar());
+		public IEnumerable<Usuario> ListarTodos() => repo.Listar();
 
 		[HttpGet("{id}")]
 		public ActionResult<Usuario> Obtener(int id) {
@@ -29,7 +31,7 @@ namespace Norma.Controladores.Usuarios {
 
 		[HttpPost]
 		public IActionResult Insertar([FromBody] Usuario usuario) {
-			if (repo.Insertar(usuario)) return Accepted();
+			if (repo.Insertar(usuario)) return Ok();
 			else return BadRequest();
 		}
 
@@ -52,7 +54,7 @@ namespace Norma.Controladores.Usuarios {
 		public IActionResult Eliminar(int id) {
 			if (repo.PorId(id) is Usuario usuario) {
 				if (repo.Eliminar(usuario)) {
-					return Accepted();
+					return Ok();
 				}
 
 				else return BadRequest();
