@@ -26,19 +26,31 @@ namespace Corvus.Servicio.Usuarios {
 
 		public override string Generar(Sesion carga) {
 			if (ValidarSesion(carga)) {
-				var criptografo = new ProveedorJWT();
-				return criptografo.Encriptar(carga);
+				try {
+					var criptografo = new ProveedorJWT();
+					return criptografo.Encriptar(carga);
+				}
+
+				catch {
+					return null;
+				}
 			}
 
 			return null;
 		}
 
 		public override Sesion Traducir(string carga) {
-			var criptografo = new ProveedorJWT();
-			var sesion = criptografo.Traduccir<Sesion>(carga);
+			try {
+				var criptografo = new ProveedorJWT();
+				var sesion = criptografo.Traduccir<Sesion>(carga);
 
-			if (sesion is Sesion) {
-				if (ValidarSesion(sesion)) return sesion;
+				if (sesion is Sesion) {
+					if (ValidarSesion(sesion)) return sesion;
+				}
+			}
+
+			catch {
+				return null;
 			}
 
 			return null;

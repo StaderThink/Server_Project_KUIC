@@ -1,13 +1,11 @@
-﻿@using System.Net.Http.Headers
-
-@inject ILocalStorageService localStorage
+﻿@inject ILocalStorageService localStorage
 @inject HttpClient http
 @inject NavigationManager navegador
 
 <Router AppAssembly="@typeof(Program).Assembly">
 	<Found Context="routeData">
 		@if (cargando) {
-			<div>Cargando...</div>
+			<div class="loader is-big"></div>
 		}
 
 		else {
@@ -16,7 +14,7 @@
 	</Found>
     <NotFound>
         <LayoutView Layout="@typeof(BaseLayout)">
-            <p>Sorry, there's nothing at this address.</p>
+            <p>Oops... todavia no hay nada en esta ruta.</p>
         </LayoutView>
     </NotFound>
 </Router>
@@ -25,22 +23,29 @@
 @code {
 	bool cargando = true;
 
+	async Task<bool> ValidarSesion() {
+		var respuesta = await http.GetAsync("/api/sesion");
+		return respuesta.IsSuccessStatusCode;
+	}
+
 	protected override async Task OnInitializedAsync() {
 		cargando = true;
 
-		if (await localStorage.ContainKeyAsync("token")) {
-			var token = await localStorage.GetItemAsync<string>("token");
-			http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+		if (!navegador.Uri.Contains("login")) {
+			if (await localStorage.ContainKeyAsync("token")) {
+				var token = await localStorage.GetItemAsync<string>("token");
+				var bearer = new AuthenticationHeaderValue("bearer", token);
 
-			var respuesta = await http.GetAsync("/api/sesion");
+				http.DefaultRequestHeaders.Authorization = bearer;
 
-			if (!respuesta.IsSuccessStatusCode) {
+				if (!await ValidarSesion()) {
+					navegador.NavigateTo("/login");
+				}
+			}
+
+			else {
 				navegador.NavigateTo("/login");
 			}
-		}
-
-		else {
-			navegador.NavigateTo("/login");
 		}
 
 		cargando = false;

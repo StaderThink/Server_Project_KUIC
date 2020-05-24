@@ -20,7 +20,7 @@ namespace Norma {
 			services.AddServerSideBlazor();
 			services.AddBlazoredLocalStorage();
 
-			services.AddTransient(service => // agregar cliente http
+			services.AddSingleton(service => // agregar cliente http
 				new HttpClient {
 					BaseAddress = new System.Uri("https://localhost:5001")
 				}

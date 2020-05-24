@@ -1,0 +1,48 @@
+﻿@using Modelo = Centaurus.Modelo.Usuario
+
+@inject HttpClient http
+
+@page "/usuarios"
+@layout BaseLayout
+
+<h1>Usuarios</h1>
+
+@if (usuarios is Modelo[]) {
+	@if (usuarios.Length == 0) {
+		<p>No hay nada por aquí...</p>
+	}
+
+	else {
+		<div class="grid has-gap xs-1 sm-2 md-3">
+			@foreach (var usuario in usuarios) {
+				<div class="card">
+					<p>@usuario.Nombre</p>
+					<p>@usuario.Correo</p>
+
+					<div class="control is-grouped">
+						<button class="is-prime">Editar</button>
+						<button class="is-outline">Borrar</button>
+					</div>
+				</div>
+			}
+		</div>
+	}
+}
+
+else {
+	<div class="loader is-medium"></div>
+}
+
+@code {
+	Modelo[] usuarios;
+
+	protected override async Task OnInitializedAsync() {
+		try {
+			usuarios = await http.GetFromJsonAsync<Modelo[]>("/api/usuario");
+		}
+
+		catch {
+			usuarios = new Modelo[0];
+		}
+	}
+}
