@@ -5,7 +5,7 @@
 <Router AppAssembly="@typeof(Program).Assembly">
 	<Found Context="routeData">
 		@if (cargando) {
-			<div class="loader is-big"></div>
+			<LoadingPage/>
 		}
 
 		else {
@@ -39,12 +39,12 @@
 				http.DefaultRequestHeaders.Authorization = bearer;
 
 				if (!await ValidarSesion()) {
-					navegador.NavigateTo("/login");
+					navegador.NavigateTo("/");
 				}
 			}
 
 			else {
-				navegador.NavigateTo("/login");
+				navegador.NavigateTo("/");
 			}
 		}
 

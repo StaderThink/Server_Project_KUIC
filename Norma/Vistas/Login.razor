@@ -1,4 +1,4 @@
-﻿@page "/login"
+﻿@page "/"
 
 @inject HttpClient http
 @inject ILocalStorageService localStorage
@@ -60,12 +60,11 @@
 			var token = await respuesta.Content.ReadAsStringAsync();
 			await localStorage.SetItemAsync("token", token);
 
-			mensaje = "Sesion iniciada";
-			navegador.NavigateTo("/");
+			navegador.NavigateTo("/dashboard");
 		}
 
 		else {
-			mensaje = "Ooops... revisa tus credenciales";
+			mensaje = "Revisa tus credenciales";
 		}
 
 		cargando = false;
