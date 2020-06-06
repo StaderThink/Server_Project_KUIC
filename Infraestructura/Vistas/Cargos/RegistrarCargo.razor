@@ -1,0 +1,28 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/cargo/registrar"
+@layout BaseLayout
+
+<form @onsubmit="Enviar">
+    <input type="text" @bind="cargo.Nombre" />
+    <input type="checkbox" @bind="cargo.Pedidos" />
+    <input type="checkbox" @bind="cargo.Usuarios" />
+    <input type="checkbox" @bind="cargo.Logistica" />
+    <input type="checkbox" @bind="cargo.Clientes" />
+    <input type="checkbox" @bind="cargo.Solicitar" />
+
+    <button>Registrar</button>
+</form>
+
+@code {
+    Cargo cargo { get; set; } = new Cargo();
+
+    async Task Enviar() {
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", cargo);
+
+        if (respuesta.IsSuccessStatusCode) {
+            navegador.NavigateTo("/cargo");
+        }
+    }
+}

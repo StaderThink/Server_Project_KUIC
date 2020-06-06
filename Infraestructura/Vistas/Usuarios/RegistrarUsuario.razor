@@ -15,7 +15,7 @@
     <div class="field">
         <label>Documento</label>
         <div class="control is-attached">
-            <select class="input" @bind="usuario.TipoDocumento">
+            <select class="input is-grow" @bind="usuario.TipoDocumento">
                 @foreach (TipoDocumento tipo in tiposDeDocumento) {
                     <option value="@tipo">@tipo</option>
                 }

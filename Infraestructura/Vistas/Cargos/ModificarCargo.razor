@@ -1,0 +1,41 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/cargo/modificar/{Id:int}"
+@layout BaseLayout
+
+@if (cargo is null) {
+    <div class="loader is-medium"></div>
+}
+
+else {
+    <form @onsubmit="Enviar">
+        <input type="text" @bind="cargo.Nombre" />
+        <input type="checkbox" @bind="cargo.Pedidos" />
+        <input type="checkbox" @bind="cargo.Usuarios" />
+        <input type="checkbox" @bind="cargo.Logistica" />
+        <input type="checkbox" @bind="cargo.Clientes" />
+        <input type="checkbox" @bind="cargo.Solicitar" />
+
+        <button>Modificar</button>
+    </form>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Cargo cargo { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{Id}");
+    }
+
+    async Task Enviar() {
+        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/cargo/{Id}", cargo);
+
+        if (respuesta.IsSuccessStatusCode) {
+            navegador.NavigateTo("/cargo");
+        }
+    }
+}

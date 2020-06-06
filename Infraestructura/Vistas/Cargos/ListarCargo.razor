@@ -1,0 +1,30 @@
+﻿@inject HttpClient http
+
+@page "/cargo"
+@layout BaseLayout
+
+<h1>Listar cargos</h1>
+
+@if (cargos is null) {
+    <div class="loader is-medium"></div>
+}
+
+else {
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Cargo cargo in cargos) {
+            <TarjetaCargo cargo="@cargo" OnCargoEliminado="ObtenerListado" />
+        }
+    </div>
+}
+
+@code {
+    Cargo[] cargos { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado() {
+        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+    }
+}
