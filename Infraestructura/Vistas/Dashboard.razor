@@ -1,22 +1,36 @@
 ﻿@page "/dashboard"
 @layout BaseLayout
 
-<h2>@tiempo</h2>
+<h1>@tiempo</h1>
+
+<div class="grid">
+    <SearchBox />
+</div>
+
+<div class="grid has-gap">
+    <a href="/usuario">Usuario</a>
+</div>
 
 @code {
-	string tiempo {
-		get {
-			int hora = DateTime.Now.Hour;
+    string tiempo {
+        get {
+            int hora = DateTime.Now.Hour;
 
-			if (hora < 12) {
-				return "Buenos dias";
-			}
-			else if (hora < 19) {
-				return "Buenas tardes";
-			}
-			else {
-				return "Buenas noches";
-			}
-		}
-	}
+            if (hora < 12) {
+                return "Buenos dias";
+            }
+
+            else if (hora < 19) {
+                return "Buenas tardes";
+            }
+
+            else {
+                #if DEBUG
+                return "Es un poco tarde, ¿no crees?";
+                #else
+                return "Buenas noches";
+                #endif
+            }
+        }
+    }
 }

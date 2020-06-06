@@ -1,0 +1,98 @@
+﻿@inject HttpClient http
+
+@page "/usuario/registrar"
+@layout BaseLayout
+
+<h2>Registrar usuario</h2>
+
+<form class="grid has-gap" @onsubmit="Enviar">
+    @if (mensaje is string) {
+        <blockquote>
+            <p>@mensaje</p>
+        </blockquote>
+    }
+
+    <div class="field">
+        <label>Documento</label>
+        <div class="control is-attached">
+            <select class="input" @bind="usuario.TipoDocumento">
+                @foreach (TipoDocumento tipo in tiposDeDocumento) {
+                    <option value="@tipo">@tipo</option>
+                }
+            </select>
+
+            <input class="input" type="number" @bind="usuario.Documento" />
+        </div>
+        <small>Número de documento de identidad</small>
+    </div>
+
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label>Nombre</label>
+            <input class="input" type="text" @bind="usuario.Nombre" />
+        </div>
+
+        <div class="field">
+            <label>Apellido</label>
+            <input class="input" type="text" @bind="usuario.Apellido" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Correo</label>
+        <input class="input" type="email" @bind="usuario.Correo" />
+    </div>
+
+    <div class="field">
+        <label>Teléfono</label>
+        <div class="control is-attached">
+            <span class="button is-static">+57</span>
+            <input class="input" type="tel" @bind="usuario.Telefono" />
+        </div>
+    </div>
+
+    <div class="field">
+        <label>Cargo</label>
+        <select class="input" @bind="usuario.Cargo">
+            <option value="0" disabled>Seleccionar...</option>
+
+            @foreach (Cargo cargo in cargos) {
+                <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+            }
+        </select>
+    </div>
+
+    <div class="field">
+        <div class="control is-grouped">
+            @if (cargando) {
+                <button class="is-prime has-loader" disabled>Registrar</button>
+            }
+
+            else {
+                <button class="is-prime">Registrar</button>
+            }
+        </div>
+    </div>
+</form>
+
+@code {
+    Cargo[] cargos { get; set; } = new Cargo[0];
+    Usuario usuario { get; set; } = new Usuario();
+
+    private Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+
+    bool cargando = false;
+    string mensaje { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+    }
+
+    async Task Enviar() {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
+
+        mensaje = respuesta.IsSuccessStatusCode ? "Registrado correctamente" : "Algo fallo al registrar el usuario";
+        cargando = false;
+    }
+}

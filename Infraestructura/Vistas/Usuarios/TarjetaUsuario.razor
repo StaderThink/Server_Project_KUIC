@@ -1,0 +1,40 @@
+﻿@inject HttpClient http
+
+<div class="card">
+    <p>@usuario.Nombre</p>
+    <p>@usuario.Documento</p>
+
+    <div class="control is-grouped">
+        <button class="is-prime">Editar</button>
+
+        @if (cargando) {
+            <button class="is-outline has-loader" disabled>Borrando</button>
+        }
+
+        else {
+            <button class="is-outline" @onclick="Eliminar">Borrad</button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Usuario usuario { get; set; }
+
+    [Parameter]
+    public EventCallback OnUsuarioEliminado { get; set; }
+
+    bool cargando = false;
+
+    async Task Eliminar() {
+        cargando = true;
+
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/usuario/{usuario.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnUsuarioEliminado.HasDelegate) {
+            await OnUsuarioEliminado.InvokeAsync(null);
+        }
+
+        cargando = false;
+    }
+}

@@ -21,33 +21,31 @@
 
 
 @code {
-	bool cargando = true;
+    bool cargando = true;
 
-	async Task<bool> ValidarSesion() {
-		var respuesta = await http.GetAsync("/api/sesion");
-		return respuesta.IsSuccessStatusCode;
-	}
+    async Task<bool> ValidarSesion() {
+        HttpResponseMessage respuesta = await http.GetAsync("/api/sesion");
+        return respuesta.IsSuccessStatusCode;
+    }
 
-	protected override async Task OnInitializedAsync() {
-		cargando = true;
+    protected override async Task OnInitializedAsync() {
+        cargando = true;
 
-		if (!navegador.Uri.Contains("login")) {
-			if (await localStorage.ContainKeyAsync("token")) {
-				var token = await localStorage.GetItemAsync<string>("token");
-				var bearer = new AuthenticationHeaderValue("bearer", token);
+        if (await localStorage.ContainKeyAsync("token")) {
+            string token = await localStorage.GetItemAsync<string>("token");
+            var bearer = new AuthenticationHeaderValue("bearer", token);
 
-				http.DefaultRequestHeaders.Authorization = bearer;
+            http.DefaultRequestHeaders.Authorization = bearer;
 
-				if (!await ValidarSesion()) {
-					navegador.NavigateTo("/");
-				}
-			}
+            if (await ValidarSesion() && navegador.BaseUri == navegador.Uri) {
+                navegador.NavigateTo("/dashboard");
+            }
+        }
 
-			else {
-				navegador.NavigateTo("/");
-			}
-		}
+        else {
+            navegador.NavigateTo("/");
+        }
 
-		cargando = false;
-	}
+        cargando = false;
+    }
 }

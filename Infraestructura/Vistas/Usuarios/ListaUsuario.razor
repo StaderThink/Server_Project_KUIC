@@ -1,0 +1,59 @@
+﻿@using Modelo = Dominio.Modelo.Usuario
+
+@inject HttpClient http
+
+@page "/usuario"
+@layout BaseLayout
+
+<h1>Usuarios</h1>
+
+<div class="control is-grouped">
+    <a class="button is-prime" href="/usuario/registrar">Registrar</a>
+</div>
+
+@if (cargando) {
+	<div class="loader is-medium"></div>
+}
+
+else if (usuarios is Modelo[]) {
+	@if (usuarios.Length == 0) {
+		<p>No hay nada por aquí...</p>
+	}
+
+	else {
+		<div class="grid has-gap xs-1 sm-2">
+			@foreach (var usuario in usuarios) {
+				<TarjetaUsuario usuario="@usuario" OnUsuarioEliminado="UsuarioEliminadoEvent" />
+			}
+		</div>
+	}
+}
+
+else {
+	<h2>Oops... hubo un error</h2>
+	<p>No se cargo los datos correctamente, intenta <a href="?">recargar la página</a> nuevamente.</p>
+}
+
+@code {
+    Modelo[] usuarios;
+    bool cargando = true;
+
+    protected override async Task OnInitializedAsync() {
+        await ObtenerLista();
+    }
+
+    async Task ObtenerLista() {
+        try {
+            usuarios = await http.GetFromJsonAsync<Modelo[]>("/api/usuario"); // peticion API
+            cargando = false;
+        }
+
+        catch (Exception ex) {
+            throw ex;
+        }
+    }
+
+    async Task UsuarioEliminadoEvent() {
+        await ObtenerLista();
+    }
+}

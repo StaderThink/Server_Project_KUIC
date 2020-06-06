@@ -1,0 +1,36 @@
+﻿<div
+     class="searchbox"
+     @onfocusin="() => mostrarBarra = true"
+     @onfocusout="() => mostrarBarra = false">
+
+    <input
+        class="input is-grow"
+        type="text"
+        @bind="texto"
+        @bind:event="oninput"
+        placeholder="Buscar..." />
+
+    @if (mostrarBarra) {
+        <div class="suggestions">
+            <div class="suggestion">
+                <p>@texto</p>
+                <span class="button is-static is-small">En todo</span>
+            </div>
+
+            <div class="suggestion">
+                <p>@texto</p>
+                <span class="button is-static is-small">En usuarios</span>
+            </div>
+
+            <div class="suggestion">
+               <p>@texto</p>
+               <span class="button is-static is-small">En productos</span>
+           </div>
+        </div>
+    }
+</div>
+
+@code {
+    bool mostrarBarra { get; set; } = false;
+    string texto { get; set; }
+}
