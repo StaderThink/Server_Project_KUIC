@@ -1,0 +1,54 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/categoria/modificar/{Id:int}"
+@layout BaseLayout
+
+@if (categoria is null)
+{
+    <div class="loader is-medium"></div>
+}
+
+else
+{
+    <h3>Editar categoria</h3>
+    <form @onsubmit="Enviar">
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" />
+        </div>
+        <div class="field">
+            <label for="descripcion">Descripción</label>
+            <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" />
+        </div>
+        <div class="field">
+            <div class="control is-gruped">
+                <button class="is-prime">Registrar</button>
+                <a href="/categoria" class="button is-outline">Cancelar</a>
+            </div>
+        </div>
+
+    </form>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Categoria categoria { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{Id}");
+    }
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/categoria/{Id}", categoria);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/categoria");
+        }
+    }
+}

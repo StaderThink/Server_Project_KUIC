@@ -1,0 +1,48 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+<div class="card">
+    <p><b>@categoria.Nombre.ToCapitalize()</b></p>
+    <p>@categoria.Descripcion.ToCapitalize()</p>
+    <div class="control is-grouped">
+        <button class="is-prime" @onclick="Editar">Editar</button>
+
+        @if (cargando)
+        {
+            <button class="is-outline has-loader" disabled>Eliminar</button>
+        }
+
+        else
+        {
+            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Categoria categoria { get; set; }
+
+    [Parameter]
+    public EventCallback<Categoria> OnCategoriaEliminada { get; set; }
+
+    bool cargando = false;
+
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/categoria/{categoria.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnCategoriaEliminada.HasDelegate)
+        {
+            await OnCategoriaEliminada.InvokeAsync(categoria);
+        }
+
+        cargando = false;
+    }
+
+    void Editar()
+    {
+        navegador.NavigateTo($"/categoria/modificar/{categoria.Id}");
+    }
+}

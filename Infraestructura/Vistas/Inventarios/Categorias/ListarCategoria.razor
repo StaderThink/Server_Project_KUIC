@@ -1,0 +1,36 @@
+﻿
+@inject HttpClient http
+@page "/categoria"
+@layout BaseLayout
+
+<h3>Listar Categorias</h3>
+
+@if (categoria == null)
+{
+    <div class="loader is-medium">
+
+    </div>
+}
+else
+{
+    <a href="/categoria/registrar" class="button is-prime">Agregar Categoria</a>
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Categoria categoria in categoria)
+        {
+            <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
+        }
+    </div>
+}
+
+@code {
+    Categoria[] categoria { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        categoria = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
+    }
+}
