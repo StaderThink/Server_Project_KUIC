@@ -1,0 +1,59 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/notificacion/registrar"
+@layout BaseLayout
+
+<h3>Registrar nueva notificacion</h3>
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="texto">Mensaje</label>
+        <input id="texto" class="input" type="text" @bind="notificacion.Texto" />
+    </div>
+    <div class="field">
+        <label for="inicio">Fecha de inicio</label>
+        <input id="inicio" class="input" type="datetime" @bind="notificacion.FechaInicio" />
+    </div>
+    <div class="field">
+        <label for="fin">Fecha de finalización</label>
+        <input id="fin" class="input" type="datetime" @bind="notificacion.FechaFin" />
+    </div>
+    <div class="field">
+        <label>Autor</label>
+        <select class="input" @bind="notificacion.Autor">
+            <option value="0" disabled>Seleccionar...</option>
+
+            @foreach (Usuario usuario in usuarios)
+            {
+                <option value="@usuario.Id">@(usuario.Nombre.ToCapitalize())</option>
+            }
+        </select>
+    </div>
+    <div class="field">
+        <div class="control is-gruped">
+            <button class="is-prime">Registrar</button>
+            <a href="/notificacion" class="button is-outline">Cancelar</a>
+        </div>
+    </div>
+</form>
+
+@code {
+    Usuario[] usuarios { get; set; } = new Usuario[0];
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuarios = await http.GetFromJsonAsync<Usuario  []>("/api/usuario");
+    }
+
+    Notificacion notificacion { get; set; } = new Notificacion();
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/notificacion", notificacion);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/notificacion");
+        }
+    }
+}

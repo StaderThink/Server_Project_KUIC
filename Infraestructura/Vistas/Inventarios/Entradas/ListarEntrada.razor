@@ -1,0 +1,36 @@
+﻿
+@inject HttpClient http
+@page "/entrada"
+@layout BaseLayout
+
+<h3>Listar Entradas</h3>
+
+@if (entradas == null)
+{
+    <div class="loader is-medium">
+
+    </div>
+}
+else
+{
+    <a href="/entrada/registrar" class="button is-prime">Agregar Entrada</a>
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Entrada entrada in entradas)
+        {
+            <TarjetaEntrada entrada="entrada" OnEntradaEliminada="ObtenerListado"></TarjetaEntrada>
+        }
+    </div>
+}
+
+@code {
+    Entrada[] entradas { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        entradas = await http.GetFromJsonAsync<Entrada[]>("/api/entrada");
+    }
+}

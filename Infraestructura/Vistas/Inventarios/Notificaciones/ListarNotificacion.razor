@@ -1,0 +1,36 @@
+﻿
+@inject HttpClient http
+@page "/notificacion"
+@layout BaseLayout
+
+<h3>Listar Notificaciones</h3>
+
+@if (notificaciones == null)
+{
+    <div class="loader is-medium">
+
+    </div>
+}
+else
+{
+    <a href="/notificacion/registrar" class="button is-prime">Agregar Notificacion</a>
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Notificacion notificacion in notificaciones)
+        {
+            <TarjetaNotificacion notificacion="notificacion" OnNotificacionEliminada="ObtenerListado"></TarjetaNotificacion>
+        }
+    </div>
+}
+
+@code {
+    Notificacion[] notificaciones { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        notificaciones = await http.GetFromJsonAsync<Notificacion[]>("/api/notificacion");
+    }
+}

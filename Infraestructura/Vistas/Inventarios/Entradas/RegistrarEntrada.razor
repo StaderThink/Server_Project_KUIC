@@ -1,0 +1,38 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/entrada/registrar"
+@layout BaseLayout
+
+<h3>Registrar nueva entrada</h3>
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" class="input" type="date" @bind="entrada.Fecha" />
+    </div>
+    <div class="field">
+        <label for="observacion">Observación</label>
+        <input id="observacion" class="input" type="text" @bind="entrada.Observacion" />
+    </div>
+    <div class="field">
+        <div class="control is-gruped">
+            <button class="is-prime">Registrar</button>
+            <a href="/categoria" class="button is-outline">Cancelar</a>
+        </div>
+    </div>
+
+</form>
+
+@code {
+    Entrada entrada { get; set; } = new Entrada();
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/entrada", entrada);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/entrada");
+        }
+    }
+}

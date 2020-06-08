@@ -1,0 +1,67 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+    <div class="card">
+        <p>@notificacion.Texto.ToCapitalize()</p>
+        <p>@notificacion.FechaInicio</p>
+        <p>@notificacion.FechaFin</p>
+        <p>
+            @if (usuario is null)
+            {
+                <span>Sin nombre</span>
+            }
+
+            else
+            {
+                <span>@usuario.Nombre</span>
+            }
+        </p>
+        <div class="control is-grouped">
+            <button class="is-prime" @onclick="Editar">Editar</button>
+
+            @if (cargando)
+            {
+                <button class="is-outline has-loader" disabled>Eliminar</button>
+            }
+
+            else
+            {
+                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+            }
+        </div>
+    </div>
+
+@code {
+    [Parameter]
+    public Notificacion notificacion { get; set; }
+
+    [Parameter]
+    public EventCallback<Notificacion> OnNotificacionEliminada { get; set; }
+
+    Usuario usuario { get; set; }
+
+    bool cargando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{notificacion.Autor}");
+    }
+
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/notificacion/{notificacion.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnNotificacionEliminada.HasDelegate)
+        {
+            await OnNotificacionEliminada.InvokeAsync(notificacion);
+        }
+
+        cargando = false;
+    }
+
+    void Editar()
+    {
+        navegador.NavigateTo($"/notificacion/modificar/{notificacion.Id}");
+    }
+}

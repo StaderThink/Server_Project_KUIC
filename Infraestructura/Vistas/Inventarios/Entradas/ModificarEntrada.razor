@@ -1,0 +1,47 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/entrada/modificar/{Id:int}"
+@layout BaseLayout
+
+<h3>Editar entrada</h3>
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" class="input" type="date" @bind="entrada.Fecha" />
+    </div>
+    <div class="field">
+        <label for="observacion">Observación</label>
+        <input id="observacion" class="input" type="text" @bind="entrada.Observacion" />
+    </div>
+    <div class="field">
+        <div class="control is-gruped">
+            <button class="is-prime">Actualizar</button>
+            <a href="/categoria" class="button is-outline">Cancelar</a>
+        </div>
+    </div>
+
+</form>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Entrada entrada { get; set; } = new Entrada();
+
+    protected override async Task OnInitializedAsync()
+    {
+        entrada = await http.GetFromJsonAsync<Entrada>($"/api/entrada/{Id}");
+    }
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/entrada/{Id}", entrada);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/entrada");
+        }
+    }
+}
+
