@@ -52,7 +52,7 @@ namespace Dominio.Repositorio
         public Estado PorOrden(int orden)
         {
             using var conexion = new Conexion();
-            var consulta = "select * from estado where orden = @Orden";
+            var consulta = "select * from estado where orden = @orden";
             return conexion.Obtener<Estado>(consulta, new { orden });
         }
     }

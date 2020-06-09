@@ -1,0 +1,35 @@
+﻿@inject HttpClient http
+
+@page "/cliente"
+@layout BaseLayout
+
+<h1>Listar clientes</h1>
+
+@if (cliente is null)
+{
+    <div class="loader is-medium"></div>
+}
+
+else
+{
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Cliente cliente in cliente)
+        {
+            <TarjetaCliente cliente="@cliente" OnClienteEliminado="ObtenerListado" />
+        }
+    </div>
+}
+
+@code {
+    Cliente[] cliente { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
+    }
+}

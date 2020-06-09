@@ -56,7 +56,7 @@ namespace Dominio.Repositorio
         public Cliente PorRut(string rut)
         {
             using var conexion = new Conexion();
-            var consulta = "slect * from cliente where rut = @Rut";
+            var consulta = "slect * from cliente where rut = @rut";
             return conexion.Obtener<Cliente>(consulta, new { rut });
         }
     }

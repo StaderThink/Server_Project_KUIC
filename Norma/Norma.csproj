@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Centaurus\Centaurus.csproj" />
+    <ProjectReference Include="..\Corvus\Corvus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Compartido\Componentes\" />
+    <Folder Include="Controladores\Clientes\" />
+    <Folder Include="Controladores\Pedidos\" />
+    <Folder Include="Servicios\" />
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="dotenv.net" Version="2.1.0" />
+    <PackageReference Include="System.Net.Http.Json" Version="5.0.0-preview.3.20214.6" />
+  </ItemGroup>
+
+</Project>

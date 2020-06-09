@@ -9,7 +9,7 @@ namespace Dominio.Modelo
 		public string Rut {get; set;}
 		public string Correo {get; set;}
 		public string Direccion {get; set;}
-		public string Telelfono {get; set;}
+		public string Telefono {get; set;}
 		public DateTime Creado { get; set; }
         public DateTime Actualizado { get; set; }
         public bool Activo { get; set; }

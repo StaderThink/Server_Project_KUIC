@@ -1,0 +1,69 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/cliente/modificar/{Id:int}"
+@layout BaseLayout
+
+@if (cliente is null)
+{
+    <div class="loader is-medium"></div>
+}
+
+else
+{
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" />
+    </div>
+    <div class="field">
+        <label for="encargado">Encargado</label>
+        <input id="encargado" class="input" type="text" @bind="cliente.Encargado" />
+    </div>
+    <div class="field">
+        <label for="rut">Rut</label>
+        <input id="rut" class="input" type="text" @bind="cliente.Rut" />
+    </div>
+    <div class="field">
+        <label for="correo">Correo</label>
+        <input id="correo" class="input" type="text" @bind="cliente.Correo" />
+    </div>
+    <div class="field">
+        <label for="direccion">Direccion</label>
+        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" />
+    </div>
+    <div class="field">
+        <label for="telefono">Telefono</label>
+        <input id="telefono" class="input" type="number" @bind="cliente.Telefono" />
+    </div>
+    <input type="checkbox" @bind="cliente.Activo" />
+
+    <div class="field">
+        <div class="control is-gruped">
+            <button class="is-prime">Registrar</button>
+            <a href="/cliente" class="button is-outline">Cancelar</a>
+        </div>
+    </div></form>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Cliente cliente { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cliente = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{Id}");
+    }
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/cliente/{Id}", cliente);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/cliente");
+        }
+    }
+}
