@@ -1,32 +1,54 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div class="card">
-    <p><b>@entrada.Fecha</b></p>
-    <p>@entrada.Observacion.ToCapitalize()</p>
-    <div class="control is-grouped">
-        <button class="is-prime" @onclick="Editar">Editar</button>
-
-        @if (cargando)
+    <div class="card">
+        @if(detalles is null)
         {
-            <button class="is-outline has-loader" disabled>Eliminar</button>
+            <div class="is-loader"></div>
         }
 
-        else
-        {
-            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+        else {
+            @foreach(DetalleEntrada detalle in detalles) {
+                <p>@detalle.Producto</p>
+                <p>@detalle.Cantidad</p>
+            }
         }
+        <p>@entrada.Fecha</p>
+        <p>@entrada.Observacion.ToCapitalize()</p>
+        <button class="is-outline" @onclick="AgregarDetalle">Detalle</button>
+        <div class="control is-grouped">
+            <button class="is-prime" @onclick="Editar">Editar</button>
+
+            @if (cargando)
+            {
+                <button class="is-outline has-loader" disabled>Eliminar</button>
+            }
+
+            else
+            {
+                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+            }
+        </div>
+
     </div>
-</div>
 
 @code {
     [Parameter]
     public Entrada entrada { get; set; }
 
+    public Producto productos { get; set; }
+
     [Parameter]
     public EventCallback<Entrada> OnEntradaEliminada { get; set; }
 
+    DetalleEntrada[] detalles { get; set; } = new DetalleEntrada[0];
+
     bool cargando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        detalles = await http.GetFromJsonAsync<DetalleEntrada[]>($"/api/detalleEntrada/entrada/{entrada.Id}");
+    }
 
     async Task Eliminar()
     {
@@ -44,5 +66,10 @@
     void Editar()
     {
         navegador.NavigateTo($"/entrada/modificar/{entrada.Id}");
+    }
+
+    void AgregarDetalle()
+    {
+        navegador.NavigateTo($"/detalleEntrada/registrar/{entrada.Id}");
     }
 }

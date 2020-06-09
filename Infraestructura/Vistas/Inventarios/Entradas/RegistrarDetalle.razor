@@ -1,0 +1,57 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/detalleEntrada/registrar/{EntradaId:int}"
+@layout BaseLayout
+
+<h3>Registrar detalle de entrada</h3>
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="cantidad">Cantidad</label>
+        <input id="cantidad" class="input" type="number" @bind="detalle.Cantidad" />
+    </div>
+    <div class="field">
+        <label>Producto</label>
+        <select class="input" @bind="detalle.Producto">
+            <option value="0" disabled>Seleccionar...</option>
+            @foreach (Producto producto in productos)
+            {
+                <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
+            }
+        </select>
+    </div>
+    <div class="field">
+        <div class="control is-gruped">
+            <button class="is-prime">Registrar</button>
+            <a href="/categoria" class="button is-outline">Cancelar</a>
+        </div>
+    </div>
+
+</form>
+
+@code {
+    [Parameter]
+    public int EntradaId { get; set; }
+
+    Entrada entrada { get; set; } = new Entrada();
+    Producto[] productos { get; set; } = new Producto[0];
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+        entrada = await http.GetFromJsonAsync<Entrada>($"/api/entrada/{EntradaId}");
+    }
+
+    DetalleEntrada detalle { get; set; } = new DetalleEntrada();
+
+    async Task Enviar()
+    {
+        detalle.Entrada = EntradaId;
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/detalleEntrada", detalle);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/entrada");
+        }
+    }
+}

@@ -42,7 +42,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        usuarios = await http.GetFromJsonAsync<Usuario  []>("/api/usuario");
+        usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
     }
 
     Notificacion notificacion { get; set; } = new Notificacion();

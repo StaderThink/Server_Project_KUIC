@@ -21,7 +21,7 @@ namespace Infraestructura.Controladores.Inventarios
             return repo.Listar();
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}")] // GET /api/detalleEntrada/1
         public ActionResult<DetalleEntrada> Obtener(int id)
         {
             var detalle = repo.PorId(id);
@@ -31,6 +31,17 @@ namespace Infraestructura.Controladores.Inventarios
                 return detalle;
             }
             return NotFound();
+        }
+
+        [HttpGet("entrada/{entradaId}")] // GET /api/detalleEntrada/entrada/5
+        public IEnumerable<DetalleEntrada> ListarPorEntrada(int entradaId)
+        {
+            var lista = repo.Listar();
+
+            return
+                from detalle in lista
+                where detalle.Entrada == entradaId
+                select detalle;
         }
 
         [HttpPost]
