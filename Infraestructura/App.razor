@@ -38,7 +38,7 @@
             http.DefaultRequestHeaders.Authorization = bearer;
 
             if (await ValidarSesion() && navegador.BaseUri == navegador.Uri) {
-                navegador.NavigateTo("/dashboard");
+                navegador.NavigateTo("/inicio");
             }
         }
 

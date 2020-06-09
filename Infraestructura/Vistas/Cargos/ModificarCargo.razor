@@ -2,22 +2,66 @@
 @inject NavigationManager navegador
 
 @page "/cargo/modificar/{Id:int}"
-@layout BaseLayout
+@layout AppLayout
 
 @if (cargo is null) {
     <div class="loader is-medium"></div>
 }
 
 else {
-    <form @onsubmit="Enviar">
-        <input type="text" @bind="cargo.Nombre" />
-        <input type="checkbox" @bind="cargo.Pedidos" />
-        <input type="checkbox" @bind="cargo.Usuarios" />
-        <input type="checkbox" @bind="cargo.Logistica" />
-        <input type="checkbox" @bind="cargo.Clientes" />
-        <input type="checkbox" @bind="cargo.Solicitar" />
+    @if (mensaje is string) {
+        <blockquote class="is-error">
+            <p>@mensaje</p>
+        </blockquote>
+    }
 
-        <button>Modificar</button>
+    <form @onsubmit="Enviar" @onsubmit:preventDefault>
+        <div class="field">
+            <label>Nombre del cargo</label>
+            <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" />
+            <small>Corto, pero descriptivo.</small>
+        </div>
+
+        <fieldset>
+            <legend>Permisos</legend>
+
+            <div class="field is-inline">
+                <label>Pedidos</label>
+                <input type="checkbox" class="toggle" @bind="cargo.Pedidos" />
+            </div>
+
+            <div class="field is-inline">
+                <label>Usuarios</label>
+                <input type="checkbox" class="toggle" @bind="cargo.Usuarios" />
+            </div>
+
+            <div class="field is-inline">
+                <label>Logistica</label>
+                <input type="checkbox" class="toggle" @bind="cargo.Logistica" />
+            </div>
+
+            <div class="field is-inline">
+                <label>Usuarios</label>
+                <input type="checkbox" class="toggle" @bind="cargo.Clientes" />
+            </div>
+
+            <div class="field is-inline">
+                <label>Usuarios</label>
+                <input type="checkbox" class="toggle" @bind="cargo.Solicitar" />
+            </div>
+        </fieldset>
+
+        <div class="control is-grouped">
+            @if (cargando) {
+                <button class="is-prime has-loader" disabled>Registrar</button>
+            }
+
+            else {
+                <button class="is-prime">Registrar</button>
+            }
+
+            <a class="button is-outline" href="/cargo">Volver</a>
+        </div>
     </form>
 }
 
@@ -27,15 +71,25 @@ else {
 
     Cargo cargo { get; set; }
 
+    string mensaje;
+    bool cargando = false;
+
     protected override async Task OnInitializedAsync() {
         cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{Id}");
     }
 
     async Task Enviar() {
+        cargando = true;
         HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/cargo/{Id}", cargo);
 
         if (respuesta.IsSuccessStatusCode) {
             navegador.NavigateTo("/cargo");
         }
+
+        else {
+            mensaje = "No se logro editar el registro";
+        }
+
+        cargando = false;
     }
 }

@@ -1,9 +1,11 @@
 ﻿@inject HttpClient http
 
 @page "/cargo"
-@layout BaseLayout
+@layout AppLayout
 
 <h1>Listar cargos</h1>
+
+<a href="/cargo/registrar">Registrar</a>
 
 @if (cargos is null) {
     <div class="loader is-medium"></div>
@@ -25,6 +27,12 @@ else {
     }
 
     async Task ObtenerListado() {
-        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        try {
+            cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        }
+
+        catch {
+            cargos = new Cargo[0];
+        }
     }
 }

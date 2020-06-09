@@ -75,5 +75,24 @@ namespace Infraestructura.Controladores.Usuarios {
 
 			return NotFound();
 		}
+
+		[HttpGet("existe")]
+		public ActionResult<Usuario> Existe([FromQuery] string documento) {
+			var lista = repo.Listar();
+
+			try {
+				var busqueda = lista.First(usuario => usuario.Documento == documento);
+
+				if (busqueda is Usuario) {
+					return busqueda;
+				}
+
+				return NotFound();
+			}
+
+			catch {
+				return NotFound();
+            }
+        }
 	}
 }

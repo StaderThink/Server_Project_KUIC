@@ -1,0 +1,29 @@
+﻿@inherits LayoutComponentBase
+
+@inject ILocalStorageService localStorage
+@inject NavigationManager navegador
+
+<header class="navbar">
+    <a href="/inicio" class="button is-outline is-small">aurelia</a>
+
+    <SearchBox />
+
+    <nav>
+        <a @onclick="CerrarSession">Cerrar sesion</a>
+    </nav>
+</header>
+
+<main class="content has-gap">
+    @Body
+
+    <footer>
+        <p>Desarrollado con 💙, en Bogotá.</p>
+    </footer>
+</main>
+
+@functions {
+    async Task CerrarSession() {
+        await localStorage.ClearAsync();
+        navegador.NavigateTo("/");
+    }
+}

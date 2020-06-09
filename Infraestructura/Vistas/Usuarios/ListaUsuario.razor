@@ -1,59 +1,62 @@
-﻿@using Modelo = Dominio.Modelo.Usuario
-
-@inject HttpClient http
+﻿@inject HttpClient http
 
 @page "/usuario"
-@layout BaseLayout
-
-<h1>Usuarios</h1>
-
-<div class="control is-grouped">
-    <a class="button is-prime" href="/usuario/registrar">Registrar</a>
-</div>
+@layout AppLayout
 
 @if (cargando) {
-	<div class="loader is-medium"></div>
+    <div class="loader is-medium"></div>
 }
 
-else if (usuarios is Modelo[]) {
-	@if (usuarios.Length == 0) {
-		<p>No hay nada por aquí...</p>
-	}
-
-	else {
-		<div class="grid has-gap xs-1 sm-2">
-			@foreach (var usuario in usuarios) {
-				<TarjetaUsuario usuario="@usuario" OnUsuarioEliminado="UsuarioEliminadoEvent" />
-			}
-		</div>
-	}
+else if (!autorizado) {
+    <p>Oops... no estas autorizado.</p>
 }
 
 else {
-	<h2>Oops... hubo un error</h2>
-	<p>No se cargo los datos correctamente, intenta <a href="?">recargar la página</a> nuevamente.</p>
+    @if (lista is null) {
+        <p>Hubo un error cargando la lista</p>
+    }
+
+    else {
+        <div class="grid has-gap xs-1 md-2">
+            @foreach(var usuario in lista) {
+                <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+            }
+        </div>
+    }
 }
 
 @code {
-    Modelo[] usuarios;
+    Usuario[] lista { get; set; }
+
     bool cargando = true;
+    bool autorizado = false;
 
     protected override async Task OnInitializedAsync() {
-        await ObtenerLista();
+        await ObtenerListado();
     }
 
-    async Task ObtenerLista() {
+    private async Task ObtenerListado() {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.GetAsync("/api/usuario");
+
         try {
-            usuarios = await http.GetFromJsonAsync<Modelo[]>("/api/usuario"); // peticion API
-            cargando = false;
+            if (respuesta.StatusCode == HttpStatusCode.OK) {
+                lista = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
+                autorizado = true;
+            }
+
+            else {
+                lista = null;
+            }
         }
 
         catch (Exception ex) {
-            throw ex;
+            lista = null;
+            Console.WriteLine(ex);
         }
-    }
 
-    async Task UsuarioEliminadoEvent() {
-        await ObtenerLista();
+        finally {
+            cargando = false;
+        }
     }
 }

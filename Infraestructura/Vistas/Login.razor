@@ -60,7 +60,7 @@
 			var token = await respuesta.Content.ReadAsStringAsync();
 			await localStorage.SetItemAsync("token", token);
 
-			navegador.NavigateTo("/dashboard");
+			navegador.NavigateTo("/inicio");
 		}
 
 		else {

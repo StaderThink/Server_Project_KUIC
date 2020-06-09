@@ -1,14 +1,14 @@
 ﻿@inject HttpClient http
 
 <div class="card">
-    <p>@usuario.Nombre</p>
-    <p>@usuario.Documento</p>
+    <p><b>@(usuario.Nombre.ToCapitalize())</b></p>
+    <p>@usuario.TipoDocumento @usuario.Documento</p>
 
     <div class="control is-grouped">
         <button class="is-prime">Editar</button>
 
         @if (cargando) {
-            <button class="is-outline has-loader" disabled>Borrando</button>
+            <button class="is-outline has-loader" disabled>Borrar</button>
         }
 
         else {
@@ -22,7 +22,7 @@
     public Usuario usuario { get; set; }
 
     [Parameter]
-    public EventCallback OnUsuarioEliminado { get; set; }
+    public EventCallback onDeleted { get; set; }
 
     bool cargando = false;
 
@@ -31,8 +31,8 @@
 
         HttpResponseMessage respuesta = await http.DeleteAsync($"/api/usuario/{usuario.Id}");
 
-        if (respuesta.IsSuccessStatusCode && OnUsuarioEliminado.HasDelegate) {
-            await OnUsuarioEliminado.InvokeAsync(null);
+        if (respuesta.IsSuccessStatusCode && onDeleted.HasDelegate) {
+            await onDeleted.InvokeAsync(null);
         }
 
         cargando = false;

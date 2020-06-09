@@ -1,11 +1,7 @@
-﻿@page "/dashboard"
-@layout BaseLayout
+﻿@page "/inicio"
+@layout AppLayout
 
 <h1>@tiempo</h1>
-
-<div class="grid">
-    <SearchBox />
-</div>
 
 <div class="grid has-gap">
     <a href="/usuario">Usuario</a>
@@ -25,11 +21,7 @@
             }
 
             else {
-                #if DEBUG
-                return "Es un poco tarde, ¿no crees?";
-                #else
-                return "Buenas noches";
-                #endif
+                return "Buenas tardes";
             }
         }
     }

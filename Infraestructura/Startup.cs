@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Net.Http;
 
-namespace Norma {
+namespace Infraestructura {
 	public class Startup {
 		public Startup(IConfiguration configuration) {
 			Configuration = configuration;

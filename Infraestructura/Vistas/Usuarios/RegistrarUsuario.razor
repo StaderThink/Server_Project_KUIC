@@ -1,65 +1,75 @@
 ﻿@inject HttpClient http
+@inject NavigationManager navegador
 
 @page "/usuario/registrar"
-@layout BaseLayout
+@layout AppLayout
 
 <h2>Registrar usuario</h2>
 
-<form class="grid has-gap" @onsubmit="Enviar">
-    @if (mensaje is string) {
-        <blockquote>
-            <p>@mensaje</p>
-        </blockquote>
-    }
+@if (mensaje is string) {
+    <blockquote class="is-warn">
+        <p>@mensaje</p>
+    </blockquote>
+}
 
-    <div class="field">
-        <label>Documento</label>
-        <div class="control is-attached">
-            <select class="input is-grow" @bind="usuario.TipoDocumento">
+<form @onsubmit="Enviar" @onsubmit:preventDefault>
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label>Tipo de documento</label>
+            <select class="input" @bind="usuario.TipoDocumento" required>
                 @foreach (TipoDocumento tipo in tiposDeDocumento) {
                     <option value="@tipo">@tipo</option>
                 }
             </select>
-
-            <input class="input" type="number" @bind="usuario.Documento" />
         </div>
-        <small>Número de documento de identidad</small>
-    </div>
 
-    <div class="grid xs-1 md-2 has-gap">
+        <div class="field @(documentoYaExiste ? "is-invalid" : "")">
+            <label>Documento</label>
+            <input type="number" placeholder="###" class="input" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required/>
+            <small>
+                @if (documentoYaExiste) {
+                    <span>Documento ya ha sido registrado</span>
+                }
+
+                else {
+                    <span>Número de documento de identidad</span>
+                }
+            </small>
+        </div>
+
         <div class="field">
             <label>Nombre</label>
-            <input class="input" type="text" @bind="usuario.Nombre" />
+            <input type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
         </div>
 
         <div class="field">
             <label>Apellido</label>
-            <input class="input" type="text" @bind="usuario.Apellido" />
+            <input type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
         </div>
-    </div>
 
-    <div class="field">
-        <label>Correo</label>
-        <input class="input" type="email" @bind="usuario.Correo" />
-    </div>
-
-    <div class="field">
-        <label>Teléfono</label>
-        <div class="control is-attached">
-            <span class="button is-static">+57</span>
-            <input class="input" type="tel" @bind="usuario.Telefono" />
+        <div class="field">
+            <label>Correo</label>
+            <input type="email" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
         </div>
-    </div>
 
-    <div class="field">
-        <label>Cargo</label>
-        <select class="input" @bind="usuario.Cargo">
-            <option value="0" disabled>Seleccionar...</option>
+        <div class="field">
+            <label>Teléfono</label>
+            <div class="control is-attached">
+                <span class="button is-static">+57</span>
+                <input type="tel" placeholder="###" minlenght="7" class="input" @bind="usuario.Telefono" required />
+            </div>
+        </div>
 
-            @foreach (Cargo cargo in cargos) {
-                <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
-            }
-        </select>
+        <div class="field">
+            <label>Cargo</label>
+            <select class="input" @bind="usuario.Cargo" required>
+                <option value="0" disabled>Seleccionar...</option>
+
+                @foreach (Cargo cargo in cargos) {
+                    <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
     </div>
 
     <div class="field">
@@ -69,8 +79,10 @@
             }
 
             else {
-                <button class="is-prime">Registrar</button>
+                <button class="is-prime" disabled="@documentoYaExiste">Registrar</button>
             }
+
+            <a href="/usuario" class="button is-outline">Cancelar</a>
         </div>
     </div>
 </form>
@@ -79,10 +91,11 @@
     Cargo[] cargos { get; set; } = new Cargo[0];
     Usuario usuario { get; set; } = new Usuario();
 
-    private Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+    Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
 
     bool cargando = false;
-    string mensaje { get; set; }
+    bool documentoYaExiste = false;
+    string mensaje;
 
     protected override async Task OnInitializedAsync() {
         cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
@@ -90,9 +103,42 @@
 
     async Task Enviar() {
         cargando = true;
-        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
 
-        mensaje = respuesta.IsSuccessStatusCode ? "Registrado correctamente" : "Algo fallo al registrar el usuario";
-        cargando = false;
+        try {
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
+
+            if (respuesta.IsSuccessStatusCode) {
+                navegador.NavigateTo("/usuario");
+            }
+
+            else {
+                if (respuesta.StatusCode == HttpStatusCode.Unauthorized) {
+                    mensaje = "¿Porque estas en esta ruta sin no tienes autorización?";
+                }
+
+                else {
+                    mensaje = "Hubo un error al insertar";
+                }
+            }
+        }
+
+        catch {
+            mensaje = "Hubo un error al insertar";
+        }
+
+        finally {
+            cargando = false;
+        }
+    }
+
+    async Task BuscarExistencia() {
+        try {
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario/existe?documento={usuario.Documento}");
+            documentoYaExiste = respuesta.IsSuccessStatusCode;
+        }
+
+        catch {
+            documentoYaExiste = true;
+        }
     }
 }
