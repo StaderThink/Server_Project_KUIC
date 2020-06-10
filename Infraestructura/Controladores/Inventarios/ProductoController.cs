@@ -20,30 +20,25 @@ namespace Infraestructura.Controladores.Inventarios
             return repositorio.Listar();
         }
 
-        [HttpGet("{id}")]
-        public ActionResult<Producto> Obtener(int id)
-        {
-            var producto = repositorio.PorId(id);
-            if (producto is Producto)
-            {
-                return producto;
-            }
-            return NotFound();
-        }
+        [HttpGet("buscar")] // GET api/producto/buscar
+        public ActionResult<Producto> Buscar([FromQuery] int id, [FromQuery] string codigo) {
+            IEnumerable<Producto> lista = repositorio.Listar();
 
-        [HttpGet("{codigo}")]
-        public ActionResult<Producto> Codigo(string codigo)
-        {
-            var producto = repositorio.PorCodigo(codigo);
-            if (producto is Producto)
-            {
+            var consulta = lista.First(producto => {
+                return producto.Id == id || producto.Codigo == codigo;
+            });
+
+            if (consulta is Producto producto) {
                 return producto;
             }
-            return NotFound();
+
+            else {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody]Producto datos)
+        public IActionResult Insertar([FromBody] Producto datos)
         {
             if (repositorio.Insertar(datos))
             {

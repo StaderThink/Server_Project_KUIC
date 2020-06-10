@@ -1,0 +1,67 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+    <div class="card">
+        <p><b>@producto.Nombre.ToCapitalize()</b></p>
+        <p>@producto.Codigo</p>
+        <p>$@producto.Precio</p>
+        <p>
+            @if (categoria is null)
+            {
+                <span>Sin categoria</span>
+            }
+
+            else
+            {
+                <span>@categoria.Nombre</span>
+            }
+        </p>
+        <div class="control is-grouped">
+            <button class="is-prime" @onclick="Editar">Editar</button>
+
+            @if (cargando)
+            {
+                <button class="is-outline has-loader" disabled>Eliminar</button>
+            }
+
+            else
+            {
+                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+            }
+        </div>
+    </div>
+
+@code {
+    [Parameter]
+    public Producto producto { get; set; }
+
+    [Parameter]
+    public EventCallback<Producto> OnProductoEliminado { get; set; }
+
+    Categoria categoria { get; set; }
+
+    bool cargando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{producto.Categoria}");
+    }
+
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/producto/{producto.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnProductoEliminado.HasDelegate)
+        {
+            await OnProductoEliminado.InvokeAsync(producto);
+        }
+
+        cargando = false;
+    }
+
+    void Editar()
+    {
+        navegador.NavigateTo($"/producto/modificar/{producto.Id}");
+    }
+}

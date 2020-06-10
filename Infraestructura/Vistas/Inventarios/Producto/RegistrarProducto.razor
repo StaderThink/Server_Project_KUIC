@@ -1,0 +1,110 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@page "/producto/registrar"
+@layout AppLayout
+
+<h3>Registrar nuevo producto</h3>
+<form @onsubmit="Enviar">
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label for="texto">Nombre</label>
+            <input id="texto" class="input" type="text" placeholder="ej: pollo" @bind="producto.Nombre" required />
+        </div>
+        <div class="field">
+            <label for="codigo">Código</label>
+            <input id="codigo" class="input" type="number" maxlength="5" placeholder="#####" minlength="5" @bind="producto.Codigo" required />
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="descripcion">Descripción</label>
+        <textarea id="descripcion" class="input" type="text" placeholder="presas de pollo" @bind="producto.Descripcion">
+        </textarea>
+    </div>
+
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label for="precio">Precio</label>
+            <input id="precio" class="input" type="number" placeholder="$$$$$$" min="50" @bind="producto.Precio" required />
+        </div>
+
+        <div class="field">
+            <label>Presentación</label>
+            <select class="input" @bind="producto.Presentacion" required>
+                @foreach (Presentacion presentacion in presentaciones)
+                {
+                    <option value="@presentacion">@presentacion</option>
+                }
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="min_cantidad">Mínima cantidad</label>
+            <input id="min_cantidad" class="input" type="number" placeholder="30" @bind="producto.MinCantidad" required />
+        </div>
+
+        <div class="field">
+            <label>Magnitud</label>
+            <select class="input" @bind="producto.Magnitud" required>
+                @foreach (Magnitud magnitud in magnitudes)
+                {
+                    <option value="@magnitud">@magnitud</option>
+                }
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="min_peso">Peso mínimo</label>
+            <input id="min_peso" class="input" type="number" placeholder="000" min="1" @bind="producto.MinPeso" required />
+        </div>
+
+        <div class="field">
+            <label for="max_peso">Peso maximo</label>
+            <input id="max_peso" class="input" type="number" placeholder="000" @bind="producto.MaxPeso" required />
+        </div>
+
+        <div class="field">
+            <label>Categoria</label>
+            <select class="input" @bind="producto.Categoria">
+                <option value="0" disabled>Seleccionar...</option>
+
+                @foreach (Categoria categoria in categorias)
+                {
+                    <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
+
+        <div class="field">
+            <div class="control is-gruped">
+                <button class="is-prime">Registrar</button>
+                <a href="/producto" class="button is-outline">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+    Array magnitudes = Enum.GetValues(typeof(Magnitud));
+    Array presentaciones = Enum.GetValues(typeof(Presentacion));
+
+    Categoria[] categorias { get; set; } = new Categoria[0];
+
+    protected override async Task OnInitializedAsync()
+    {
+        categorias = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
+    }
+
+    Producto producto { get; set; } = new Producto();
+
+    async Task Enviar()
+    {
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
+
+        if (respuesta.IsSuccessStatusCode)
+        {
+            navegador.NavigateTo("/producto");
+        }
+    }
+}

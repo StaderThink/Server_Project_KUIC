@@ -6,8 +6,14 @@ namespace Dominio.Repositorio {
 	public sealed class RepoProducto: IRepo<Producto> {
 		public bool Insertar(Producto entidad) {
 			using var conexion = new Conexion();
-			var consulta = @"insert into producto (nombre, descripcion, codigo, precio, min_cantidad, min_peso, max_peso, magnitud, presentacion, categoria) 
-				values (@Nombre, @Descripcion, @Codigo, @Precio, @MinCantidad, @MinPeso, @MaxPeso, @Magnitud, @Presentacion, @Categoria)";
+			var consulta = @$"
+				insert into producto (nombre, descripcion, codigo, precio, min_cantidad, min_peso, max_peso, magnitud, presentacion, categoria) 
+				values (
+					@Nombre, @Descripcion, @Codigo, @Precio, @MinCantidad,
+					@MinPeso, @MaxPeso, '{entidad.Magnitud}', '{entidad.Presentacion}', @Categoria
+				)
+			";
+
 			var filasAfectadas = conexion.Ejecutar(consulta, entidad);
 			return filasAfectadas > 0;
 		}

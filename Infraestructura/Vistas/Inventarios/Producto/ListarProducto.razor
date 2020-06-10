@@ -1,0 +1,36 @@
+﻿@inject HttpClient http
+@page "/producto"
+@layout AppLayout
+
+<h3>Listar Productos</h3>
+
+@if (productos == null)
+{
+    <div class="loader is-medium">
+
+    </div>
+}
+else
+{
+    <a href="/producto/registrar" class="button is-prime">Agregar Producto</a>
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Producto producto in productos)
+        {
+            <TarjetaProducto producto="producto" OnProductoEliminado="ObtenerListado"></TarjetaProducto>
+        }
+    </div>
+}
+
+@code {
+    Producto[] productos { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        productos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+    }
+}
+
