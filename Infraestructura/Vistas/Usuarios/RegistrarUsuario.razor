@@ -56,13 +56,13 @@
             <label>Teléfono</label>
             <div class="control is-attached">
                 <span class="button is-static">+57</span>
-                <input type="tel" placeholder="###" minlenght="7" class="input" @bind="usuario.Telefono" required />
+                <input type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
             </div>
         </div>
 
         <div class="field">
             <label>Cargo</label>
-            <select class="input" @bind="usuario.Cargo" required>
+            <select class="input" @bind="usuario.Cargo" min="1" required>
                 <option value="0" disabled>Seleccionar...</option>
 
                 @foreach (Cargo cargo in cargos) {
