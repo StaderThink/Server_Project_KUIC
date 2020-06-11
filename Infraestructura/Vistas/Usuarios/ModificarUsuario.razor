@@ -4,8 +4,6 @@
 @page "/usuario/modificar/{Id:int}"
 @layout AppLayout
 
-<h2>Registrar usuario</h2>
-
 @if (mensaje is string) {
     <blockquote class="is-warn">
         <p>@mensaje</p>
@@ -49,9 +47,7 @@
 
         <div class="field">
             <label>Cargo</label>
-            <select class="input" @bind="usuario.Cargo" min="1" required>
-                <option value="0" disabled>Seleccionar...</option>
-
+            <select class="input" @bind="usuario.Cargo" required>
                 @foreach (Cargo cargo in cargos) {
                     <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
                 }
@@ -62,11 +58,11 @@
     <div class="field">
         <div class="control is-grouped">
             @if (cargando) {
-                <button class="is-prime has-loader" disabled>Registrar</button>
+                <button class="is-prime has-loader" disabled>Guardar</button>
             }
 
             else {
-                <button class="is-prime" disabled="@documentoYaExiste">Guardar</button>
+                <button class="is-prime" disabled="@invalido">Guardar</button>
             }
 
             <a href="/usuario" class="button is-outline">Volver</a>
@@ -84,8 +80,13 @@
     Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
 
     bool cargando = false;
-    bool documentoYaExiste = false;
     string mensaje;
+
+    bool invalido {
+        get {
+            return usuario.Cargo == 0;
+        }
+    }
 
     protected override async Task OnInitializedAsync() {
         cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");

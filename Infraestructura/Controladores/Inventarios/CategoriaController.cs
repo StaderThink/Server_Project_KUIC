@@ -1,64 +1,67 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
-using Microsoft.AspNetCore.Mvc;
+
 using Infraestructura.Extensiones;
+
+using Microsoft.AspNetCore.Mvc;
+
 using System.Collections.Generic;
 
 namespace Infraestructura.Controladores.Inventarios {
-	[Route("api/[controller]")]
-	[Autenticado(Permiso.Logistica)]
-	public class CategoriaController: Controller {
-		private readonly RepoCategoria repo = new RepoCategoria();
+    [Route("api/[controller]")]
+    [Autenticado(Permiso.Logistica)]
+    public class CategoriaController : Controller {
+        private readonly RepoCategoria repo = new RepoCategoria();
 
-		[HttpGet]
-		public IEnumerable<Categoria> Listar() {
-			return repo.Listar();
-		}
+        [HttpGet]
+        public IEnumerable<Categoria> Listar() {
+            return repo.Listar();
+        }
 
-		[HttpGet("{id}")]
-		public ActionResult<Categoria> Obtener(int id) {
-			var categoria = repo.PorId(id);
+        [HttpGet("{id}")]
+        public ActionResult<Categoria> Obtener(int id) {
+            Categoria categoria = repo.PorId(id);
 
-			if (categoria is Categoria) {
-				return categoria;
-			}
+            if (categoria is Categoria) {
+                return categoria;
+            }
 
-			return NotFound();
-		}
+            return NotFound();
+        }
 
-		[HttpPost]
-		public IActionResult Insertar([FromBody] Categoria datos) {
-			if (repo.Insertar(datos)) {
-				return Accepted();
-			}
+        [HttpPost]
+        public IActionResult Insertar([FromBody] Categoria datos) {
+            if (repo.Insertar(datos)) {
+                return Accepted();
+            }
 
-			return BadRequest();
-		}
+            return BadRequest();
+        }
 
-		[HttpDelete("{id}")]
-		public IActionResult Eliminar(int id) {
-			var categoria = repo.PorId(id);
+        [HttpDelete("{id}")]
+        public IActionResult Eliminar(int id) {
+            Categoria categoria = repo.PorId(id);
 
-			if (categoria is Categoria) {
-				if (repo.Eliminar(categoria)) {
-					return Accepted();
-				}
-			}
+            if (categoria is Categoria) {
+                if (repo.Eliminar(categoria)) {
+                    return Accepted();
+                }
+            }
 
-			return BadRequest();
-		}
+            return BadRequest();
+        }
 
-		[HttpPut("{id}")]
-		public IActionResult Editar(int id, [FromBody] Categoria datos) {
-			if (repo.PorId(id) is Categoria) {
-				datos.Id = id;
+        [HttpPut("{id}")]
+        public IActionResult Editar(int id, [FromBody] Categoria datos) {
+            if (repo.PorId(id) is Categoria) {
+                datos.Id = id;
 
-				if (repo.Editar(datos)) {
-					return Accepted();
-				}
-			}
+                if (repo.Editar(datos)) {
+                    return Accepted();
+                }
+            }
 
-			return BadRequest();
-		}
-	}
+            return BadRequest();
+        }
+    }
 }

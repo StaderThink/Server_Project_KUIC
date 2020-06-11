@@ -1,59 +1,61 @@
-﻿using Dominio.Modelo;
-using Dominio.Repositorio;
-using Aplicacion.Modelo.Sesiones;
+﻿using Aplicacion.Modelo.Sesiones;
 using Aplicacion.Seguridad;
+
+using Dominio.Modelo;
+using Dominio.Repositorio;
+
 using System;
 
 namespace Aplicacion.Servicio.Usuarios {
-	public sealed class ServicioSesion: Traductor<Sesion, string> {
-		private bool ValidarSesion(Sesion sesion) {
-			var dias = (DateTime.Now - sesion.Fecha).Days;
-			if (dias > 3) return false;
+    public sealed class ServicioSesion : Traductor<Sesion, string> {
+        private bool ValidarSesion(Sesion sesion) {
+            int dias = (DateTime.Now - sesion.Fecha).Days;
+            if (dias > 3) return false;
 
-			var credencial = sesion.Credencial;
+            Credencial credencial = sesion.Credencial;
 
-			var repo = new RepoUsuario();
-			var usuario = repo.PorDocumento(sesion.Credencial.Documento);
+            RepoUsuario repo = new RepoUsuario();
+            Usuario usuario = repo.PorDocumento(sesion.Credencial.Documento);
 
-			if (usuario is Usuario) {
-				if (usuario.Activo && usuario.Clave == credencial.Clave) {
-					return true;
-				}
-			}
+            if (usuario is Usuario) {
+                if (usuario.Activo && usuario.Clave == credencial.Clave) {
+                    return true;
+                }
+            }
 
-			return false;
-		}
+            return false;
+        }
 
-		public override string Generar(Sesion carga) {
-			if (ValidarSesion(carga)) {
-				try {
-					var criptografo = new ProveedorJWT();
-					return criptografo.Encriptar(carga);
-				}
+        public override string Generar(Sesion carga) {
+            if (ValidarSesion(carga)) {
+                try {
+                    ProveedorJWT criptografo = new ProveedorJWT();
+                    return criptografo.Encriptar(carga);
+                }
 
-				catch {
-					return null;
-				}
-			}
+                catch {
+                    return null;
+                }
+            }
 
-			return null;
-		}
+            return null;
+        }
 
-		public override Sesion Traducir(string carga) {
-			try {
-				var criptografo = new ProveedorJWT();
-				var sesion = criptografo.Traduccir<Sesion>(carga);
+        public override Sesion Traducir(string carga) {
+            try {
+                ProveedorJWT criptografo = new ProveedorJWT();
+                Sesion sesion = criptografo.Traduccir<Sesion>(carga);
 
-				if (sesion is Sesion) {
-					if (ValidarSesion(sesion)) return sesion;
-				}
-			}
+                if (sesion is Sesion) {
+                    if (ValidarSesion(sesion)) return sesion;
+                }
+            }
 
-			catch {
-				return null;
-			}
+            catch {
+                return null;
+            }
 
-			return null;
-		}
-	}
+            return null;
+        }
+    }
 }

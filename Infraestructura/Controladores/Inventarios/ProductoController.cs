@@ -1,22 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Dominio.Modelo;
+﻿using Dominio.Modelo;
 using Dominio.Repositorio;
-using Microsoft.AspNetCore.Mvc;
+
 using Infraestructura.Extensiones;
 
-namespace Infraestructura.Controladores.Inventarios
-{
+using Microsoft.AspNetCore.Mvc;
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Infraestructura.Controladores.Inventarios {
     [Route("api/[controller]")]
     [Autenticado(Permiso.Logistica)]
-    public class ProductoController : Controller
-    {
+    public class ProductoController : Controller {
         private readonly RepoProducto repositorio = new RepoProducto();
         [HttpGet]
-        public IEnumerable<Producto> Listar()
-        {
+        public IEnumerable<Producto> Listar() {
             return repositorio.Listar();
         }
 
@@ -24,7 +22,7 @@ namespace Infraestructura.Controladores.Inventarios
         public ActionResult<Producto> Buscar([FromQuery] int id, [FromQuery] string codigo) {
             IEnumerable<Producto> lista = repositorio.Listar();
 
-            var consulta = lista.First(producto => {
+            Producto consulta = lista.First(producto => {
                 return producto.Id == id || producto.Codigo == codigo;
             });
 
@@ -38,23 +36,18 @@ namespace Infraestructura.Controladores.Inventarios
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Producto datos)
-        {
-            if (repositorio.Insertar(datos))
-            {
+        public IActionResult Insertar([FromBody] Producto datos) {
+            if (repositorio.Insertar(datos)) {
                 return Accepted();
             }
             return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody]Producto datos)
-        {
-            if (repositorio.PorId(id) is Producto)
-            {
+        public IActionResult Editar(int id, [FromBody] Producto datos) {
+            if (repositorio.PorId(id) is Producto) {
                 datos.Id = id;
-                if (repositorio.Editar(datos))
-                {
+                if (repositorio.Editar(datos)) {
                     return Accepted();
                 }
             }
@@ -62,13 +55,10 @@ namespace Infraestructura.Controladores.Inventarios
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            var producto = repositorio.PorId(id);
-            if (producto is Producto)
-            {
-                if (repositorio.Eliminar(producto))
-                {
+        public IActionResult Delete(int id) {
+            Producto producto = repositorio.PorId(id);
+            if (producto is Producto) {
+                if (repositorio.Eliminar(producto)) {
                     return Accepted();
                 }
             }

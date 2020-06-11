@@ -17,6 +17,10 @@ else {
     }
 
     else {
+        <h2>Listar usuarios</h2>
+
+        <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
+
         <div class="grid has-gap xs-1 md-2">
             @foreach(var usuario in lista) {
                 <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
@@ -37,7 +41,7 @@ else {
 
     private async Task ObtenerListado() {
         cargando = true;
-        HttpResponseMessage respuesta = await http.GetAsync("/api/usuario");
+        HttpResponseMessage respuesta = await http.GetAsync("/api/usuario/todos");
 
         try {
             if (respuesta.StatusCode == HttpStatusCode.OK) {

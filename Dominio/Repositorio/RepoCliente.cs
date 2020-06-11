@@ -1,16 +1,14 @@
 ﻿using Dominio.Modelo;
+
 using System;
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio
-{
-    public sealed class RepoCliente : IRepo<Cliente>
-    {
-        public bool Editar(Cliente entidad)
-        {
-            using var conexion = new Conexion();
+namespace Dominio.Repositorio {
+    public sealed class RepoCliente : IRepo<Cliente> {
+        public bool Editar(Cliente entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = $@"
+            string consulta = $@"
                 update cliente set 
                     nombre = @Nombre,
                     encargado = @Encargado,
@@ -22,48 +20,43 @@ namespace Dominio.Repositorio
 					activo = @Activo
                     where id = @Id
            ";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Eliminar(Cliente entidad)
-        {
-            using var conexion = new Conexion();
+        public bool Eliminar(Cliente entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = "delete from cliente where id = @Id";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            string consulta = "delete from cliente where id = @Id";
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Insertar(Cliente entidad)
-        {
-            using var conexion = new Conexion();
+        public bool Insertar(Cliente entidad) {
+            using Conexion conexion = new Conexion();
 
             entidad.Actualizado = DateTime.Now;
             entidad.Creado = DateTime.Now;
 
-            var consulta = $@"
+            string consulta = $@"
                 insert into cliente (nombre, encargado, rut, correo, direccion, telefono, creado, actualizado, activo) 
                 values (@Nombre, @Encargado, @Rut, @Correo, @Direccion, @Telefono, @Creado, @Actualizado, @Activo)";
 
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public IEnumerable<Cliente> Listar()
-        {
-            using var conexion = new Conexion();
+        public IEnumerable<Cliente> Listar() {
+            using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Cliente>("select * from cliente");
         }
 
-        public Cliente PorId(int id)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from cliente where id = @id";
+        public Cliente PorId(int id) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from cliente where id = @id";
 
             return conexion.Obtener<Cliente>(consulta, new { id });
         }
-        public Cliente PorRut(string rut)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from cliente where rut = @rut";
+        public Cliente PorRut(string rut) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from cliente where rut = @rut";
             return conexion.Obtener<Cliente>(consulta, new { rut });
         }
     }

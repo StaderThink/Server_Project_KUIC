@@ -1,15 +1,13 @@
 ﻿using Dominio.Modelo;
+
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio
-{
-    public sealed class RepoEstado : IRepo<Estado>
-    {
-        public bool Editar(Estado entidad)
-        {
-            using var conexion = new Conexion();
+namespace Dominio.Repositorio {
+    public sealed class RepoEstado : IRepo<Estado> {
+        public bool Editar(Estado entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = $@"
+            string consulta = $@"
                 update estado set 
                     nombre = @Nombre,
                     orden = @Orden,
@@ -17,42 +15,37 @@ namespace Dominio.Repositorio
                     
                     where id = @Id
            ";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Eliminar(Estado entidad)
-        {
-            using var conexion = new Conexion();
+        public bool Eliminar(Estado entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = "delete from estado where id = @Id";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            string consulta = "delete from estado where id = @Id";
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Insertar(Estado entidad)
-        {
-            using var conexion = new Conexion();
-            var consulta = $@"insert into (nombre, orden, cancelable) 
+        public bool Insertar(Estado entidad) {
+            using Conexion conexion = new Conexion();
+            string consulta = $@"insert into (nombre, orden, cancelable) 
                             values (@Nombre, @Orden, @Cancelable)";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public IEnumerable<Estado> Listar()
-        {
-            using var conexion = new Conexion();
+        public IEnumerable<Estado> Listar() {
+            using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Estado>("select * from estado");
         }
 
-        public Estado PorId(int id)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from estado where id = @id";
+        public Estado PorId(int id) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from estado where id = @id";
 
             return conexion.Obtener<Estado>(consulta, new { id });
         }
-        public Estado PorOrden(int orden)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from estado where orden = @orden";
+        public Estado PorOrden(int orden) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from estado where orden = @orden";
             return conexion.Obtener<Estado>(consulta, new { orden });
         }
     }

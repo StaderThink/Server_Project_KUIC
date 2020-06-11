@@ -9,112 +9,111 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Infraestructura.Controladores.Usuarios {
     [Route("api/[controller]")]
-	[Autenticado(Permiso.Usuarios)]
-	public class UsuarioController: Controller {
-		private readonly RepoUsuario repo = new RepoUsuario();
+    [Autenticado(Permiso.Usuarios)]
+    public class UsuarioController : Controller {
+        private readonly RepoUsuario repo = new RepoUsuario();
 
-		[HttpGet]
-		public IEnumerable<Usuario> Listar() {
-			var todos = repo.Listar();
-			return todos
-				.Where(usuario => usuario.Activo)
-				.OrderBy(usuario => usuario.Documento);
-		}
-
-		[HttpGet("todos")]
-		public IEnumerable<Usuario> ListarTodos() {
-			return repo
-				.Listar()
-				.OrderBy(usuario => usuario.Documento);
+        [HttpGet]
+        public IEnumerable<Usuario> Listar() {
+            IEnumerable<Usuario> todos = repo.Listar();
+            return todos
+                .Where(usuario => usuario.Activo)
+                .OrderBy(usuario => usuario.Documento);
         }
 
-		[HttpGet("{id}")]
-		public ActionResult<Usuario> Obtener(int id) {
-			if (repo.PorId(id) is Usuario usuario) {
-				return usuario;
-			}
+        [HttpGet("todos")]
+        public IEnumerable<Usuario> ListarTodos() {
+            return repo
+                .Listar()
+                .OrderBy(usuario => usuario.Documento);
+        }
 
-			return NotFound();
-		}
+        [HttpGet("{id}")]
+        public ActionResult<Usuario> Obtener(int id) {
+            if (repo.PorId(id) is Usuario usuario) {
+                return usuario;
+            }
 
-		[HttpPost]
-		public IActionResult Insertar([FromBody] Usuario usuario) {
-			var servicio = new ServicioRegistradorUsuario(repo);
+            return NotFound();
+        }
 
-			if (servicio.Registrar(usuario)) return Ok();
-			else return BadRequest();
-		}
+        [HttpPost]
+        public IActionResult Insertar([FromBody] Usuario usuario) {
+            ServicioRegistradorUsuario servicio = new ServicioRegistradorUsuario(repo);
 
-		[HttpPut("{id}")]
-		public IActionResult Editar(int id, [FromBody] Usuario usuario) {
-			if (repo.PorId(id) is Usuario) {
-				usuario.Id = id;
+            if (servicio.Registrar(usuario)) return Ok();
+            else return BadRequest();
+        }
 
-				if (repo.Editar(usuario)) {
-					return Ok();
-				}
+        [HttpPut("{id}")]
+        public IActionResult Editar(int id, [FromBody] Usuario usuario) {
+            if (repo.PorId(id) is Usuario) {
+                usuario.Id = id;
 
-				return BadRequest();
-			}
+                if (repo.Editar(usuario)) {
+                    return Ok();
+                }
 
-			return NotFound();
-		}
+                return BadRequest();
+            }
 
-		[HttpDelete("{id}")]
-		public IActionResult Eliminar(int id) {
-			if (repo.PorId(id) is Usuario usuario) {
-				if (repo.Eliminar(usuario)) {
-					return Ok();
-				}
+            return NotFound();
+        }
 
-				else return BadRequest();
-			}
+        [HttpDelete("{id}")]
+        public IActionResult Eliminar(int id) {
+            if (repo.PorId(id) is Usuario usuario) {
+                if (repo.Eliminar(usuario)) {
+                    return Ok();
+                }
 
-			return NotFound();
-		}
+                else return BadRequest();
+            }
 
-		[HttpGet("existe")]
-		public ActionResult<Usuario> Existe([FromQuery] string documento) {
-			var lista = repo.Listar();
+            return NotFound();
+        }
 
-			try {
-				var busqueda = lista.First(usuario => usuario.Documento == documento);
+        [HttpGet("existe")]
+        public ActionResult<Usuario> Existe([FromQuery] string documento) {
+            IEnumerable<Usuario> lista = repo.Listar();
 
-				if (busqueda is Usuario) {
-					return busqueda;
-				}
+            try {
+                Usuario busqueda = lista.First(usuario => usuario.Documento == documento);
 
-				return NotFound();
-			}
+                if (busqueda is Usuario) {
+                    return busqueda;
+                }
 
-			catch {
-				return NotFound();
+                return NotFound();
+            }
+
+            catch {
+                return NotFound();
             }
         }
 
-		[HttpGet("existencias")]
-		public IActionResult Existencias([FromQuery] string documento, [FromQuery] string nombre, [FromQuery] string apellido) {
-			var lista = repo.Listar();
+        [HttpGet("existencias")]
+        public IActionResult Existencias([FromQuery] string documento, [FromQuery] string nombre, [FromQuery] string apellido) {
+            IEnumerable<Usuario> lista = repo.Listar();
 
-			try {
-				var consulta =
-					from usuario in lista
-					where
-						usuario.Documento.Contains(documento ?? "") ||
-						usuario.Nombre.Contains(nombre ?? "") ||
-						usuario.Apellido.Contains(apellido ?? "")
-					select usuario;
+            try {
+                IEnumerable<Usuario> consulta =
+                    from usuario in lista
+                    where
+                        usuario.Documento.Contains(documento ?? "") ||
+                        usuario.Nombre.Contains(nombre ?? "") ||
+                        usuario.Apellido.Contains(apellido ?? "")
+                    select usuario;
 
-				return Ok(consulta.Count());
+                return Ok(consulta.Count());
             }
 
-			catch {
-				return NotFound();
+            catch {
+                return NotFound();
             }
         }
-	}
+    }
 }

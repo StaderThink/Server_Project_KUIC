@@ -4,6 +4,8 @@
     <p><b>@(usuario.Nombre.ToCapitalize())</b></p>
     <p>@usuario.TipoDocumento @usuario.Documento</p>
 
+    <span class="button is-static is-small">@(usuario.Activo ? "Activo" : "Inactivo")</span>
+
     <div class="control is-grouped">
         <a href="/usuario/modificar/@usuario.Id" class="button is-prime">Editar</a>
 

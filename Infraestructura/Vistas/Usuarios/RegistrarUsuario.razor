@@ -61,9 +61,7 @@
 
         <div class="field">
             <label>Cargo</label>
-            <select class="input" @bind="usuario.Cargo" min="1" required>
-                <option value="0" disabled>Seleccionar...</option>
-
+            <select class="input" @bind="usuario.Cargo" required>
                 @foreach (Cargo cargo in cargos) {
                     <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
                 }
@@ -92,9 +90,9 @@
 
     Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
 
-    bool cargando = false;
     bool documentoYaExiste = false;
     string mensaje;
+    bool cargando = false;
 
     protected override async Task OnInitializedAsync() {
         cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");

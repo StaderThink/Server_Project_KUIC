@@ -1,7 +1,7 @@
 ﻿namespace Dominio.Modelo {
-	public sealed class Existencia: IEntidad {
-		public int Id { get; set; }
-		public int Producto { get; set; }
-		public int Cantidad { get; set; }
-	}
+    public sealed class Existencia : IEntidad {
+        public int Id { get; set; }
+        public int Producto { get; set; }
+        public int Cantidad { get; set; }
+    }
 }

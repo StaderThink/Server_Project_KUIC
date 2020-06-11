@@ -1,16 +1,13 @@
-﻿using System;
+﻿using Dominio.Modelo;
+
 using System.Collections.Generic;
-using Dominio.Modelo;
 
-namespace Dominio.Repositorio
-{
-  public sealed class RepoPedido : IRepo<Pedido>
-    {
-        public bool Editar(Pedido entidad)
-        {
-            using var conexion = new Conexion();
+namespace Dominio.Repositorio {
+    public sealed class RepoPedido : IRepo<Pedido> {
+        public bool Editar(Pedido entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = $@"
+            string consulta = $@"
                 update pedido set 
                     fecha = @Fecha,
                     cliente = @Cliente,
@@ -21,47 +18,41 @@ namespace Dominio.Repositorio
                     observacion = @Observacion
                     where id = @Id
            ";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Eliminar(Pedido entidad)
-        {
-            using var conexion = new Conexion();
+        public bool Eliminar(Pedido entidad) {
+            using Conexion conexion = new Conexion();
 
-            var consulta = "delete from pedido where id = @Id";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            string consulta = "delete from pedido where id = @Id";
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Insertar(Pedido entidad)
-        {
-            using var conexion = new Conexion();
-            var consulta = $@"insert into (fecha, cliente, asesor, estado, cancelado, descuento, observacion) 
+        public bool Insertar(Pedido entidad) {
+            using Conexion conexion = new Conexion();
+            string consulta = $@"insert into (fecha, cliente, asesor, estado, cancelado, descuento, observacion) 
                             values (@Fecha, @Cliente, @Asesor, @Estado, @Cancelado, @Descuento, @Observacion)";
-            var filasAfectadas = conexion.Ejecutar(consulta, entidad);
+            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public IEnumerable<Pedido> Listar()
-        {
-            using var conexion = new Conexion();
+        public IEnumerable<Pedido> Listar() {
+            using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Pedido>("select * from pedido");
         }
 
-        public Pedido PorId(int id)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from pedido where id = @id";
+        public Pedido PorId(int id) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from pedido where id = @id";
             return conexion.Obtener<Pedido>(consulta, new { id });
         }
-        public Pedido PorAsesor(int asesor)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from pedido where asesor = @asesor";
+        public Pedido PorAsesor(int asesor) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from pedido where asesor = @asesor";
             return conexion.Obtener<Pedido>(consulta, new { asesor });
         }
-        public Pedido PorCliente(int cliente)
-        {
-            using var conexion = new Conexion();
-            var consulta = "select * from pedido where cliente = @cliente";
+        public Pedido PorCliente(int cliente) {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from pedido where cliente = @cliente";
             return conexion.Obtener<Pedido>(consulta, new { cliente });
         }
     }

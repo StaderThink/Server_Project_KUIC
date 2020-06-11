@@ -17,34 +17,32 @@
         <small>Corto, pero descriptivo.</small>
     </div>
 
-    <fieldset>
-        <legend>Permisos</legend>
-
+    <div class="grid has-gap">
         <div class="field is-inline">
-            <label>Pedidos</label>
-            <input type="checkbox" class="toggle" @bind="cargo.Pedidos" />
+            <input type="checkbox" class="checkbox" @bind="cargo.Pedidos" />
+            <label>¿Puedes verificar los pedidos?</label>
         </div>
 
         <div class="field is-inline">
-            <label>Usuarios</label>
-            <input type="checkbox" class="toggle" @bind="cargo.Usuarios" />
+            <input type="checkbox" class="checkbox" @bind="cargo.Usuarios" />
+            <label>¿Puede cambiar los permisos de los usuarios?</label>
         </div>
 
         <div class="field is-inline">
-            <label>Logistica</label>
-            <input type="checkbox" class="toggle" @bind="cargo.Logistica" />
+            <input type="checkbox" class="checkbox" @bind="cargo.Logistica" />
+            <label>¿Puede gestionar el inventario?</label>
         </div>
 
         <div class="field is-inline">
-            <label>Usuarios</label>
-            <input type="checkbox" class="toggle" @bind="cargo.Clientes" />
+            <input type="checkbox" class="checkbox" @bind="cargo.Clientes" />
+            <label>¿Puede gestionar datos de los clientes?</label>
         </div>
 
         <div class="field is-inline">
-            <label>Usuarios</label>
-            <input type="checkbox" class="toggle" @bind="cargo.Solicitar" />
+            <input type="checkbox" class="checkbox" @bind="cargo.Solicitar" />
+            <label>¿Puede solicitar pedidos?</label>
         </div>
-    </fieldset>
+    </div>
 
     <div class="control is-grouped">
         @if (cargando) {

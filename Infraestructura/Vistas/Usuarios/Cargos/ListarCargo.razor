@@ -3,15 +3,15 @@
 @page "/cargo"
 @layout AppLayout
 
-<h1>Listar cargos</h1>
-
-<a href="/cargo/registrar">Registrar</a>
-
 @if (cargos is null) {
     <div class="loader is-medium"></div>
 }
 
 else {
+    <h2>Listar cargos</h2>
+
+    <a class="button is-prime" href="/cargo/registrar">Registrar cargo</a>
+
     <div class="grid xs-1 md-2 has-gap">
         @foreach (Cargo cargo in cargos) {
             <TarjetaCargo cargo="@cargo" OnCargoEliminado="ObtenerListado" />

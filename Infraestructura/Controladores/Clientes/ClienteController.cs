@@ -1,96 +1,93 @@
-﻿using Aplicacion.Servicio.Usuarios;
-using Dominio.Modelo;
+﻿using Dominio.Modelo;
 using Dominio.Repositorio;
+
 using Infraestructura.Extensiones;
+
 using Microsoft.AspNetCore.Mvc;
+
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Infraestructura.Controladores.Clientes {
     [Route("api/[controller]")]
-	[Autenticado(Permiso.Clientes)]
-	public class ClienteController: Controller {
-		private readonly RepoCliente repositorio = new RepoCliente();
+    [Autenticado(Permiso.Clientes)]
+    public class ClienteController : Controller {
+        private readonly RepoCliente repositorio = new RepoCliente();
 
-		[HttpGet]
-		public IEnumerable<Cliente> Listar() {
-			var todos = repositorio.Listar();
-			return todos
-				.Where(cliente => cliente.Activo)
-				.OrderBy(cliente => cliente.Id);
-		}
-
-		[HttpGet("todos")]
-		public IEnumerable<Cliente> ListarTodos() {
-			return repositorio
-				.Listar()
-				.OrderBy(cliente => cliente.Id);
+        [HttpGet]
+        public IEnumerable<Cliente> Listar() {
+            IEnumerable<Cliente> todos = repositorio.Listar();
+            return todos
+                .Where(cliente => cliente.Activo)
+                .OrderBy(cliente => cliente.Id);
         }
 
-		[HttpGet("{id}")]
-		public ActionResult<Cliente> Obtener(int id) {
-			if (repositorio.PorId(id) is Cliente cliente) {
-				return cliente;
-			}
+        [HttpGet("todos")]
+        public IEnumerable<Cliente> ListarTodos() {
+            return repositorio
+                .Listar()
+                .OrderBy(cliente => cliente.Id);
+        }
 
-			return NotFound();
-		}
+        [HttpGet("{id}")]
+        public ActionResult<Cliente> Obtener(int id) {
+            if (repositorio.PorId(id) is Cliente cliente) {
+                return cliente;
+            }
 
-		[HttpPost]
-		public IActionResult Insertar([FromBody] Cliente cliente) {
-			if (repositorio.Insertar(cliente))
-			{
-				return Accepted();
-			}
-			return BadRequest();
-		}
+            return NotFound();
+        }
 
-		[HttpPut("{id}")]
-		public IActionResult Editar(int id, [FromBody] Cliente cliente) {
-			if (repositorio.PorId(id) is Cliente) {
-				cliente.Id = id;
+        [HttpPost]
+        public IActionResult Insertar([FromBody] Cliente cliente) {
+            if (repositorio.Insertar(cliente)) {
+                return Accepted();
+            }
+            return BadRequest();
+        }
 
-				if (repositorio.Editar(cliente)) {
-					return Ok();
-				}
+        [HttpPut("{id}")]
+        public IActionResult Editar(int id, [FromBody] Cliente cliente) {
+            if (repositorio.PorId(id) is Cliente) {
+                cliente.Id = id;
 
-				return BadRequest();
-			}
+                if (repositorio.Editar(cliente)) {
+                    return Ok();
+                }
 
-			return NotFound();
-		}
+                return BadRequest();
+            }
 
-		[HttpDelete("{id}")]
-		public IActionResult Eliminar(int id) {
-			if (repositorio.PorId(id) is Cliente cliente) {
-				if (repositorio.Eliminar(cliente)) {
-					return Ok();
-				}
+            return NotFound();
+        }
 
-				else return BadRequest();
-			}
+        [HttpDelete("{id}")]
+        public IActionResult Eliminar(int id) {
+            if (repositorio.PorId(id) is Cliente cliente) {
+                if (repositorio.Eliminar(cliente)) {
+                    return Ok();
+                }
 
-			return NotFound();
-		}
-		[HttpGet("existe")]
-		public ActionResult<Cliente> Existe([FromQuery] string rut)
-		{
-			var lista = repositorio.Listar();
-			try
-			{
-				var busqueda = lista.First(cliente => cliente.Rut == rut);
+                else return BadRequest();
+            }
 
-				if (busqueda is Cliente)
-				{
-					return busqueda;
-				}
+            return NotFound();
+        }
+        [HttpGet("existe")]
+        public ActionResult<Cliente> Existe([FromQuery] string rut) {
+            IEnumerable<Cliente> lista = repositorio.Listar();
+            try {
+                Cliente busqueda = lista.First(cliente => cliente.Rut == rut);
 
-				return NotFound();
-			}
-			catch
-			{
-				return NotFound();
-			}
-		}
-	}
+                if (busqueda is Cliente) {
+                    return busqueda;
+                }
+
+                return NotFound();
+            }
+            catch {
+                return NotFound();
+            }
+        }
+    }
 }
