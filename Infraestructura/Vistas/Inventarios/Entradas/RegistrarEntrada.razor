@@ -8,11 +8,11 @@
 <form @onsubmit="Enviar">
     <div class="field">
         <label for="fecha">Fecha</label>
-        <input id="fecha" class="input" type="date" @bind="entrada.Fecha" />
+        <input id="fecha" class="input" type="date" @bind="entrada.Fecha" required/>
     </div>
     <div class="field">
         <label for="observacion">Observación</label>
-        <input id="observacion" class="input" type="text" @bind="entrada.Observacion" />
+        <input id="observacion" class="input" type="text" @bind="entrada.Observacion" required/>
     </div>
     <div class="field">
         <div class="control is-gruped">

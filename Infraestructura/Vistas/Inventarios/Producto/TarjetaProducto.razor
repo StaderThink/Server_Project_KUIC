@@ -5,17 +5,7 @@
         <p><b>@producto.Nombre.ToCapitalize()</b></p>
         <p>@producto.Codigo</p>
         <p>$@producto.Precio</p>
-        <p>
-            @if (categoria is null)
-            {
-                <span>Sin categoria</span>
-            }
-
-            else
-            {
-                <span>@categoria.Nombre</span>
-            }
-        </p>
+        <p>@categoria.Nombre</p>
         <div class="control is-grouped">
             <button class="is-prime" @onclick="Editar">Editar</button>
 

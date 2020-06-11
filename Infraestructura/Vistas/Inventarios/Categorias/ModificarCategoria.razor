@@ -15,11 +15,11 @@ else
     <form @onsubmit="Enviar">
         <div class="field">
             <label for="nombre">Nombre</label>
-            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" />
+            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required/>
         </div>
         <div class="field">
             <label for="descripcion">Descripción</label>
-            <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" />
+            <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" required/>
         </div>
         <div class="field">
             <div class="control is-gruped">

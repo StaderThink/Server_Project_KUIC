@@ -36,12 +36,12 @@
     [Parameter]
     public Entrada entrada { get; set; }
 
-    public Producto productos { get; set; }
-
     [Parameter]
     public EventCallback<Entrada> OnEntradaEliminada { get; set; }
 
     DetalleEntrada[] detalles { get; set; } = new DetalleEntrada[0];
+
+    DetalleEntrada detalle { get; set; } = new DetalleEntrada();
 
     bool cargando = false;
 

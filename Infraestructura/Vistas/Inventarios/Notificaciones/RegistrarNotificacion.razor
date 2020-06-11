@@ -8,19 +8,19 @@
 <form @onsubmit="Enviar">
     <div class="field">
         <label for="texto">Mensaje</label>
-        <input id="texto" class="input" type="text" @bind="notificacion.Texto" />
+        <input id="texto" class="input" type="text" @bind="notificacion.Texto" required/>
     </div>
     <div class="field">
         <label for="inicio">Fecha de inicio</label>
-        <input id="inicio" class="input" type="datetime" @bind="notificacion.FechaInicio" />
+        <input id="inicio" class="input" type="datetime" @bind="notificacion.FechaInicio" required/>
     </div>
     <div class="field">
         <label for="fin">Fecha de finalización</label>
-        <input id="fin" class="input" type="datetime" @bind="notificacion.FechaFin" />
+        <input id="fin" class="input" type="datetime" @bind="notificacion.FechaFin" required/>
     </div>
     <div class="field">
         <label>Autor</label>
-        <select class="input" @bind="notificacion.Autor">
+        <select class="input" @bind="notificacion.Autor" required>
             <option value="0" disabled>Seleccionar...</option>
 
             @foreach (Usuario usuario in usuarios)

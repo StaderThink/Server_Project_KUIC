@@ -8,11 +8,11 @@
 <form @onsubmit="Enviar">
     <div class="field">
         <label for="cantidad">Cantidad</label>
-        <input id="cantidad" class="input" type="number" @bind="detalle.Cantidad" />
+        <input id="cantidad" class="input" type="number" @bind="detalle.Cantidad" required/>
     </div>
     <div class="field">
         <label>Producto</label>
-        <select class="input" @bind="detalle.Producto">
+        <select class="input" @bind="detalle.Producto" required>
             <option value="0" disabled>Seleccionar...</option>
             @foreach (Producto producto in productos)
             {
