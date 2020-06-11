@@ -5,6 +5,8 @@
 
 <h1>Listar clientes</h1>
 
+<a href="/cliente/registrar" class="button is-prime">Registrar</a>
+
 @if (cliente is null)
 {
     <div class="loader is-medium"></div>
@@ -29,7 +31,7 @@ else
     }
 
     async Task ObtenerListado()
-    {
-        cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
+    {      
+            cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
     }
 }

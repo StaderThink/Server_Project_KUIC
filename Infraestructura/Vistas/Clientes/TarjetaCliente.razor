@@ -1,23 +1,24 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div class="card">
-    <p>@(cliente.Nombre.ToCapitalize())</p>
+    <div class="card">
+        <p>@(cliente.Nombre.ToCapitalize())</p>
+        <p>RUT @cliente.Rut</p>
+        
+        <div class="control is-grouped">
+            <button class="is-prime" @onclick="Editar">Editar</button>
 
-    <div class="control is-grouped">
-        <button class="is-prime" @onclick="Editar">Editar</button>
+            @if (cargando)
+            {
+                <button class="is-outline has-loader" disabled>Borrar</button>
+            }
 
-        @if (cargando)
-        {
-            <button class="is-outline has-loader" disabled>Borrar</button>
-        }
-
-        else
-        {
-            <button class="is-outline" @onclick="Eliminar">Borrar</button>
-        }
+            else
+            {
+                <button class="is-outline" @onclick="Eliminar">Borrar</button>
+            }
+        </div>
     </div>
-</div>
 
 @code {
     [Parameter]

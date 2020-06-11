@@ -14,27 +14,27 @@ else
 <form @onsubmit="Enviar">
     <div class="field">
         <label for="nombre">Nombre</label>
-        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" />
+        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" required/>
     </div>
     <div class="field">
         <label for="encargado">Encargado</label>
-        <input id="encargado" class="input" type="text" @bind="cliente.Encargado" />
+        <input id="encargado" class="input" type="text" @bind="cliente.Encargado" required/>
     </div>
     <div class="field">
         <label for="rut">Rut</label>
-        <input id="rut" class="input" type="text" @bind="cliente.Rut" />
+        <input id="rut" class="input" type="number" placeholder="###" @bind="cliente.Rut" disabled readonly/>
     </div>
     <div class="field">
         <label for="correo">Correo</label>
-        <input id="correo" class="input" type="text" @bind="cliente.Correo" />
+        <input id="correo" class="input" type="email" @bind="cliente.Correo" required/>
     </div>
     <div class="field">
         <label for="direccion">Direccion</label>
-        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" />
+        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" required />
     </div>
     <div class="field">
         <label for="telefono">Telefono</label>
-        <input id="telefono" class="input" type="number" @bind="cliente.Telefono" />
+        <input id="telefono"  placeholder="###" minlength="10" class="input" type="number" @bind="cliente.Telefono" required />
     </div>
     <input type="checkbox" @bind="cliente.Activo" />
 

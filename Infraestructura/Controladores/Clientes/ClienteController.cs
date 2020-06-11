@@ -72,5 +72,25 @@ namespace Infraestructura.Controladores.Clientes {
 
 			return NotFound();
 		}
+		[HttpGet("existe")]
+		public ActionResult<Cliente> Existe([FromQuery] string rut)
+		{
+			var lista = repositorio.Listar();
+			try
+			{
+				var busqueda = lista.First(cliente => cliente.Rut == rut);
+
+				if (busqueda is Cliente)
+				{
+					return busqueda;
+				}
+
+				return NotFound();
+			}
+			catch
+			{
+				return NotFound();
+			}
+		}
 	}
 }

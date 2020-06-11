@@ -1,4 +1,5 @@
 ﻿using Dominio.Modelo;
+using System;
 using System.Collections.Generic;
 
 namespace Dominio.Repositorio
@@ -35,8 +36,14 @@ namespace Dominio.Repositorio
         public bool Insertar(Cliente entidad)
         {
             using var conexion = new Conexion();
-            var consulta = $@"insert into (nombre, encargado, rut, correo, direccion, telefono) 
-                            values (@Nombre, @Encargado, @Rut, @Correo, @Direccion, @Telefono)";
+
+            entidad.Actualizado = DateTime.Now;
+            entidad.Creado = DateTime.Now;
+
+            var consulta = $@"
+                insert into cliente (nombre, encargado, rut, correo, direccion, telefono, creado, actualizado, activo) 
+                values (@Nombre, @Encargado, @Rut, @Correo, @Direccion, @Telefono, @Creado, @Actualizado, @Activo)";
+
             var filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
@@ -56,8 +63,9 @@ namespace Dominio.Repositorio
         public Cliente PorRut(string rut)
         {
             using var conexion = new Conexion();
-            var consulta = "slect * from cliente where rut = @rut";
+            var consulta = "select * from cliente where rut = @rut";
             return conexion.Obtener<Cliente>(consulta, new { rut });
         }
     }
+
 }

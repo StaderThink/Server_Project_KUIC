@@ -5,10 +5,18 @@
 @layout AppLayout
 
 <h3>Registrar Cliente</h3>
+
+@if (mensaje is string)
+{
+    <blockquote class="is-warn">
+        <p>@mensaje</p>
+    </blockquote>
+}
+
 <form @onsubmit="Enviar">
     <div class="field">
         <label for="nombre">Nombre</label>
-        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" />
+        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" required />
     </div>
     <div class="field">
         <label for="encargado">Encargado</label>
@@ -16,24 +24,46 @@
     </div>
     <div class="field">
         <label for="rut">Rut</label>
-        <input id="rut" class="input" type="text" @bind="cliente.Rut" />
+        <input id="rut" class="@(rutExiste ? "input is-error" : "input")" type="number" placeholder="###" minlength="11" @bind="cliente.Rut" @onfocus="BuscarExistencia" required />
+
+        @if (rutExiste)
+        {
+            <small class="is-error">Este RUT ya ha sido registrado</small>
+        }
+
+        else
+        {
+            <small>Número de RUT</small>
+        }
+
     </div>
     <div class="field">
         <label for="correo">Correo</label>
-        <input id="correo" class="input" type="text" @bind="cliente.Correo" />
+        <input id="correo" class="input" type="email" @bind="cliente.Correo" required />
     </div>
     <div class="field">
         <label for="direccion">Direccion</label>
-        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" />
+        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" required />
     </div>
     <div class="field">
         <label for="telefono">Telefono</label>
-        <input id="telefono" class="input" type="number" @bind="cliente.Telefono" />
+        <input id="telefono" type="number" placeholder="###" minlength="10" class="input" @bind="cliente.Telefono" required />
     </div>
-    <input type="checkbox" @bind="cliente.Activo" />
+    <div class="field">
+        <label for="activo">Activo</label>
+        <input type="checkbox" class="toggle" @bind="cliente.Activo" />
+    </div>
     <div class="field">
         <div class="control is-gruped">
-            <button class="is-prime">Registrar</button>
+            @if (cargando)
+            {
+                <button class="is-prime has-loader" disabled>Registrar</button>
+            }
+
+            else
+            {
+                <button class="is-prime" disabled="@rutExiste">Registrar</button>
+            }
             <a href="/cliente" class="button is-outline">Cancelar</a>
         </div>
     </div>
@@ -43,13 +73,59 @@
 @code {
     Cliente cliente { get; set; } = new Cliente();
 
+    string mensaje;
+    bool cargando = false;
+    bool rutExiste = false;
+
     async Task Enviar()
     {
-        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cliente", cliente);
+        cargando = true;
 
-        if (respuesta.IsSuccessStatusCode)
+        try
         {
-            navegador.NavigateTo("/cliente");
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cliente", cliente);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/cliente");
+            }
+
+            else
+            {
+                if (respuesta.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    mensaje = "¿Porque estas en esta ruta si no tienes autorización?";
+                }
+
+                else
+                {
+                    mensaje = "Hubo un error al insertar";
+                }
+            }
+        }
+
+        catch
+        {
+            mensaje = "Hubo un error al insertar";
+        }
+
+        finally
+        {
+            cargando = false;
+        }
+    }
+
+    async Task BuscarExistencia()
+    {
+        try
+        {
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente/existe?rut={cliente.Rut}");
+            rutExiste = respuesta.IsSuccessStatusCode;
+        }
+
+        catch
+        {
+            rutExiste = true;
         }
     }
 }
