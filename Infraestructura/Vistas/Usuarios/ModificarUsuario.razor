@@ -1,7 +1,7 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-@page "/usuario/registrar"
+@page "/usuario/modificar/{Id:int}"
 @layout AppLayout
 
 <h2>Registrar usuario</h2>
@@ -16,24 +16,12 @@
     <div class="grid xs-1 md-2 has-gap">
         <div class="field">
             <label>Tipo de documento</label>
-            <select class="input" @bind="usuario.TipoDocumento" required>
-                @foreach (TipoDocumento tipo in tiposDeDocumento) {
-                    <option value="@tipo">@tipo</option>
-                }
-            </select>
+            <input type="text" class="input" @bind="usuario.TipoDocumento" disabled readonly />
         </div>
 
         <div class="field">
             <label>Documento</label>
-            <input type="number" placeholder="###" class="@(documentoYaExiste ? "input is-error" : "input")" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required />
-            
-            @if (documentoYaExiste) {
-                <small class="is-error">Documento ya ha sido registrado</small>
-            }
-
-            else {
-                <small>Número de documento de identidad</small>
-            }
+            <input type="number" placeholder="###" class="input" @bind="usuario.Documento" disabled readonly />
         </div>
 
         <div class="field">
@@ -78,15 +66,18 @@
             }
 
             else {
-                <button class="is-prime" disabled="@documentoYaExiste">Registrar</button>
+                <button class="is-prime" disabled="@documentoYaExiste">Guardar</button>
             }
 
-            <a href="/usuario" class="button is-outline">Cancelar</a>
+            <a href="/usuario" class="button is-outline">Volver</a>
         </div>
     </div>
 </form>
 
 @code {
+    [Parameter]
+    public int Id { get; set; }
+
     Cargo[] cargos { get; set; } = new Cargo[0];
     Usuario usuario { get; set; } = new Usuario();
 
@@ -98,46 +89,30 @@
 
     protected override async Task OnInitializedAsync() {
         cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Id}");
     }
 
     async Task Enviar() {
         cargando = true;
 
         try {
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/usuario/{Id}", usuario);
 
             if (respuesta.IsSuccessStatusCode) {
                 navegador.NavigateTo("/usuario");
             }
 
             else {
-                if (respuesta.StatusCode == HttpStatusCode.Unauthorized) {
-                    mensaje = "¿Porque estas en esta ruta sin no tienes autorización?";
-                }
-
-                else {
-                    mensaje = "Hubo un error al insertar";
-                }
+                mensaje = "No se logro realizar el registro";
             }
         }
 
         catch {
-            mensaje = "Hubo un error al insertar";
+            mensaje = "Hubo un error insertando el registro";
         }
 
         finally {
             cargando = false;
-        }
-    }
-
-    async Task BuscarExistencia() {
-        try {
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario/existe?documento={usuario.Documento}");
-            documentoYaExiste = respuesta.IsSuccessStatusCode;
-        }
-
-        catch {
-            documentoYaExiste = true;
         }
     }
 }

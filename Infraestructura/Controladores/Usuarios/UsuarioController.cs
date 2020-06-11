@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infraestructura.Controladores.Usuarios {
     [Route("api/[controller]")]
@@ -89,6 +90,27 @@ namespace Infraestructura.Controladores.Usuarios {
 
 				return NotFound();
 			}
+
+			catch {
+				return NotFound();
+            }
+        }
+
+		[HttpGet("existencias")]
+		public IActionResult Existencias([FromQuery] string documento, [FromQuery] string nombre, [FromQuery] string apellido) {
+			var lista = repo.Listar();
+
+			try {
+				var consulta =
+					from usuario in lista
+					where
+						usuario.Documento.Contains(documento ?? "") ||
+						usuario.Nombre.Contains(nombre ?? "") ||
+						usuario.Apellido.Contains(apellido ?? "")
+					select usuario;
+
+				return Ok(consulta.Count());
+            }
 
 			catch {
 				return NotFound();

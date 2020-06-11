@@ -5,7 +5,7 @@
     <p>@usuario.TipoDocumento @usuario.Documento</p>
 
     <div class="control is-grouped">
-        <button class="is-prime">Editar</button>
+        <a href="/usuario/modificar/@usuario.Id" class="button is-prime">Editar</a>
 
         @if (cargando) {
             <button class="is-outline has-loader" disabled>Borrar</button>

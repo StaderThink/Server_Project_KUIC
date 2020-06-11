@@ -1,0 +1,25 @@
+﻿#searchbox {
+    max-width: 35rem;
+    width: 100%;
+    position: relative;
+}
+
+#searchbox .suggestions {
+    position: absolute;
+    top: calc(100% + 1rem);
+    background: white;
+    width: 100%;
+    box-shadow: 0 0 .4rem rgba(0, 0, 0, 0.1);
+    border-radius: 0.4rem;
+    border: solid 1px rgba(0, 0, 0, 0.15);
+    z-index: 10;
+}
+
+#searchbox .suggestion {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    text-decoration: none;
+}

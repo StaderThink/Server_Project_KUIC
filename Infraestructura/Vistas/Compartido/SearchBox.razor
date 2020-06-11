@@ -1,5 +1,7 @@
-﻿<div
-     class="searchbox"
+﻿@inject HttpClient http
+
+<div
+     id="searchbox"
      @onfocusin="() => mostrarBarra = true"
      @onfocusout="() => mostrarBarra = false">
 
@@ -8,29 +10,50 @@
         type="text"
         @bind="texto"
         @bind:event="oninput"
+        @onkeyup="Buscar"
         placeholder="Buscar..." />
 
     @if (mostrarBarra) {
         <div class="suggestions">
-            <div class="suggestion">
-                <p>@texto</p>
-                <span class="button is-static is-small">En todo</span>
-            </div>
+            <!-- usuarios -->
 
-            <div class="suggestion">
-                <p>@texto</p>
-                <span class="button is-static is-small">En usuarios</span>
-            </div>
+            @if (usuarios > 0) {
+                <a class="suggestion">
+                    <p>Usuarios</p>
+                    <span class="button is-static is-small">
+                        @(usuarios > 9 ? "+9" : usuarios.ToString())
+                    </span>
+                </a>
+            }
 
-            <div class="suggestion">
-               <p>@texto</p>
-               <span class="button is-static is-small">En productos</span>
-           </div>
+            <a class="suggestion">
+                <p>Buscar...</p>
+                <small>En todo</small>
+            </a>
         </div>
     }
 </div>
 
 @code {
-    bool mostrarBarra { get; set; } = false;
-    string texto { get; set; }
+    bool mostrarBarra = false;
+    string texto;
+
+    int usuarios { get; set; } = 0;
+
+    private async Task Buscar() {
+        await BuscarUsuarios();
+    }
+
+    private async Task BuscarUsuarios() {
+        string url = $"/api/usuario/existencias?documento={texto}&nombre={texto}&apellido={texto}";
+
+        try {
+            var listado = await http.GetFromJsonAsync<int>(url);
+            usuarios = listado;
+        }
+
+        catch {
+            usuarios = 0;
+        }
+    }
 }
