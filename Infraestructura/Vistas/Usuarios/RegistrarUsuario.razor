@@ -85,14 +85,14 @@
 </form>
 
 @code {
-    Cargo[] cargos { get; set; } = new Cargo[0];
-    Usuario usuario { get; set; } = new Usuario();
+        Cargo[] cargos { get; set; } = new Cargo[0];
+        Usuario usuario { get; set; } = new Usuario();
 
-    Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+        Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
 
-    bool documentoYaExiste = false;
-    string mensaje;
-    bool cargando = false;
+        bool documentoYaExiste = false;
+        string mensaje;
+        bool cargando = false;
 
     protected override async Task OnInitializedAsync() {
         cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
@@ -130,8 +130,16 @@
 
     async Task BuscarExistencia() {
         try {
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario/existe?documento={usuario.Documento}");
-            documentoYaExiste = respuesta.IsSuccessStatusCode;
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={usuario.Documento}");
+
+            if (respuesta.IsSuccessStatusCode) {
+                var existencias = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
+                documentoYaExiste = existencias.Length > 0;
+            }
+
+            else {
+                documentoYaExiste = true;
+            }
         }
 
         catch {

@@ -1,59 +1,73 @@
 ﻿@inject HttpClient http
+@inject NavigationManager navegador
 
-<div
-     id="searchbox"
-     @onfocusin="() => mostrarBarra = true"
-     @onfocusout="() => mostrarBarra = false">
-
+<div id="searchbox">
     <input
-        class="input is-grow"
+        class="input"
         type="text"
         @bind="texto"
         @bind:event="oninput"
         @onkeyup="Buscar"
         placeholder="Buscar..." />
 
-    @if (mostrarBarra) {
-        <div class="suggestions">
-            <!-- usuarios -->
+    <div class="@(mostrarBarra ? "suggestions visible" : "suggestions invisible")">
+        <!-- usuarios -->
 
-            @if (usuarios > 0) {
-                <a class="suggestion">
-                    <p>Usuarios</p>
-                    <span class="button is-static is-small">
-                        @(usuarios > 9 ? "+9" : usuarios.ToString())
-                    </span>
-                </a>
-            }
-
-            <a class="suggestion">
-                <p>Buscar...</p>
-                <small>En todo</small>
+        @if (contadorUsuarios is string) {
+            <a @onclick="RedigirBusquedaUsuario" class="suggestion">
+                <p>Usuarios</p>
+                <span class="button is-static is-small">@contadorUsuarios</span>
             </a>
-        </div>
-    }
+        }
+
+        <a class="suggestion">
+            <p>Buscar "@texto"</p>
+            <span class="button is-static is-small">En todo</span>
+        </a>
+    </div>
 </div>
 
 @code {
-    bool mostrarBarra = false;
-    string texto;
+    bool mostrarBarra {
+        get {
+            return !string.IsNullOrWhiteSpace(texto);
+        }
+    }
 
-    int usuarios { get; set; } = 0;
+    string texto;
+    string contadorUsuarios;
 
     private async Task Buscar() {
         await BuscarUsuarios();
     }
 
     private async Task BuscarUsuarios() {
-        string url = $"/api/usuario/existencias?documento={texto}&nombre={texto}&apellido={texto}";
+        string url = $"/api/usuario?buscar={texto}";
 
         try {
-            var listado = await http.GetFromJsonAsync<int>(url);
-            usuarios = listado;
+            var listado = await http.GetFromJsonAsync<Usuario[]>(url);
+
+            if (listado.Length > 9) {
+                contadorUsuarios = "+9";
+            }
+
+            else if (listado.Length == 0) {
+                contadorUsuarios = null;
+            }
+
+            else {
+                contadorUsuarios = listado.Length.ToString();
+            }
         }
 
         catch {
-            usuarios = 0;
+            contadorUsuarios = null;
         }
+    }
+
+    // redirecciones
+
+    private void RedigirBusquedaUsuario() {
+        navegador.NavigateTo($"/usuario/{texto}", true);
     }
 }

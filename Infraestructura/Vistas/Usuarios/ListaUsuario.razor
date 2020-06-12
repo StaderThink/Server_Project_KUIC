@@ -1,6 +1,8 @@
 ﻿@inject HttpClient http
+@inject NavigationManager navegador
 
 @page "/usuario"
+@page "/usuario/{busqueda}"
 @layout AppLayout
 
 @if (cargando) {
@@ -22,7 +24,7 @@ else {
         <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
 
         <div class="grid has-gap xs-1 md-2">
-            @foreach(var usuario in lista) {
+            @foreach (var usuario in lista) {
                 <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
             }
         </div>
@@ -35,13 +37,16 @@ else {
     bool cargando = true;
     bool autorizado = false;
 
+    [Parameter]
+    public string busqueda { get; set; } = "";
+
     protected override async Task OnInitializedAsync() {
         await ObtenerListado();
     }
 
     private async Task ObtenerListado() {
         cargando = true;
-        HttpResponseMessage respuesta = await http.GetAsync("/api/usuario/todos");
+        HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
 
         try {
             if (respuesta.StatusCode == HttpStatusCode.OK) {

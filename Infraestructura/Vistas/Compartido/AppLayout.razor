@@ -3,10 +3,14 @@
 @inject ILocalStorageService localStorage
 @inject NavigationManager navegador
 
-<header class="navbar">
-    <a href="/inicio" class="button is-outline is-small">aurelia</a>
+<header>
+    <div class="logo">
+        <a href="/inicio" class="button is-outline is-small">aurelia</a>
+    </div>
 
-    <SearchBox />
+    <div class="search">
+        <SearchBox />
+    </div>
 
     <nav>
         <a @onclick="CerrarSession">Cerrar sesion</a>
@@ -17,7 +21,7 @@
     @Body
 
     <footer>
-        <p>Desarrollado con 💙, en Bogotá.</p>
+        <p>Desarrollado con 💖, en Bogotá.</p>
     </footer>
 </main>
 

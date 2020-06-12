@@ -16,19 +16,30 @@ namespace Infraestructura.Controladores.Usuarios {
     public class UsuarioController : Controller {
         private readonly RepoUsuario repo = new RepoUsuario();
 
-        [HttpGet]
-        public IEnumerable<Usuario> Listar() {
-            IEnumerable<Usuario> todos = repo.Listar();
-            return todos
-                .Where(usuario => usuario.Activo)
-                .OrderBy(usuario => usuario.Documento);
+        private IEnumerable<Usuario> Busqueda(string criterio = "") {
+            IEnumerable<Usuario> lista = repo.Listar();
+
+            criterio = criterio?.ToLower() ?? "";
+
+            return
+                from usuario in lista
+                where
+                    usuario.Documento.Contains(criterio) ||
+                    usuario.Nombre.Contains(criterio) ||
+                    usuario.Apellido.Contains(criterio)
+                select usuario;
         }
 
-        [HttpGet("todos")]
-        public IEnumerable<Usuario> ListarTodos() {
-            return repo
-                .Listar()
-                .OrderBy(usuario => usuario.Documento);
+        [HttpGet]
+        public IActionResult Listar([FromQuery] string buscar) {
+            try {
+                var resultado = Busqueda(buscar);
+                return Ok(resultado);
+            }
+
+            catch {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -74,46 +85,6 @@ namespace Infraestructura.Controladores.Usuarios {
             }
 
             return NotFound();
-        }
-
-        [HttpGet("existe")]
-        public ActionResult<Usuario> Existe([FromQuery] string documento) {
-            IEnumerable<Usuario> lista = repo.Listar();
-
-            try {
-                Usuario busqueda = lista.First(usuario => usuario.Documento == documento);
-
-                if (busqueda is Usuario) {
-                    return busqueda;
-                }
-
-                return NotFound();
-            }
-
-            catch {
-                return NotFound();
-            }
-        }
-
-        [HttpGet("existencias")]
-        public IActionResult Existencias([FromQuery] string documento, [FromQuery] string nombre, [FromQuery] string apellido) {
-            IEnumerable<Usuario> lista = repo.Listar();
-
-            try {
-                IEnumerable<Usuario> consulta =
-                    from usuario in lista
-                    where
-                        usuario.Documento.Contains(documento ?? "") ||
-                        usuario.Nombre.Contains(nombre ?? "") ||
-                        usuario.Apellido.Contains(apellido ?? "")
-                    select usuario;
-
-                return Ok(consulta.Count());
-            }
-
-            catch {
-                return NotFound();
-            }
         }
     }
 }

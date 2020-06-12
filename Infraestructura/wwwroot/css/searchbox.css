@@ -1,18 +1,29 @@
 ﻿#searchbox {
-    max-width: 35rem;
     width: 100%;
     position: relative;
 }
 
 #searchbox .suggestions {
     position: absolute;
-    top: calc(100% + 1rem);
+    top: 100%;
+    margin-top: 1.5rem;
     background: white;
     width: 100%;
     box-shadow: 0 0 .4rem rgba(0, 0, 0, 0.1);
     border-radius: 0.4rem;
     border: solid 1px rgba(0, 0, 0, 0.15);
     z-index: 10;
+    transition: all ease .15s;
+}
+
+#searchbox .suggestions.invisible {
+    visibility: hidden;
+    opacity: 0;
+}
+
+#searchbox .suggestions.visible {
+    visibility: visible;
+    opacity: 1;
 }
 
 #searchbox .suggestion {
@@ -22,4 +33,9 @@
     align-items: center;
     cursor: pointer;
     text-decoration: none;
+    user-select: none;
+}
+
+#searchbox .suggestion:hover {
+    background: rgba(0,0,0, 0.02);
 }
