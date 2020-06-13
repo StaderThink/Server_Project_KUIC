@@ -13,8 +13,8 @@
 <form @onsubmit="Enviar" @onsubmit:preventDefault>
     <div class="grid xs-1 md-2 has-gap">
         <div class="field">
-            <label>Tipo de documento</label>
-            <input type="text" class="input" @bind="usuario.TipoDocumento" disabled readonly />
+            <label for="tipoDocumento">Tipo de documento</label>
+            <input id="tipoDocumento" type="text" class="input" @bind="usuario.TipoDocumento" disabled readonly />
         </div>
 
         <div class="field">
@@ -23,35 +23,40 @@
         </div>
 
         <div class="field">
-            <label>Nombre</label>
-            <input type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
         </div>
 
         <div class="field">
-            <label>Apellido</label>
-            <input type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
+            <label for="apellido">Apellido</label>
+            <input id="apellido" type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
         </div>
 
         <div class="field">
-            <label>Correo</label>
-            <input type="email" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
         </div>
 
         <div class="field">
-            <label>Teléfono</label>
+            <label for="telefono">Teléfono</label>
             <div class="control is-attached">
                 <span class="button is-static">+57</span>
-                <input type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
+                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
             </div>
         </div>
 
         <div class="field">
-            <label>Cargo</label>
-            <select class="input" @bind="usuario.Cargo" required>
+            <label for="cargo">Cargo</label>
+            <select id="cargo" class="input" @bind="usuario.Cargo" required>
                 @foreach (Cargo cargo in cargos) {
                     <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
                 }
             </select>
+        </div>
+
+        <div class="field">
+            <label for="activo">Activo</label>
+            <input id="activo" type="checkbox" class="checkbox" @bind="usuario.Activo" />
         </div>
     </div>
 

@@ -15,7 +15,7 @@ namespace Dominio.Repositorio {
 					clave = @Clave,
 					telefono = @Telefono,
 					actualizado = curdate(),
-                    cargo = @Cargo
+                    cargo = @Cargo,
 					activo = @Activo
 				where id = @Id
 			";

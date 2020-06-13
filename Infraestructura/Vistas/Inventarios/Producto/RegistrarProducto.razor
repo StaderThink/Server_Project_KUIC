@@ -8,10 +8,10 @@
 
 @if (categorias.Length == 0)
 {
-<blockquote class="is-warn">
-    <p>@noExistenCategorias</p>
-    <a href="/categoria/registrar" class="button is-prime">Agregar Categoria</a>
-</blockquote>
+    <blockquote class="is-warn">
+        <p>@noExistenCategorias</p>
+        <a href="/categoria/registrar" class="button is-prime">Agregar Categoria</a>
+    </blockquote>
 }
 
 else
@@ -30,14 +30,13 @@ else
 
     <div class="field">
         <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" class="input" type="text" placeholder="presas de pollo" @bind="producto.Descripcion">
-        </textarea>
+        <textarea id="descripcion" class="input" type="text" placeholder="presas de pollo" @bind="producto.Descripcion"></textarea>
     </div>
 
     <div class="grid xs-1 md-2 has-gap">
         <div class="field">
             <label for="precio">Precio</label>
-            <input id="precio" class="input" type="number" placeholder="$$$$$$" min="50" @bind="producto.Precio" required />
+            <input id="precio" class="input" type="number" placeholder="###.#" min="50" @bind="producto.Precio" required />
         </div>
 
         <div class="field">
@@ -87,11 +86,9 @@ else
             </select>
         </div>
 
-        <div class="field">
-            <div class="control is-gruped">
-                <button class="is-prime">Registrar</button>
-                <a href="/producto" class="button is-outline">Cancelar</a>
-            </div>
+        <div class="control is-grouped">
+            <button class="is-prime">Registrar</button>
+            <a href="/producto" class="button is-outline">Cancelar</a>
         </div>
     </div>
 </form>

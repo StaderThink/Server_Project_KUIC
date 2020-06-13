@@ -1,25 +1,24 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-    <div class="card">
-        <p><b>@producto.Nombre.ToCapitalize()</b></p>
-        <p>@producto.Codigo</p>
-        <p>$@producto.Precio</p>
-        <p>@categoria.Nombre</p>
-        <div class="control is-grouped">
-            <button class="is-prime" @onclick="Editar">Editar</button>
+<div class="card">
+    <p>@producto.Codigo <b>@producto.Nombre.ToCapitalize()</b></p>
+    <p>$@producto.Precio</p>
 
-            @if (cargando)
-            {
-                <button class="is-outline has-loader" disabled>Eliminar</button>
-            }
+    <div class="control is-grouped">
+        <button class="is-prime" @onclick="Editar">Editar</button>
 
-            else
-            {
-                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
-            }
-        </div>
+        @if (cargando)
+        {
+            <button class="is-outline has-loader" disabled>Eliminar</button>
+        }
+
+        else
+        {
+            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+        }
     </div>
+</div>
 
 @code {
     [Parameter]

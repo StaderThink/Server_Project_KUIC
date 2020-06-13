@@ -18,7 +18,7 @@ namespace Dominio.Repositorio {
                     telefono = @Telefono,
                     actualizado = curdate(),
 					activo = @Activo
-                    where id = @Id
+                where id = @Id
            ";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
