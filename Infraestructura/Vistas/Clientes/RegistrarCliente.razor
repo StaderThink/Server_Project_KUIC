@@ -4,7 +4,7 @@
 @page "/cliente/registrar"
 @layout AppLayout
 
-<h3>Registrar Cliente</h3>
+<h2>Registrar cliente</h2>
 
 @if (mensaje is string)
 {
@@ -13,48 +13,58 @@
     </blockquote>
 }
 
-<form @onsubmit="Enviar">
-    <div class="field">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" class="input" type="text" @bind="cliente.Nombre" required />
-    </div>
-    <div class="field">
-        <label for="encargado">Encargado</label>
-        <input id="encargado" class="input" type="text" @bind="cliente.Encargado" />
-    </div>
-    <div class="field">
-        <label for="rut">Rut</label>
-        <input id="rut" class="@(rutExiste ? "input is-error" : "input")" type="number" placeholder="###" minlength="11" @bind="cliente.Rut" @onfocus="BuscarExistencia" required />
+<form @onsubmit="Enviar" @onsubmit:preventDefault>
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label for="rut">RUT</label>
+            <input id="rut" type="number" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="cliente.Rut" @onfocusout="BuscarExistencia" required />
 
-        @if (rutExiste)
-        {
-            <small class="is-error">Este RUT ya ha sido registrado</small>
-        }
+            @if (yaExiste)
+            {
+                <small class="is-error">Este RUT ya ha sido registrado</small>
+            }
 
-        else
-        {
-            <small>Número de RUT</small>
-        }
+            else
+            {
+                <small>Número de RUT</small>
+            }
+        </div>
 
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" placeholder="Ej. Sebastian Vargas" class="input" @bind="cliente.Nombre" required />
+        </div>
+
+        <div class="field">
+            <label for="encargado">Encargado</label>
+            <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
+        </div>
+
+        <div class="field">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
+        </div>
+
+        <div class="field">
+            <label for="direccion">Direccion</label>
+            <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
+        </div>
+
+        <div class="field">
+            <label for="telefono">Teléfono</label>
+            <div class="control is-attached">
+                <span class="button is-static">+57</span>
+                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
+            </div>
+        </div>
+        <div class="field">
+            <label for="activo">Activo</label>
+            <input type="checkbox" class="toggle" @bind="cliente.Activo" />
+        </div>
     </div>
+
     <div class="field">
-        <label for="correo">Correo</label>
-        <input id="correo" class="input" type="email" @bind="cliente.Correo" required />
-    </div>
-    <div class="field">
-        <label for="direccion">Direccion</label>
-        <input id="direccion" class="input" type="text" @bind="cliente.Direccion" required />
-    </div>
-    <div class="field">
-        <label for="telefono">Telefono</label>
-        <input id="telefono" type="number" placeholder="###" minlength="10" class="input" @bind="cliente.Telefono" required />
-    </div>
-    <div class="field">
-        <label for="activo">Activo</label>
-        <input type="checkbox" class="toggle" @bind="cliente.Activo" />
-    </div>
-    <div class="field">
-        <div class="control is-gruped">
+        <div class="control is-grouped">
             @if (cargando)
             {
                 <button class="is-prime has-loader" disabled>Registrar</button>
@@ -62,20 +72,23 @@
 
             else
             {
-                <button class="is-prime" disabled="@rutExiste">Registrar</button>
+                <button class="is-prime" disabled="@yaExiste">Registrar</button>
             }
+
             <a href="/cliente" class="button is-outline">Cancelar</a>
         </div>
     </div>
-
 </form>
 
 @code {
     Cliente cliente { get; set; } = new Cliente();
 
+
+    bool yaExiste = false;
     string mensaje;
     bool cargando = false;
-    bool rutExiste = false;
+
+    
 
     async Task Enviar()
     {
@@ -94,7 +107,7 @@
             {
                 if (respuesta.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    mensaje = "¿Porque estas en esta ruta si no tienes autorización?";
+                    mensaje = "¿Porque estas en esta ruta sin no tienes autorización?";
                 }
 
                 else
@@ -119,13 +132,23 @@
     {
         try
         {
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente/existe?rut={cliente.Rut}");
-            rutExiste = respuesta.IsSuccessStatusCode;
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente?buscar={cliente.Rut}");
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var existencias = await respuesta.Content.ReadFromJsonAsync<Cliente[]>();
+                yaExiste = existencias.Length > 0;
+            }
+
+            else
+            {
+                yaExiste = true;
+            }
         }
 
         catch
         {
-            rutExiste = true;
+                yaExiste = true;
         }
     }
 }

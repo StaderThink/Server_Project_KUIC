@@ -1,49 +1,46 @@
 ﻿@inject HttpClient http
-@inject NavigationManager navegador
 
-    <div class="card">
-        <p>@(cliente.Nombre.ToCapitalize())</p>
-        <p>RUT @cliente.Rut</p>
-        
-        <div class="control is-grouped">
-            <button class="is-prime" @onclick="Editar">Editar</button>
+<div class="card">
+    <p><b>@(cliente.Nombre.ToCapitalize())</b></p>
+    <p>RUT:  @cliente.Rut</p>
 
-            @if (cargando)
-            {
-                <button class="is-outline has-loader" disabled>Borrar</button>
-            }
+    <span class="button is-static is-small">@(cliente.Activo ? "Activo" : "Inactivo")</span>
 
-            else
-            {
-                <button class="is-outline" @onclick="Eliminar">Borrar</button>
-            }
-        </div>
+    <div class="control is-grouped">
+        <a href="/cliente/modificar/@cliente.Id" class="button is-prime">Editar</a>
+
+        @if (cargando)
+        {
+            <button class="is-outline has-loader" disabled>Borrar</button>
+        }
+
+        else
+        {
+            <button class="is-outline" @onclick="Eliminar">Borrar</button>
+        }
     </div>
+</div>
 
 @code {
     [Parameter]
     public Cliente cliente { get; set; }
 
     [Parameter]
-    public EventCallback<Cliente> OnClienteEliminado { get; set; }
+    public EventCallback onDeleted { get; set; }
 
     bool cargando = false;
 
     async Task Eliminar()
     {
         cargando = true;
+
         HttpResponseMessage respuesta = await http.DeleteAsync($"/api/cliente/{cliente.Id}");
 
-        if (respuesta.IsSuccessStatusCode && OnClienteEliminado.HasDelegate)
+        if (respuesta.IsSuccessStatusCode && onDeleted.HasDelegate)
         {
-            await OnClienteEliminado.InvokeAsync(cliente);
+            await onDeleted.InvokeAsync(null);
         }
 
         cargando = false;
-    }
-
-    void Editar()
-    {
-        navegador.NavigateTo($"/cliente/modificar/{cliente.Id}");
     }
 }

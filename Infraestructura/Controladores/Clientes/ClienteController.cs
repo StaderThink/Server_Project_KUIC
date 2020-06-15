@@ -1,10 +1,7 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
-
 using Infraestructura.Extensiones;
-
 using Microsoft.AspNetCore.Mvc;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,20 +10,34 @@ namespace Infraestructura.Controladores.Clientes {
     [Autenticado(Permiso.Clientes)]
     public class ClienteController : Controller {
         private readonly RepoCliente repositorio = new RepoCliente();
+        private IEnumerable<Cliente> Busqueda(string criterio = "")
+        {
+            IEnumerable<Cliente> lista = repositorio.Listar();
 
-        [HttpGet]
-        public IEnumerable<Cliente> Listar() {
-            IEnumerable<Cliente> todos = repositorio.Listar();
-            return todos
-                .Where(cliente => cliente.Activo)
-                .OrderBy(cliente => cliente.Id);
+            criterio = criterio?.ToLower() ?? "";
+
+            return
+                from cliente in lista
+                where
+                    cliente.Nombre.Contains(criterio) ||
+                    cliente.Rut.Contains(criterio)
+                    
+                select cliente;
         }
+        [HttpGet]
 
-        [HttpGet("todos")]
-        public IEnumerable<Cliente> ListarTodos() {
-            return repositorio
-                .Listar()
-                .OrderBy(cliente => cliente.Id);
+        public IActionResult Listar([FromQuery] string buscar)
+        {
+            try
+            {
+                var resultado = Busqueda(buscar);
+                return Ok(resultado);
+            }
+
+            catch
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -72,22 +83,6 @@ namespace Infraestructura.Controladores.Clientes {
             }
 
             return NotFound();
-        }
-        [HttpGet("existe")]
-        public ActionResult<Cliente> Existe([FromQuery] string rut) {
-            IEnumerable<Cliente> lista = repositorio.Listar();
-            try {
-                Cliente busqueda = lista.First(cliente => cliente.Rut == rut);
-
-                if (busqueda is Cliente) {
-                    return busqueda;
-                }
-
-                return NotFound();
-            }
-            catch {
-                return NotFound();
-            }
         }
     }
 }

@@ -1,37 +1,84 @@
 ﻿@inject HttpClient http
+@inject NavigationManager navegador
 
 @page "/cliente"
+@page "/cliente/{busqueda}"
 @layout AppLayout
 
-<h1>Listar clientes</h1>
-
-<a href="/cliente/registrar" class="button is-prime">Registrar</a>
-
-@if (cliente is null)
+@if (cargando)
 {
     <div class="loader is-medium"></div>
 }
 
+else if (!autorizado)
+{
+    <p>Oops... no estas autorizado.</p>
+}
+
 else
 {
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Cliente cliente in cliente)
-        {
-            <TarjetaCliente cliente="@cliente" OnClienteEliminado="ObtenerListado" />
-        }
-    </div>
+    @if (lista is null)
+    {
+        <p>Hubo un error cargando la lista</p>
+    }
+
+    else
+    {
+        <h2>Listar clientes</h2>
+
+        <a class="button is-prime" href="/cliente/registrar">Registrar cliente</a>
+
+        <div class="grid has-gap xs-1 md-2">
+            @foreach (var cliente in lista)
+            {
+                <TarjetaCliente cliente="cliente" onDeleted="ObtenerListado" />
+            }
+        </div>
+    }
 }
 
 @code {
-    Cliente[] cliente { get; set; }
+    Cliente[] lista { get; set; }
+
+    bool cargando = true;
+    bool autorizado = false;
+
+    [Parameter]
+    public string busqueda { get; set; } = "";
 
     protected override async Task OnInitializedAsync()
     {
         await ObtenerListado();
     }
 
-    async Task ObtenerListado()
-    {      
-            cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
+    private async Task ObtenerListado()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente?buscar={busqueda}");
+
+        try
+        {
+            if (respuesta.StatusCode == HttpStatusCode.OK)
+            {
+                lista = await respuesta.Content.ReadFromJsonAsync<Cliente[]>();
+                autorizado = true;
+            }
+
+            else
+            {
+                lista = null;
+            }
+        }
+
+        catch (Exception ex)
+        {
+            lista = null;
+            Console.WriteLine(ex);
+        }
+
+        finally
+        {
+            cargando = false;
+        }
     }
 }
