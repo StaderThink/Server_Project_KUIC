@@ -39,6 +39,8 @@ namespace Infraestructura {
                 app.UseHsts();
             }
 
+            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

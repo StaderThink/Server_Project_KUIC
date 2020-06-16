@@ -1,7 +1,10 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
+
 using Infraestructura.Extensiones;
+
 using Microsoft.AspNetCore.Mvc;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,8 +13,8 @@ namespace Infraestructura.Controladores.Clientes {
     [Autenticado(Permiso.Clientes)]
     public class ClienteController : Controller {
         private readonly RepoCliente repositorio = new RepoCliente();
-        private IEnumerable<Cliente> Busqueda(string criterio = "")
-        {
+
+        private IEnumerable<Cliente> Busqueda(string criterio = "") {
             IEnumerable<Cliente> lista = repositorio.Listar();
 
             criterio = criterio?.ToLower() ?? "";
@@ -19,23 +22,19 @@ namespace Infraestructura.Controladores.Clientes {
             return
                 from cliente in lista
                 where
-                    cliente.Nombre.Contains(criterio) ||
-                    cliente.Rut.Contains(criterio)
-                    
+                    cliente.Rut.Contains(criterio) ||
+                    cliente.Nombre.Contains(criterio)
                 select cliente;
         }
-        [HttpGet]
 
-        public IActionResult Listar([FromQuery] string buscar)
-        {
-            try
-            {
-                var resultado = Busqueda(buscar);
+        [HttpGet]
+        public IActionResult Listar([FromQuery] string buscar) {
+            try {
+                IEnumerable<Cliente> resultado = Busqueda(buscar);
                 return Ok(resultado);
             }
 
-            catch
-            {
+            catch {
                 return BadRequest();
             }
         }

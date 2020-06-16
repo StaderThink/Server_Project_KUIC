@@ -6,13 +6,18 @@ namespace Dominio.Repositorio {
     public sealed class RepoEntrada : IRepo<Entrada> {
         public bool Insertar(Entrada entidad) {
             using Conexion conexion = new Conexion();
-            string consulta = "insert into entrada (fecha, observacion) values (@Fecha, @Observacion)";
+            string consulta = $@"
+                insert into entrada (fecha, observacion)
+                values (@Fecha, @Observacion)
+            ";
+
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
+
         public bool Editar(Entrada entidad) {
             using Conexion conexion = new Conexion();
-            string consulta = @"
+            string consulta = @$"
 				update entrada set fecha = @Fecha, observacion = @Observacion
 				where id = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);

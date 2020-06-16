@@ -33,7 +33,7 @@ namespace Infraestructura.Controladores.Usuarios {
         [HttpGet]
         public IActionResult Listar([FromQuery] string buscar) {
             try {
-                var resultado = Busqueda(buscar);
+                IEnumerable<Usuario> resultado = Busqueda(buscar);
                 return Ok(resultado);
             }
 

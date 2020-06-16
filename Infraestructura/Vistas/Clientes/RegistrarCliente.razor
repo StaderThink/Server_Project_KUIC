@@ -26,13 +26,13 @@
 
             else
             {
-                <small>Número de RUT</small>
+                <small>Número de registro único tributario</small>
             }
         </div>
 
         <div class="field">
             <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" placeholder="Ej. Sebastian Vargas" class="input" @bind="cliente.Nombre" required />
+            <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
         </div>
 
         <div class="field">
@@ -57,9 +57,10 @@
                 <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
             </div>
         </div>
-        <div class="field">
+
+        <div class="field is-inline">
             <label for="activo">Activo</label>
-            <input type="checkbox" class="toggle" @bind="cliente.Activo" />
+            <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
         </div>
     </div>
 
@@ -83,12 +84,9 @@
 @code {
     Cliente cliente { get; set; } = new Cliente();
 
-
     bool yaExiste = false;
     string mensaje;
     bool cargando = false;
-
-    
 
     async Task Enviar()
     {
@@ -132,6 +130,12 @@
     {
         try
         {
+            if (string.IsNullOrWhiteSpace(cliente.Rut))
+            {
+                yaExiste = false;
+                return;
+            }
+
             HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente?buscar={cliente.Rut}");
 
             if (respuesta.IsSuccessStatusCode)
@@ -148,7 +152,7 @@
 
         catch
         {
-                yaExiste = true;
+            yaExiste = true;
         }
     }
 }

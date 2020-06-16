@@ -18,11 +18,11 @@
     </div>
     <div class="field">
         <label for="inicio">Fecha de inicio</label>
-        <input id="inicio" class="input" type="date" @bind="notificacion.FechaInicio" required/>
+        <input id="inicio" class="input" type="datetime-local" @bind="notificacion.FechaInicio" @bind:format="@CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required/>
     </div>
     <div class="field">
         <label for="fin">Fecha de finalización</label>
-        <input id="fin" class="input" type="date" @bind="notificacion.FechaFin" required/>
+        <input id="fin" class="input" type="datetime-local" @bind="notificacion.FechaFin" @bind:format="@CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required/>
     </div>
     <div class="field">
         <label>Autor</label>
@@ -36,7 +36,7 @@
         </select>
     </div>
     <div class="field">
-        <div class="control is-gruped">
+        <div class="control is-grouped">
             <button class="is-prime">Actualizar</button>
             <a href="/notificacion" class="button is-outline">Cancelar</a>
         </div>

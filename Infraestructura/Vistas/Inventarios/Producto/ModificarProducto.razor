@@ -9,23 +9,22 @@
     <div class="grid xs-1 md-2 has-gap">
         <div class="field">
             <label for="texto">Nombre</label>
-            <input id="texto" class="input" type="text" placeholder="ej: pollo" @bind="producto.Nombre" required />
+            <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
         </div>
+
         <div class="field">
             <label for="codigo">Código</label>
-            <input id="codigo" class="input" type="number" maxlength="5" placeholder="#####" minlength="5" @bind="producto.Codigo" required />
+            <input id="codigo" class="input" type="number" maxlength="5" minlength="5" placeholder="#####" @bind="producto.Codigo" required />
         </div>
-    </div>
 
-    <div class="field">
-        <label for="descripcion">Descripción</label>
-        <input id="descripcion" class="input" type="text" placeholder="presa de pollo" @bind="producto.Descripcion" />
-    </div>
+        <div class="field column xs-1 md-2">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" class="input" type="text" placeholder="Presas de pollo" @bind="producto.Descripcion"></textarea>
+        </div>
 
-    <div class="grid xs-1 md-2 has-gap">
         <div class="field">
             <label for="precio">Precio</label>
-            <input id="precio" class="input" type="number" placeholder="$$$$$$" min="50" @bind="producto.Precio" required />
+            <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
         </div>
 
         <div class="field">
@@ -39,8 +38,8 @@
         </div>
 
         <div class="field">
-            <label for="min_cantidad">Mínima cantidad</label>
-            <input id="min_cantidad" class="input" type="number" placeholder="30" @bind="producto.MinCantidad" required />
+            <label for="min_cantidad">Cantidad</label>
+            <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
         </div>
 
         <div class="field">
@@ -54,33 +53,37 @@
         </div>
 
         <div class="field">
-            <label for="min_peso">Peso mínimo</label>
-            <input id="min_peso" class="input" type="number" placeholder="000" min="1" @bind="producto.MinPeso" required />
-        </div>
-
-        <div class="field">
-            <label for="max_peso">Peso maximo</label>
-            <input id="max_peso" class="input" type="number" placeholder="000" @bind="producto.MaxPeso" required />
+            <label for="min_peso">Peso</label>
+            <div class="control is-attached">
+                <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
+                <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
+            </div>
+            <small>Peso mínimo y máximo</small>
         </div>
 
         <div class="field">
             <label>Categoria</label>
             <select class="input" @bind="producto.Categoria">
-                <option value="0" disabled>Seleccionar...</option>
-
                 @foreach (Categoria categoria in categorias)
                 {
                     <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
                 }
             </select>
         </div>
+    </div>
 
-        <div class="field">
-            <div class="control is-gruped">
-                <button class="is-prime">Registrar</button>
-                <a href="/producto" class="button is-outline">Cancelar</a>
-            </div>
-        </div>
+    <div class="control is-grouped">
+        @if (cargando)
+        {
+            <button class="is-prime has-loader" disabled>Guardar</button>
+        }
+
+        else
+        {
+            <button class="is-prime">Guardar</button>
+        }
+
+        <a href="/producto" class="button is-outline">Cancelar</a>
     </div>
 </form>
 
@@ -94,6 +97,8 @@
     Categoria[] categorias { get; set; } = new Categoria[0];
     Producto producto { get; set; } = new Producto();
 
+    bool cargando = false;
+
     protected override async Task OnInitializedAsync()
     {
         categorias = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
@@ -102,11 +107,26 @@
 
     async Task Enviar()
     {
-        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/producto/{Id}", producto);
+        cargando = true;
 
-        if (respuesta.IsSuccessStatusCode)
+        try
         {
-            navegador.NavigateTo("/producto");
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/producto/{Id}", producto);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/producto");
+            }
+        }
+
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+
+        finally
+        {
+            cargando = false;
         }
     }
 }

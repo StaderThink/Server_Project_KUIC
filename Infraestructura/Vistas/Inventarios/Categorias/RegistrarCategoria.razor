@@ -5,23 +5,23 @@
 @layout AppLayout
 
 <h3>Registrar nueva categoria</h3>
-    <form @onsubmit="Enviar">
-        <div class="field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
-        </div>
-        <div class="field">
-            <label for="descripcion">Descripción</label>
-            <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" reuired/>
-        </div>
-        <div class="field">
-            <div class="control is-gruped">
-                <button class="is-prime">Registrar</button>
-                <a href="/categoria" class="button is-outline" >Cancelar</a>
-            </div>
-        </div>
-        
-    </form>
+
+<form @onsubmit="Enviar">
+    <div class="field">
+        <label for="nombre">Nombre</label>
+        <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
+    </div>
+
+    <div class="field">
+        <label for="descripcion">Descripción</label>
+        <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" reuired/>
+    </div>
+
+    <div class="control is-grouped">
+        <button class="is-prime">Registrar</button>
+        <a href="/categoria" class="button is-outline">Cancelar</a>
+    </div>
+</form>
 
 @code {
     Categoria categoria { get; set; } = new Categoria();

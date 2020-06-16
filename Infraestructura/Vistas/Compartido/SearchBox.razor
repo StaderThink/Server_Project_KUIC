@@ -13,10 +13,21 @@
     <div class="@(mostrarBarra ? "suggestions visible" : "suggestions invisible")">
         <!-- usuarios -->
 
-        @if (contadorUsuarios is string) {
-            <a @onclick="RedigirBusquedaUsuario" class="suggestion">
+        @if (contadorUsuarios is string)
+        {
+            <a @onclick="RedirigirClientes" class="suggestion">
                 <p>Usuarios</p>
                 <span class="button is-static is-small">@contadorUsuarios</span>
+            </a>
+        }
+
+        <!-- clientes -->
+
+        @if (contadorClientes is string)
+        {
+            <a @onclick="RedirigirClientes" class="suggestion">
+                <p>Clientes</p>
+                <span class="button is-static is-small">@contadorClientes</span>
             </a>
         }
 
@@ -35,39 +46,45 @@
     }
 
     string texto;
+
     string contadorUsuarios;
+    string contadorClientes;
 
     private async Task Buscar() {
-        await BuscarUsuarios();
+        contadorUsuarios = await RealizarBusqueda<Usuario>(controlador: "usuario");
+        contadorClientes = await RealizarBusqueda<Cliente>(controlador: "cliente");
     }
 
-    private async Task BuscarUsuarios() {
-        string url = $"/api/usuario?buscar={texto}";
+    private async Task<string> RealizarBusqueda<T>(string controlador)
+    {
+        string url = $"/api/{controlador}?buscar={texto}";
 
-        try {
-            var listado = await http.GetFromJsonAsync<Usuario[]>(url);
+        var listado = await http.GetFromJsonAsync<T[]>(url);
 
-            if (listado.Length > 9) {
-                contadorUsuarios = "+9";
-            }
-
-            else if (listado.Length == 0) {
-                contadorUsuarios = null;
-            }
-
-            else {
-                contadorUsuarios = listado.Length.ToString();
-            }
+        if (listado.Length > 9)
+        {
+            return "+9";
         }
 
-        catch {
-            contadorUsuarios = null;
+        else if (listado.Length == 0)
+        {
+            return null;
+        }
+
+        else
+        {
+            return listado.Length.ToString();
         }
     }
 
     // redirecciones
 
-    private void RedigirBusquedaUsuario() {
-        navegador.NavigateTo($"/usuario/{texto}", true);
+    private void Redirigir(string controlador)
+    {
+        navegador.NavigateTo($"/{controlador}/{texto}", true);
     }
+
+    private void RedirigirUsuario() => Redirigir(controlador: "usuario");
+
+    private void RedirigirClientes() => Redirigir(controlador: "cliente");
 }
