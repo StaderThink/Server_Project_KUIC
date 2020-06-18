@@ -13,7 +13,6 @@ using System.Text;
 
 namespace Aplicacion.Servicio.Usuarios
 {
-#nullable enable
     public sealed class ServicioSesion
     {
         private readonly RepoUsuario _repo;
@@ -29,7 +28,7 @@ namespace Aplicacion.Servicio.Usuarios
             {
                 var repoCargo = new RepoCargo();
                 var cargo = repoCargo.PorId(usuario.Cargo);
-                
+
                 // generacion del token
 
                 string tokenSecreto = Environment.GetEnvironmentVariable("TOKEN") ?? "Aurelia";
@@ -65,11 +64,16 @@ namespace Aplicacion.Servicio.Usuarios
         {
             var roles = new List<Claim>();
 
-            if (cargo.Logistica) roles.Add(new Claim(ClaimTypes.Role, "logistica"));
-            if (cargo.Pedidos) roles.Add(new Claim(ClaimTypes.Role, "pedidos"));
-            if (cargo.Solicitar) roles.Add(new Claim(ClaimTypes.Role, "solicitar"));
-            if (cargo.Usuarios) roles.Add(new Claim(ClaimTypes.Role, "usuarios"));
-            if (cargo.Clientes) roles.Add(new Claim(ClaimTypes.Role, "clientes"));
+            if (cargo.Logistica)
+                roles.Add(new Claim(ClaimTypes.Role, "logistica"));
+            if (cargo.Pedidos)
+                roles.Add(new Claim(ClaimTypes.Role, "pedidos"));
+            if (cargo.Solicitar)
+                roles.Add(new Claim(ClaimTypes.Role, "solicitar"));
+            if (cargo.Usuarios)
+                roles.Add(new Claim(ClaimTypes.Role, "usuarios"));
+            if (cargo.Clientes)
+                roles.Add(new Claim(ClaimTypes.Role, "clientes"));
 
             return roles;
         }

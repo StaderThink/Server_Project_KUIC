@@ -12,7 +12,7 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpPost]
         public IActionResult IniciarSesion([FromBody] Credencial credencial)
         {
-            var servicio = new ServicioSesion();
+            ServicioSesion servicio = new ServicioSesion();
 
             if (servicio.GenerarToken(credencial) is string token)
             {
