@@ -2,15 +2,19 @@
 
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio {
-    public sealed class RepoSegmento : IRepo<Segmento> {
-        public bool Insertar(Segmento entidad) {
+namespace Dominio.Repositorio
+{
+    public sealed class RepoSegmento : IRepo<Segmento>
+    {
+        public bool Insertar(Segmento entidad)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "insert into segmento (notificacion, cargo) values (@Notificacion, @Cargo)";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Editar(Segmento entidad) {
+        public bool Editar(Segmento entidad)
+        {
             using Conexion conexion = new Conexion();
             string consulta = @"
 				update segmento set notificacion = @Notificacion, cargo = @Cargo
@@ -18,17 +22,20 @@ namespace Dominio.Repositorio {
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Eliminar(Segmento entidad) {
+        public bool Eliminar(Segmento entidad)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "delete from segmento where id = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public IEnumerable<Segmento> Listar() {
+        public IEnumerable<Segmento> Listar()
+        {
             using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Segmento>("select * from segmento");
         }
-        public Segmento PorId(int id) {
+        public Segmento PorId(int id)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "select * from segmento where id = @id";
             return conexion.Obtener<Segmento>(consulta, new { id });

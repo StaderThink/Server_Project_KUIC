@@ -1,27 +1,31 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
 
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 
-namespace Infraestructura.Controladores.Inventarios {
+namespace Infraestructura.Controladores.Inventarios
+{
     [Route("api/[controller]")]
-    [Autenticado(Permiso.Logistica)]
-    public class EntradaController : Controller {
+    [Authorize]
+    public class EntradaController : Controller
+    {
         private readonly RepoEntrada repositorio = new RepoEntrada();
 
         [HttpGet]
-        public IEnumerable<Entrada> Listar() {
+        public IEnumerable<Entrada> Listar()
+        {
             return repositorio.Listar();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Entrada> Obtener(int id) {
+        public ActionResult<Entrada> Obtener(int id)
+        {
             Entrada entrada = repositorio.PorId(id);
-            if (entrada is Entrada) {
+            if (entrada is Entrada)
+            {
                 return entrada;
             }
 
@@ -29,8 +33,10 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Entrada informacion) {
-            if (repositorio.Insertar(informacion)) {
+        public IActionResult Insertar([FromBody] Entrada informacion)
+        {
+            if (repositorio.Insertar(informacion))
+            {
                 return Accepted();
             }
 
@@ -38,10 +44,13 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id) {
+        public IActionResult Eliminar(int id)
+        {
             Entrada entrada = repositorio.PorId(id);
-            if (entrada is Entrada) {
-                if (repositorio.Eliminar(entrada)) {
+            if (entrada is Entrada)
+            {
+                if (repositorio.Eliminar(entrada))
+                {
                     return Accepted();
                 }
             }
@@ -50,10 +59,13 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Entrada informacion) {
-            if (repositorio.PorId(id) is Entrada) {
+        public IActionResult Editar(int id, [FromBody] Entrada informacion)
+        {
+            if (repositorio.PorId(id) is Entrada)
+            {
                 informacion.Id = id;
-                if (repositorio.Editar(informacion)) {
+                if (repositorio.Editar(informacion))
+                {
                     return Accepted();
                 }
             }

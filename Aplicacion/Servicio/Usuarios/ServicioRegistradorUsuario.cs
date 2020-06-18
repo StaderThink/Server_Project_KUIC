@@ -3,15 +3,19 @@ using Dominio.Repositorio;
 
 using System;
 
-namespace Aplicacion.Servicio.Usuarios {
-    public sealed class ServicioRegistradorUsuario {
+namespace Aplicacion.Servicio.Usuarios
+{
+    public sealed class ServicioRegistradorUsuario
+    {
         private readonly IRepo<Usuario> repo;
 
-        public ServicioRegistradorUsuario(IRepo<Usuario> repo) {
+        public ServicioRegistradorUsuario(IRepo<Usuario> repo)
+        {
             this.repo = repo;
         }
 
-        public bool Registrar(Usuario usuario) {
+        public bool Registrar(Usuario usuario)
+        {
             // valores por defecto
 
             usuario.Clave = Guid.NewGuid().ToString()[0..8];

@@ -2,9 +2,12 @@
 
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio {
-    public sealed class RepoCargo : IRepo<Cargo> {
-        public bool Editar(Cargo entidad) {
+namespace Dominio.Repositorio
+{
+    public sealed class RepoCargo : IRepo<Cargo>
+    {
+        public bool Editar(Cargo entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = @"
@@ -19,7 +22,8 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public bool Eliminar(Cargo entidad) {
+        public bool Eliminar(Cargo entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = "delete from cargo where id = @Id";
@@ -28,7 +32,8 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public bool Insertar(Cargo entidad) {
+        public bool Insertar(Cargo entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = @"
@@ -40,12 +45,14 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public IEnumerable<Cargo> Listar() {
+        public IEnumerable<Cargo> Listar()
+        {
             using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Cargo>("select * from cargo");
         }
 
-        public Cargo PorId(int id) {
+        public Cargo PorId(int id)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "select * from cargo where id = @id";
 

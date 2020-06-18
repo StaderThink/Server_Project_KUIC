@@ -1,4 +1,4 @@
-﻿namespace Infraestructura.Extensiones
+﻿namespace Aplicacion.Extensiones
 {
     public static class StringExtension
     {

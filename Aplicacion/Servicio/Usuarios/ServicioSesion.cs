@@ -1,58 +1,89 @@
 ﻿using Aplicacion.Modelo.Sesiones;
-using Aplicacion.Seguridad;
 
 using Dominio.Modelo;
 using Dominio.Repositorio;
 
+using Microsoft.IdentityModel.Tokens;
+
 using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
-namespace Aplicacion.Servicio.Usuarios {
-    public sealed class ServicioSesion : Traductor<Sesion, string> {
-        private bool ValidarSesion(Sesion sesion) {
-            int dias = (DateTime.Now - sesion.Fecha).Days;
-            if (dias > 3) return false;
+namespace Aplicacion.Servicio.Usuarios
+{
+#nullable enable
+    public sealed class ServicioSesion
+    {
+        private readonly RepoUsuario _repo;
 
-            Credencial credencial = sesion.Credencial;
-
-            RepoUsuario repo = new RepoUsuario();
-            Usuario usuario = repo.PorDocumento(sesion.Credencial.Documento);
-
-            if (usuario is Usuario) {
-                if (usuario.Activo && usuario.Clave == credencial.Clave) {
-                    return true;
-                }
-            }
-
-            return false;
+        public ServicioSesion()
+        {
+            _repo = new RepoUsuario();
         }
 
-        public override string Generar(Sesion carga) {
-            if (ValidarSesion(carga)) {
-                try {
-                    ProveedorJWT criptografo = new ProveedorJWT();
-                    return criptografo.Encriptar(carga);
-                }
+        public string? GenerarToken(Credencial credencial)
+        {
+            if (ValidarCredencial(credencial) is Usuario usuario)
+            {
+                var repoCargo = new RepoCargo();
+                var cargo = repoCargo.PorId(usuario.Cargo);
+                
+                // generacion del token
 
-                catch {
-                    return null;
-                }
+                string tokenSecreto = Environment.GetEnvironmentVariable("TOKEN") ?? "Aurelia";
+
+                SymmetricSecurityKey llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
+                SigningCredentials credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
+
+                var carga = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Dns, usuario.Documento),
+                    new Claim(ClaimTypes.Email, usuario.Correo),
+                };
+
+                carga.AddRange(GenerarRoles(cargo));
+
+                JwtSecurityToken token = new JwtSecurityToken
+                (
+                    issuer: tokenSecreto,
+                    audience: tokenSecreto,
+                    claims: carga,
+                    expires: DateTime.Now.AddDays(3),
+                    signingCredentials: credenciales
+                );
+
+                JwtSecurityTokenHandler criptografo = new JwtSecurityTokenHandler();
+                return criptografo.WriteToken(token);
             }
 
             return null;
         }
 
-        public override Sesion Traducir(string carga) {
-            try {
-                ProveedorJWT criptografo = new ProveedorJWT();
-                Sesion sesion = criptografo.Traduccir<Sesion>(carga);
+        private IEnumerable<Claim> GenerarRoles(Cargo cargo)
+        {
+            var roles = new List<Claim>();
 
-                if (sesion is Sesion) {
-                    if (ValidarSesion(sesion)) return sesion;
+            if (cargo.Logistica) roles.Add(new Claim(ClaimTypes.Role, "logistica"));
+            if (cargo.Pedidos) roles.Add(new Claim(ClaimTypes.Role, "pedidos"));
+            if (cargo.Solicitar) roles.Add(new Claim(ClaimTypes.Role, "solicitar"));
+            if (cargo.Usuarios) roles.Add(new Claim(ClaimTypes.Role, "usuarios"));
+            if (cargo.Clientes) roles.Add(new Claim(ClaimTypes.Role, "clientes"));
+
+            return roles;
+        }
+
+        private Usuario? ValidarCredencial(Credencial credencial)
+        {
+            var usuario = _repo.PorDocumento(credencial.Documento);
+
+            if (usuario is Usuario)
+            {
+                if (usuario.Clave == credencial.Clave && usuario.Activo)
+                {
+                    return usuario;
                 }
-            }
-
-            catch {
-                return null;
             }
 
             return null;

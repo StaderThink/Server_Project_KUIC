@@ -1,6 +1,8 @@
 ﻿using System;
-namespace Dominio.Modelo {
-    public sealed class Pedido : IEntidad {
+namespace Dominio.Modelo
+{
+    public sealed class Pedido : IEntidad
+    {
         public int Id { get; set; }
         public DateTime Fecha { get; set; }
         public int Cliente { get; set; }

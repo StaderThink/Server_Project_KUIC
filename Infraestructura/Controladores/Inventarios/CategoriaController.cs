@@ -1,28 +1,32 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
 
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 
-namespace Infraestructura.Controladores.Inventarios {
+namespace Infraestructura.Controladores.Inventarios
+{
     [Route("api/[controller]")]
-    [Autenticado(Permiso.Logistica)]
-    public class CategoriaController : Controller {
+    [Authorize]
+    public class CategoriaController : Controller
+    {
         private readonly RepoCategoria repo = new RepoCategoria();
 
         [HttpGet]
-        public IEnumerable<Categoria> Listar() {
+        public IEnumerable<Categoria> Listar()
+        {
             return repo.Listar();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Categoria> Obtener(int id) {
+        public ActionResult<Categoria> Obtener(int id)
+        {
             Categoria categoria = repo.PorId(id);
 
-            if (categoria is Categoria) {
+            if (categoria is Categoria)
+            {
                 return categoria;
             }
 
@@ -30,8 +34,10 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Categoria datos) {
-            if (repo.Insertar(datos)) {
+        public IActionResult Insertar([FromBody] Categoria datos)
+        {
+            if (repo.Insertar(datos))
+            {
                 return Accepted();
             }
 
@@ -39,11 +45,14 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id) {
+        public IActionResult Eliminar(int id)
+        {
             Categoria categoria = repo.PorId(id);
 
-            if (categoria is Categoria) {
-                if (repo.Eliminar(categoria)) {
+            if (categoria is Categoria)
+            {
+                if (repo.Eliminar(categoria))
+                {
                     return Accepted();
                 }
             }
@@ -52,11 +61,14 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Categoria datos) {
-            if (repo.PorId(id) is Categoria) {
+        public IActionResult Editar(int id, [FromBody] Categoria datos)
+        {
+            if (repo.PorId(id) is Categoria)
+            {
                 datos.Id = id;
 
-                if (repo.Editar(datos)) {
+                if (repo.Editar(datos))
+                {
                     return Accepted();
                 }
             }

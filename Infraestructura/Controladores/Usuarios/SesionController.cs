@@ -1,49 +1,32 @@
-﻿using Aplicacion.Modelo.Formularios;
-using Aplicacion.Modelo.Sesiones;
+﻿using Aplicacion.Modelo.Sesiones;
 using Aplicacion.Servicio.Usuarios;
 
-using Dominio.Modelo;
-
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using System;
-
-namespace Infraestructura.Controladores.Usuarios {
+namespace Infraestructura.Controladores.Usuarios
+{
     [Route("api/[controller]")]
-    public class SesionController : Controller {
+    public class SesionController : ControllerBase
+    {
         [HttpPost]
-        public IActionResult IniciarSesion([FromBody] Credencial credencial) {
-            Sesion sesion = new Sesion {
-                Fecha = DateTime.Now,
-                Credencial = credencial
-            };
+        public IActionResult IniciarSesion([FromBody] Credencial credencial)
+        {
+            var servicio = new ServicioSesion();
 
-            ServicioSesion servicio = new ServicioSesion();
-
-            if (servicio.Generar(sesion) is string token) {
+            if (servicio.GenerarToken(credencial) is string token)
+            {
                 return Ok(token);
             }
 
             return BadRequest();
         }
 
-        [Autenticado]
+        [Authorize(Roles = "usuarios")]
         [HttpGet]
-        public ActionResult<Usuario> QuienSoy() {
-            object carga = HttpContext.Items["usuario"];
-
-            if (carga is Usuario usuario) return usuario;
-            else return NoContent();
-        }
-
-        [HttpPost("reestablecer")]
-        public IActionResult ReestablecerClave([FromBody] FormularioReestablecerClave formulario) {
-            ServicioReestablecerClave servicio = new ServicioReestablecerClave();
-
-            if (servicio.ReestablecerClave(formulario)) return Ok();
-            else return BadRequest();
+        public IActionResult VerificarSesion()
+        {
+            return Ok("Hola!");
         }
     }
 }

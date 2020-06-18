@@ -2,9 +2,12 @@
 
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio {
-    public sealed class RepoUsuario : IRepo<Usuario> {
-        public bool Editar(Usuario entidad) {
+namespace Dominio.Repositorio
+{
+    public sealed class RepoUsuario : IRepo<Usuario>
+    {
+        public bool Editar(Usuario entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = @$"
@@ -22,7 +25,8 @@ namespace Dominio.Repositorio {
 
             Usuario temporal = PorId(entidad.Id);
 
-            if (entidad.Clave == null) {
+            if (entidad.Clave == null)
+            {
                 entidad.Clave = temporal.Clave;
             }
 
@@ -30,7 +34,8 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public bool Eliminar(Usuario entidad) {
+        public bool Eliminar(Usuario entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = "delete from usuario where id = @Id";
@@ -39,7 +44,8 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public bool Insertar(Usuario entidad) {
+        public bool Insertar(Usuario entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = @$"
@@ -53,19 +59,22 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public IEnumerable<Usuario> Listar() {
+        public IEnumerable<Usuario> Listar()
+        {
             using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Usuario>("select * from usuario");
         }
 
-        public Usuario PorId(int id) {
+        public Usuario PorId(int id)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "select * from usuario where id = @id";
 
             return conexion.Obtener<Usuario>(consulta, new { id });
         }
 
-        public Usuario PorDocumento(string documento) {
+        public Usuario PorDocumento(string documento)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "select * from usuario where documento = @documento";
 

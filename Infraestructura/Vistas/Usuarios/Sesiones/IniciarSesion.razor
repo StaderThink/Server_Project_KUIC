@@ -1,0 +1,50 @@
+﻿@inject AuthenticationStateProvider proveedor
+@using Autenticacion
+
+@page "/"
+
+<h3>IniciarSesion</h3>
+
+<AuthorizeView>
+    <Authorized>
+        Estas autorizado
+    </Authorized>
+
+    <NotAuthorized>
+        No estas autorizado
+    </NotAuthorized>
+</AuthorizeView>
+
+<form class="grid has-gap" @onsubmit="Iniciar" >
+    <div class="field">
+        <label>Documento</label>
+
+        <div class="control is-attached">
+            <span class="button is-static">CC</span>
+            <input type="text" pattern="[0-9]*" @bind="documento" placeholder="###" class="input" />
+        </div>
+
+        <small>Número de cédula de ciudadanía</small>
+    </div>
+
+    <div class="field">
+        <label>Clave</label>
+        <input type="password" @bind="clave" placeholder="###" class="input" />
+    </div>
+
+    <div class="field">
+        <div class="control is-grouped">
+            <button class="is-prime">Ingresar</button>
+        </div>
+    </div>
+</form>
+
+@code {
+    string documento;
+    string clave;
+
+    void Iniciar()
+    {
+        
+    }
+}

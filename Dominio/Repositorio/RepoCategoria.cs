@@ -2,9 +2,12 @@
 
 using System.Collections.Generic;
 
-namespace Dominio.Repositorio {
-    public sealed class RepoCategoria : IRepo<Categoria> {
-        public bool Insertar(Categoria entidad) {
+namespace Dominio.Repositorio
+{
+    public sealed class RepoCategoria : IRepo<Categoria>
+    {
+        public bool Insertar(Categoria entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = "insert into categoria (nombre, descripcion) values (@Nombre, @Descripcion)";
@@ -13,7 +16,8 @@ namespace Dominio.Repositorio {
             return filasAfectadas > 0;
         }
 
-        public bool Editar(Categoria entidad) {
+        public bool Editar(Categoria entidad)
+        {
             using Conexion conexion = new Conexion();
             string consulta = @"
 				update categoria set nombre = @Nombre, descripcion = @Descripcion
@@ -21,18 +25,21 @@ namespace Dominio.Repositorio {
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public bool Eliminar(Categoria entidad) {
+        public bool Eliminar(Categoria entidad)
+        {
             using Conexion conexion = new Conexion();
 
             string consulta = "delete from categoria where id = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
-        public IEnumerable<Categoria> Listar() {
+        public IEnumerable<Categoria> Listar()
+        {
             using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Categoria>("select * from categoria");
         }
-        public Categoria PorId(int id) {
+        public Categoria PorId(int id)
+        {
             using Conexion conexion = new Conexion();
             string consulta = "select * from categoria where id = @id";
 

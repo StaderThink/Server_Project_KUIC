@@ -3,18 +3,22 @@ using Dominio.Repositorio;
 
 using Infraestructura.Extensiones;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Infraestructura.Controladores.Clientes {
+namespace Infraestructura.Controladores.Clientes
+{
     [Route("api/[controller]")]
-    [Autenticado(Permiso.Clientes)]
-    public class ClienteController : Controller {
+    [Authorize]
+    public class ClienteController : Controller
+    {
         private readonly RepoCliente repositorio = new RepoCliente();
 
-        private IEnumerable<Cliente> Busqueda(string criterio = "") {
+        private IEnumerable<Cliente> Busqueda(string criterio = "")
+        {
             IEnumerable<Cliente> lista = repositorio.Listar();
 
             criterio = criterio?.ToLower() ?? "";
@@ -28,20 +32,25 @@ namespace Infraestructura.Controladores.Clientes {
         }
 
         [HttpGet]
-        public IActionResult Listar([FromQuery] string buscar) {
-            try {
+        public IActionResult Listar([FromQuery] string buscar)
+        {
+            try
+            {
                 IEnumerable<Cliente> resultado = Busqueda(buscar);
                 return Ok(resultado);
             }
 
-            catch {
+            catch
+            {
                 return BadRequest();
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Cliente> Obtener(int id) {
-            if (repositorio.PorId(id) is Cliente cliente) {
+        public ActionResult<Cliente> Obtener(int id)
+        {
+            if (repositorio.PorId(id) is Cliente cliente)
+            {
                 return cliente;
             }
 
@@ -49,19 +58,24 @@ namespace Infraestructura.Controladores.Clientes {
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Cliente cliente) {
-            if (repositorio.Insertar(cliente)) {
+        public IActionResult Insertar([FromBody] Cliente cliente)
+        {
+            if (repositorio.Insertar(cliente))
+            {
                 return Accepted();
             }
             return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Cliente cliente) {
-            if (repositorio.PorId(id) is Cliente) {
+        public IActionResult Editar(int id, [FromBody] Cliente cliente)
+        {
+            if (repositorio.PorId(id) is Cliente)
+            {
                 cliente.Id = id;
 
-                if (repositorio.Editar(cliente)) {
+                if (repositorio.Editar(cliente))
+                {
                     return Ok();
                 }
 
@@ -72,13 +86,17 @@ namespace Infraestructura.Controladores.Clientes {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id) {
-            if (repositorio.PorId(id) is Cliente cliente) {
-                if (repositorio.Eliminar(cliente)) {
+        public IActionResult Eliminar(int id)
+        {
+            if (repositorio.PorId(id) is Cliente cliente)
+            {
+                if (repositorio.Eliminar(cliente))
+                {
                     return Ok();
                 }
 
-                else return BadRequest();
+                else
+                    return BadRequest();
             }
 
             return NotFound();

@@ -1,46 +1,55 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
 
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 
-namespace Infraestructura.Controladores.Inventarios {
+namespace Infraestructura.Controladores.Inventarios
+{
     [Route("api/[controller]")]
-    [Autenticado]
-    public class DetalleSalidaController : Controller {
+    [Authorize]
+    public class DetalleSalidaController : Controller
+    {
         private readonly RepoDetalleSalida repo = new RepoDetalleSalida();
 
         [HttpGet]
-        public IEnumerable<DetalleSalida> Listar() {
+        public IEnumerable<DetalleSalida> Listar()
+        {
             return repo.Listar();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<DetalleSalida> Obtener(int id) {
+        public ActionResult<DetalleSalida> Obtener(int id)
+        {
             DetalleSalida detalle = repo.PorId(id);
 
-            if (detalle is DetalleSalida) {
+            if (detalle is DetalleSalida)
+            {
                 return detalle;
             }
             return NotFound();
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] DetalleSalida datos) {
-            if (repo.Insertar(datos)) {
+        public IActionResult Insertar([FromBody] DetalleSalida datos)
+        {
+            if (repo.Insertar(datos))
+            {
                 return Accepted();
             }
             return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] DetalleSalida datos) {
-            if (repo.PorId(id) is DetalleSalida) {
+        public IActionResult Editar(int id, [FromBody] DetalleSalida datos)
+        {
+            if (repo.PorId(id) is DetalleSalida)
+            {
                 datos.Id = id;
-                if (repo.Editar(datos)) {
+                if (repo.Editar(datos))
+                {
                     return Accepted();
                 }
             }
@@ -48,10 +57,13 @@ namespace Infraestructura.Controladores.Inventarios {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id) {
+        public IActionResult Delete(int id)
+        {
             DetalleSalida detalle = repo.PorId(id);
-            if (detalle is DetalleSalida) {
-                if (repo.Eliminar(detalle)) {
+            if (detalle is DetalleSalida)
+            {
+                if (repo.Eliminar(detalle))
+                {
                     return Accepted();
                 }
             }

@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace Dominio.Modelo {
-    public sealed class Notificacion : IEntidad {
+namespace Dominio.Modelo
+{
+    public sealed class Notificacion : IEntidad
+    {
         public int Id { get; set; }
         public string Texto { get; set; }
         public DateTime FechaInicio { get; set; }

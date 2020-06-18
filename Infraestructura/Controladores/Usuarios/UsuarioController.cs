@@ -3,20 +3,22 @@
 using Dominio.Modelo;
 using Dominio.Repositorio;
 
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Infraestructura.Controladores.Usuarios {
+namespace Infraestructura.Controladores.Usuarios
+{
     [Route("api/[controller]")]
-    [Autenticado(Permiso.Usuarios)]
-    public class UsuarioController : Controller {
+    [Authorize]
+    public class UsuarioController : Controller
+    {
         private readonly RepoUsuario repo = new RepoUsuario();
 
-        private IEnumerable<Usuario> Busqueda(string criterio = "") {
+        private IEnumerable<Usuario> Busqueda(string criterio = "")
+        {
             IEnumerable<Usuario> lista = repo.Listar();
 
             criterio = criterio?.ToLower() ?? "";
@@ -31,20 +33,25 @@ namespace Infraestructura.Controladores.Usuarios {
         }
 
         [HttpGet]
-        public IActionResult Listar([FromQuery] string buscar) {
-            try {
+        public IActionResult Listar([FromQuery] string buscar)
+        {
+            try
+            {
                 IEnumerable<Usuario> resultado = Busqueda(buscar);
                 return Ok(resultado);
             }
 
-            catch {
+            catch
+            {
                 return BadRequest();
             }
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Usuario> Obtener(int id) {
-            if (repo.PorId(id) is Usuario usuario) {
+        public ActionResult<Usuario> Obtener(int id)
+        {
+            if (repo.PorId(id) is Usuario usuario)
+            {
                 return usuario;
             }
 
@@ -52,19 +59,25 @@ namespace Infraestructura.Controladores.Usuarios {
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Usuario usuario) {
+        public IActionResult Insertar([FromBody] Usuario usuario)
+        {
             ServicioRegistradorUsuario servicio = new ServicioRegistradorUsuario(repo);
 
-            if (servicio.Registrar(usuario)) return Ok();
-            else return BadRequest();
+            if (servicio.Registrar(usuario))
+                return Ok();
+            else
+                return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Usuario usuario) {
-            if (repo.PorId(id) is Usuario) {
+        public IActionResult Editar(int id, [FromBody] Usuario usuario)
+        {
+            if (repo.PorId(id) is Usuario)
+            {
                 usuario.Id = id;
 
-                if (repo.Editar(usuario)) {
+                if (repo.Editar(usuario))
+                {
                     return Ok();
                 }
 
@@ -75,13 +88,17 @@ namespace Infraestructura.Controladores.Usuarios {
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id) {
-            if (repo.PorId(id) is Usuario usuario) {
-                if (repo.Eliminar(usuario)) {
+        public IActionResult Eliminar(int id)
+        {
+            if (repo.PorId(id) is Usuario usuario)
+            {
+                if (repo.Eliminar(usuario))
+                {
                     return Ok();
                 }
 
-                else return BadRequest();
+                else
+                    return BadRequest();
             }
 
             return NotFound();

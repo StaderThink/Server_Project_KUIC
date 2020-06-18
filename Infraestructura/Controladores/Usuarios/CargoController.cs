@@ -1,30 +1,35 @@
 ﻿using Dominio.Modelo;
 using Dominio.Repositorio;
 
-using Infraestructura.Extensiones;
-
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 
-namespace Infraestructura.Controladores.Usuarios {
-    [Autenticado(Permiso.Usuarios)]
+namespace Infraestructura.Controladores.Usuarios
+{
+    [Authorize]
     [Route("api/[controller]")]
-    public class CargoController : Controller {
+    public class CargoController : Controller
+    {
         private readonly RepoCargo repo;
 
-        public CargoController() {
+        public CargoController()
+        {
             repo = new RepoCargo();
         }
 
         [HttpGet]
-        public IEnumerable<Cargo> Listar() {
+        public IEnumerable<Cargo> Listar()
+        {
             return repo.Listar();
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Cargo datos) {
-            if (repo.Insertar(datos)) {
+        public IActionResult Insertar([FromBody] Cargo datos)
+        {
+            if (repo.Insertar(datos))
+            {
                 return Ok();
             }
 
@@ -32,8 +37,10 @@ namespace Infraestructura.Controladores.Usuarios {
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Cargo> Obtener(int id) {
-            if (repo.PorId(id) is Cargo cargo) {
+        public ActionResult<Cargo> Obtener(int id)
+        {
+            if (repo.PorId(id) is Cargo cargo)
+            {
                 return cargo;
             }
 
@@ -41,22 +48,30 @@ namespace Infraestructura.Controladores.Usuarios {
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Cargo datos) {
-            if (repo.PorId(id) is Cargo) {
+        public IActionResult Editar(int id, [FromBody] Cargo datos)
+        {
+            if (repo.PorId(id) is Cargo)
+            {
                 datos.Id = id;
 
-                if (repo.Editar(datos)) return Ok();
-                else return BadRequest();
+                if (repo.Editar(datos))
+                    return Ok();
+                else
+                    return BadRequest();
             }
 
             return NotFound();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id) {
-            if (repo.PorId(id) is Cargo cargo) {
-                if (repo.Eliminar(cargo)) return Ok();
-                else return BadRequest();
+        public IActionResult Eliminar(int id)
+        {
+            if (repo.PorId(id) is Cargo cargo)
+            {
+                if (repo.Eliminar(cargo))
+                    return Ok();
+                else
+                    return BadRequest();
             }
 
             return NotFound();

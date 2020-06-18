@@ -4,13 +4,7 @@
 
 <Router AppAssembly="@typeof(Program).Assembly">
 	<Found Context="routeData">
-		@if (cargando) {
-			<LoadingPage/>
-		}
-
-		else {
-			<RouteView RouteData="@routeData" />
-		}
+        <AuthorizeRouteView RouteData="@routeData" />
 	</Found>
     <NotFound>
         <LayoutView Layout="@typeof(BaseLayout)">
@@ -18,34 +12,3 @@
         </LayoutView>
     </NotFound>
 </Router>
-
-
-@code {
-    bool cargando = true;
-
-    async Task<bool> ValidarSesion() {
-        HttpResponseMessage respuesta = await http.GetAsync("/api/sesion");
-        return respuesta.IsSuccessStatusCode;
-    }
-
-    protected override async Task OnInitializedAsync() {
-        cargando = true;
-
-        if (await localStorage.ContainKeyAsync("token")) {
-            string token = await localStorage.GetItemAsync<string>("token");
-            var bearer = new AuthenticationHeaderValue("bearer", token);
-
-            http.DefaultRequestHeaders.Authorization = bearer;
-
-            if (await ValidarSesion() && navegador.BaseUri == navegador.Uri) {
-                navegador.NavigateTo("/inicio");
-            }
-        }
-
-        else {
-            navegador.NavigateTo("/");
-        }
-
-        cargando = false;
-    }
-}

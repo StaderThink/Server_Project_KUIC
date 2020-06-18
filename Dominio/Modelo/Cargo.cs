@@ -1,5 +1,7 @@
-﻿namespace Dominio.Modelo {
-    public sealed class Cargo : IEntidad {
+﻿namespace Dominio.Modelo
+{
+    public sealed class Cargo : IEntidad
+    {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public bool Pedidos { get; set; }

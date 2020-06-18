@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Text.Json.Serialization;
 
-namespace Dominio.Modelo {
-    public sealed class Usuario : IEntidad {
+namespace Dominio.Modelo
+{
+    public sealed class Usuario : IEntidad
+    {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }
