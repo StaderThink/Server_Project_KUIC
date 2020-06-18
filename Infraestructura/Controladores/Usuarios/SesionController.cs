@@ -1,8 +1,15 @@
 ﻿using Aplicacion.Modelo.Sesiones;
+using Aplicacion.Seguridad;
 using Aplicacion.Servicio.Usuarios;
+
+using Dominio.Modelo;
+using Dominio.Repositorio;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using System.Linq;
+using System.Security.Claims;
 
 namespace Infraestructura.Controladores.Usuarios
 {
@@ -12,21 +19,34 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpPost]
         public IActionResult IniciarSesion([FromBody] Credencial credencial)
         {
-            ServicioSesion servicio = new ServicioSesion();
+            var servicio = new ServicioSesion();
 
-            if (servicio.GenerarToken(credencial) is string token)
+            if (servicio.ValidarCredencial(credencial) is Usuario usuario)
             {
-                return Ok(token);
+                var criptografo = new ProveedorJWT();
+                var identidad = servicio.GenerarIdentidad(usuario);
+
+                return Ok(criptografo.GenerarToken(identidad));
             }
 
             return BadRequest();
         }
 
-        [Authorize(Roles = "usuarios")]
+        [Authorize]
         [HttpGet]
         public IActionResult VerificarSesion()
         {
-            return Ok("Hola!");
+            var cargaDocumento = HttpContext.User.Claims.First(carga => carga.Type == ClaimTypes.Dns);
+            var documento = cargaDocumento.Value;
+
+            var repo = new RepoUsuario();
+
+            if (repo.PorDocumento(documento) is Usuario usuario)
+            {
+                return Ok(usuario);
+            }
+
+            return BadRequest();
         }
     }
 }

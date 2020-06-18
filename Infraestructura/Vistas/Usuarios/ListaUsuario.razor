@@ -5,37 +5,45 @@
 @page "/usuario/{busqueda}"
 @layout AppLayout
 
-@if (cargando) {
-    <div class="loader is-medium"></div>
-}
+<AuthorizeView Roles="usuarios">
+    <Authorized>
+        @if (cargando)
+        {
+            <div class="loader is-medium"></div>
+        }
 
-else if (!autorizado) {
-    <p>Oops... no estas autorizado.</p>
-}
-
-else {
-    @if (lista is null) {
-        <p>Hubo un error cargando la lista</p>
-    }
-
-    else {
-        <h3>Listar usuarios</h3>
-
-        <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
-
-        <div class="grid has-gap xs-1 md-2">
-            @foreach (var usuario in lista) {
-                <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+        else
+        {
+            @if (lista is null)
+            {
+                <p>Hubo un error cargando la lista</p>
             }
-        </div>
-    }
-}
+
+            else
+            {
+                <h3>Listar usuarios</h3>
+
+                <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
+
+                <div class="grid has-gap xs-1 md-2">
+                    @foreach (var usuario in lista)
+                    {
+                        <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                    }
+                </div>
+            }
+        }
+    </Authorized>
+
+    <NotAuthorized>
+        <p>Oops... parece que no tienes permisos para estar aquí</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     Usuario[] lista { get; set; }
 
     bool cargando = true;
-    bool autorizado = false;
 
     [Parameter]
     public string busqueda { get; set; } = "";
@@ -51,7 +59,6 @@ else {
         try {
             if (respuesta.StatusCode == HttpStatusCode.OK) {
                 lista = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
-                autorizado = true;
             }
 
             else {

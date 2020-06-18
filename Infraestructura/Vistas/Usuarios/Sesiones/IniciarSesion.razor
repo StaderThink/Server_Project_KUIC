@@ -1,50 +1,66 @@
 ﻿@inject AuthenticationStateProvider proveedor
 @using Autenticacion
 
+@layout BaseLayout
 @page "/"
 
-<h3>IniciarSesion</h3>
-
 <AuthorizeView>
-    <Authorized>
-        Estas autorizado
-    </Authorized>
-
     <NotAuthorized>
-        No estas autorizado
+        @if (error)
+        {
+            <blockquote class="is-error">Hubo un error iniciando sesión</blockquote>
+        }
+
+        <form class="grid has-gap" @onsubmit="Iniciar">
+            <div class="field">
+                <label>Documento</label>
+
+                <div class="control is-attached">
+                    <span class="button is-static">CC</span>
+                    <input type="text" pattern="[0-9]*" @bind="documento" placeholder="###" class="input" />
+                </div>
+
+                <small>Número de cédula de ciudadanía</small>
+            </div>
+
+            <div class="field">
+                <label>Clave</label>
+                <input type="password" @bind="clave" placeholder="###" class="input" />
+            </div>
+
+            <div class="field">
+                <div class="control is-grouped">
+                    <button class="is-prime">Ingresar</button>
+                </div>
+            </div>
+        </form>
     </NotAuthorized>
+
+    <Authorized>
+        <h1>Tu ya estas autenticado</h1>
+        <p>Parece que ya estas autenticado, si gustas te podemos llevar a la vista principal <a href="/inicio">haciendo click</a>.</p>
+    </Authorized>
 </AuthorizeView>
-
-<form class="grid has-gap" @onsubmit="Iniciar" >
-    <div class="field">
-        <label>Documento</label>
-
-        <div class="control is-attached">
-            <span class="button is-static">CC</span>
-            <input type="text" pattern="[0-9]*" @bind="documento" placeholder="###" class="input" />
-        </div>
-
-        <small>Número de cédula de ciudadanía</small>
-    </div>
-
-    <div class="field">
-        <label>Clave</label>
-        <input type="password" @bind="clave" placeholder="###" class="input" />
-    </div>
-
-    <div class="field">
-        <div class="control is-grouped">
-            <button class="is-prime">Ingresar</button>
-        </div>
-    </div>
-</form>
 
 @code {
     string documento;
     string clave;
 
-    void Iniciar()
+    bool cargando = false;
+    bool error = false;
+
+    async Task Iniciar()
     {
-        
+        try
+        {
+            var nuevoProveedor = (BlazorAuthenticationProvider) proveedor;
+            await nuevoProveedor.IniciarSesion(documento, clave);
+        }
+
+        catch (Exception ex)
+        {
+            error = true;
+            Console.WriteLine(ex.ToString());
+        }
     }
 }

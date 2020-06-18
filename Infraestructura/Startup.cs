@@ -1,7 +1,10 @@
 using Blazored.LocalStorage;
 
+using Infraestructura.Autenticacion;
+
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -51,14 +54,14 @@ namespace Infraestructura
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(ConfigurarAutenticacion);
 
-            // services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-
             services.AddSingleton(service => // agregar cliente http
                 new HttpClient
                 {
                     BaseAddress = new Uri("https://localhost:5001")
                 }
             );
+
+            services.AddScoped<AuthenticationStateProvider, BlazorAuthenticationProvider>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
