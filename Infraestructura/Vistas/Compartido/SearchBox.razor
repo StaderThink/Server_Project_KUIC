@@ -1,7 +1,7 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div id="searchbox">
+<div class="searchbox">
     <input
         class="input"
         type="text"
@@ -15,7 +15,7 @@
 
         @if (contadorUsuarios is string)
         {
-            <a @onclick="RedirigirClientes" class="suggestion">
+            <a @onclick="RedirigirUsuarios" class="suggestion">
                 <p>Usuarios</p>
                 <span class="button is-static is-small">@contadorUsuarios</span>
             </a>
@@ -84,7 +84,7 @@
         navegador.NavigateTo($"/{controlador}/{texto}", true);
     }
 
-    private void RedirigirUsuario() => Redirigir(controlador: "usuario");
+    private void RedirigirUsuarios() => Redirigir(controlador: "usuario");
 
     private void RedirigirClientes() => Redirigir(controlador: "cliente");
 }

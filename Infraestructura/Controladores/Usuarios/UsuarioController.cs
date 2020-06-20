@@ -11,8 +11,8 @@ using System.Linq;
 
 namespace Infraestructura.Controladores.Usuarios
 {
+    [Authorize(Roles = "usuarios")]
     [Route("api/[controller]")]
-    [Authorize]
     public class UsuarioController : Controller
     {
         private readonly RepoUsuario repo = new RepoUsuario();

@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Infraestructura.Controladores.Usuarios
 {
-    [Authorize]
+    [Authorize(Roles = "usuarios")]
     [Route("api/[controller]")]
     public class CargoController : Controller
     {

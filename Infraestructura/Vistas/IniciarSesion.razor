@@ -6,6 +6,8 @@
 
 <AuthorizeView>
     <NotAuthorized>
+        <!-- login -->
+
         @if (error)
         {
             <blockquote class="is-error">Hubo un error iniciando sesión</blockquote>
@@ -37,8 +39,8 @@
     </NotAuthorized>
 
     <Authorized>
-        <h1>Tu ya estas autenticado</h1>
-        <p>Parece que ya estas autenticado, si gustas te podemos llevar a la vista principal <a href="/inicio">haciendo click</a>.</p>
+        <h1>Hola 👋</h1>
+        <SearchBox/>
     </Authorized>
 </AuthorizeView>
 

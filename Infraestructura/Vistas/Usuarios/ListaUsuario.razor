@@ -14,24 +14,16 @@
 
         else
         {
-            @if (lista is null)
-            {
-                <p>Hubo un error cargando la lista</p>
-            }
+            <h3>Listar usuarios</h3>
 
-            else
-            {
-                <h3>Listar usuarios</h3>
+            <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
 
-                <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
-
-                <div class="grid has-gap xs-1 md-2">
-                    @foreach (var usuario in lista)
-                    {
-                        <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
-                    }
-                </div>
-            }
+            <div class="grid has-gap xs-1 md-2">
+                @foreach (var usuario in lista)
+                {
+                    <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                }
+            </div>
         }
     </Authorized>
 
@@ -67,7 +59,7 @@
         }
 
         catch (Exception ex) {
-            lista = null;
+            lista = new Usuario[0];
             Console.WriteLine(ex);
         }
 

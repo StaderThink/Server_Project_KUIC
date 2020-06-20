@@ -1,11 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-@inject ILocalStorageService localStorage
+@using Autenticacion
+
+@inject AuthenticationStateProvider authProvider
 @inject NavigationManager navegador
 
 <header>
     <div class="logo">
-        <a href="/inicio" class="button is-outline is-small">aurelia</a>
+        <a href="/" class="button is-outline is-small">aurelia</a>
     </div>
 
     <div class="search">
@@ -27,7 +29,9 @@
 
 @functions {
     async Task CerrarSession() {
-        await localStorage.ClearAsync();
+        var proveedor = (BlazorAuthenticationProvider) authProvider;
+
+        await proveedor.CerrarSesion();
         navegador.NavigateTo("/");
     }
 }

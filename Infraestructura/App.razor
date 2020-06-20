@@ -1,14 +1,24 @@
-﻿@inject ILocalStorageService localStorage
-@inject HttpClient http
-@inject NavigationManager navegador
+﻿<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(Program).Assembly">
+        <Found Context="routeData">
+            <AuthorizeView>
+                <Authorized>
+                    <AuthorizeRouteView RouteData="@routeData"/>
+                </Authorized>
 
-<Router AppAssembly="@typeof(Program).Assembly">
-	<Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" />
-	</Found>
-    <NotFound>
-        <LayoutView Layout="@typeof(BaseLayout)">
-            <p>Oops... todavia no hay nada en esta ruta.</p>
-        </LayoutView>
-    </NotFound>
-</Router>
+                <Authorizing>
+                    <div class="loader is-large"></div>
+                </Authorizing>
+
+                <NotAuthorized>
+                    <Infraestructura.Vistas.IniciarSesion/>
+                </NotAuthorized>
+            </AuthorizeView>
+        </Found>
+        <NotFound>
+            <LayoutView Layout="@typeof(BaseLayout)">
+                <p>Oops... todavia no hay nada en esta ruta.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+</CascadingAuthenticationState>

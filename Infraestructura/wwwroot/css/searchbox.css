@@ -1,9 +1,9 @@
-﻿#searchbox {
+﻿.searchbox {
     width: 100%;
     position: relative;
 }
 
-#searchbox .suggestions {
+.searchbox .suggestions {
     position: absolute;
     top: 100%;
     margin-top: 1.5rem;
@@ -16,17 +16,17 @@
     transition: all ease .15s;
 }
 
-#searchbox .suggestions.invisible {
+.searchbox .suggestions.invisible {
     visibility: hidden;
     opacity: 0;
 }
 
-#searchbox .suggestions.visible {
+.searchbox .suggestions.visible {
     visibility: visible;
     opacity: 1;
 }
 
-#searchbox .suggestion {
+.searchbox .suggestion {
     padding: 1rem;
     display: flex;
     justify-content: space-between;
