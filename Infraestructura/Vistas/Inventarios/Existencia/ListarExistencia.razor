@@ -1,0 +1,45 @@
+﻿@inject HttpClient http
+@layout AppLayout
+@page "/inventario"
+
+<h3>Inventario</h3>
+
+@if (existencias == null)
+{
+    <div class="loader is-medium">
+
+    </div>
+}
+
+else
+{
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Existencia existencia in existencias)
+        {
+            <TarjetaExistencia existencia="existencia" OnExistenciaEliminada="ObtenerListado"></TarjetaExistencia>
+        }
+    </div>
+}
+
+@code {
+
+    Existencia[] existencias { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        try
+        {
+            existencias = await http.GetFromJsonAsync<Existencia[]>("/api/existencia");
+        }
+
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.ToString());
+        }
+    }
+}

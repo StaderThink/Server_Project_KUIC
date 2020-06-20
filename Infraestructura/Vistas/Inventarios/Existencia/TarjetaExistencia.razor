@@ -1,0 +1,62 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+<div class="card">
+    <div>
+        @if (categoria is null)
+        {
+            <b>Cargando...</b>
+        }
+        else
+        {
+            <p><b>@categoria.Nombre</b></p>
+        }
+        @if (producto is null)
+        {
+            <b>Cargando...</b>
+        }
+
+        else
+        {
+
+            <p>@producto.Nombre.ToCapitalize()</p>
+        }
+    </div>
+    <p>@existencia.Cantidad</p>
+    <div class="control is-grouped">
+        <button class="is-prime" @onclick="Editar">Editar</button>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public Existencia existencia { get; set; }
+
+    [Parameter]
+    public EventCallback<Existencia> OnExistenciaEliminada { get; set; }
+
+    Producto producto { get; set; }
+
+    Categoria categoria { get; set; }
+
+    protected override async Task OnInitializedAsync() {
+        producto = await http.GetFromJsonAsync<Producto>($"/api/producto/{existencia.Producto}");
+        categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{producto.Categoria}");
+    }
+
+    async Task Eliminar()
+    {
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/existencia/{existencia.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnExistenciaEliminada.HasDelegate)
+        {
+            await OnExistenciaEliminada.InvokeAsync(existencia);
+        }
+    }
+
+    void Editar()
+    {
+        navegador.NavigateTo($"/catalogo/modificar/{existencia.Id}");
+    }
+}

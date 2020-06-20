@@ -32,7 +32,8 @@ namespace Dominio.Repositorio
         public IEnumerable<Existencia> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Existencia>("select * from existencia");
+            var listado = conexion.Seleccionar<Existencia>("select * from existencia");
+            return listado;
         }
         public Existencia PorId(int id)
         {

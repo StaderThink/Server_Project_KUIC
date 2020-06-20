@@ -10,14 +10,27 @@ using System.Linq;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    //[Authorize]
     public class ProductoController : Controller
     {
         private readonly RepoProducto repositorio = new RepoProducto();
+
         [HttpGet]
         public IEnumerable<Producto> Listar()
         {
             return repositorio.Listar();
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Producto> Obtener(int id)
+        {
+            Producto producto = repositorio.PorId(id);
+
+            if (producto is Producto)
+            {
+                return producto;
+            }
+            return NotFound();
         }
 
         [HttpGet("buscar")] // GET api/producto/buscar
