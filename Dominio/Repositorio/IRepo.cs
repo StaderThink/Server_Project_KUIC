@@ -11,5 +11,10 @@ namespace Dominio.Repositorio
         bool Eliminar(Modelo entidad);
         IEnumerable<Modelo> Listar();
         Modelo PorId(int id);
+
+        int UltimoPorId()
+        {
+            return 0;
+        }
     }
 }

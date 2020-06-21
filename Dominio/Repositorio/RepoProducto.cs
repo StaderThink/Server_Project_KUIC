@@ -60,5 +60,15 @@ namespace Dominio.Repositorio
             string consulta = "select * from producto where codigo = @codigo";
             return conexion.Obtener<Producto>(consulta, new { codigo });
         }
+
+        public int UltimoPorId()
+        {
+            using var conexion = new Conexion();
+
+            string consulta = "select * from producto order by id desc limit 0, 1";
+            var producto = conexion.Obtener<Producto>(consulta);
+
+            return producto.Id;
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿<CascadingAuthenticationState>
+﻿@using Infraestructura.Vistas.Usuarios.Sesiones
+
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
             <AuthorizeView>
@@ -7,11 +9,13 @@
                 </Authorized>
 
                 <Authorizing>
-                    <div class="loader is-large"></div>
+                    <div class="loader"></div>
                 </Authorizing>
 
                 <NotAuthorized>
-                    <Infraestructura.Vistas.IniciarSesion/>
+                    <LayoutView Layout="@typeof(BaseLayout)">
+                        <IniciarSesion/>
+                    </LayoutView>
                 </NotAuthorized>
             </AuthorizeView>
         </Found>

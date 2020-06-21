@@ -18,17 +18,25 @@
 
             <a class="button is-prime" href="/usuario/registrar">Registrar usuario</a>
 
-            <div class="grid has-gap xs-1 md-2">
-                @foreach (var usuario in lista)
-                {
-                    <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
-                }
-            </div>
+            @if (lista is null)
+            {
+                <p>Algo salio muy mal...</p>
+            }
+
+            else
+            {
+                <div class="grid has-gap xs-1 md-2">
+                    @foreach (var usuario in lista)
+                    {
+                        <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                    }
+                </div>
+            }
         }
     </Authorized>
 
     <NotAuthorized>
-        <p>Oops... parece que no tienes permisos para estar aquí</p>
+        <h2>No tienes permisos para acceder a esta vista</h2>
     </NotAuthorized>
 </AuthorizeView>
 
@@ -46,7 +54,7 @@
 
     private async Task ObtenerListado() {
         cargando = true;
-        HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
+        var respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
 
         try {
             if (respuesta.StatusCode == HttpStatusCode.OK) {
