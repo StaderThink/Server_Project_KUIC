@@ -45,5 +45,15 @@ namespace Dominio.Repositorio
             string consulta = "select * from entrada where id = @id";
             return conexion.Obtener<Entrada>(consulta, new { id });
         }
+
+        public int UltimoPorId()
+        {
+            using var conexion = new Conexion();
+
+            string consulta = "select * from entrada order by id desc limit 0, 1";
+            var entrada = conexion.Obtener<Entrada>(consulta);
+
+            return entrada.Id;
+        }
     }
 }

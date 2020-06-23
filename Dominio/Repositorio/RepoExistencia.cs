@@ -41,5 +41,13 @@ namespace Dominio.Repositorio
             string consulta = "select * from existencia where id = @id";
             return conexion.Obtener<Existencia>(consulta, new { id });
         }
+
+        public Existencia PorProducto(int producto)
+        {
+            using var conexion = new Conexion();
+            string consulta = "select * from existencia where producto = @producto";
+
+            return conexion.Obtener<Existencia>(consulta, new { producto });
+        }
     }
 }

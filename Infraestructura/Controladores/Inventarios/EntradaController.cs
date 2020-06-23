@@ -1,4 +1,6 @@
-﻿using Dominio.Modelo;
+﻿using Aplicacion.Modelo.Inventarios;
+using Aplicacion.Servicio.Inventarios;
+using Dominio.Modelo;
 using Dominio.Repositorio;
 
 using Microsoft.AspNetCore.Authorization;
@@ -33,9 +35,11 @@ namespace Infraestructura.Controladores.Inventarios
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Entrada informacion)
+        public IActionResult Insertar([FromBody] FormularioRegistrarEntrada formulario)
         {
-            if (repositorio.Insertar(informacion))
+            var servicio = new ServicioRegistradorEntrada();
+
+            if (servicio.Registrar(formulario))
             {
                 return Accepted();
             }

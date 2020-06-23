@@ -1,4 +1,5 @@
-﻿using Dominio.Modelo;
+﻿using Aplicacion.Servicio.Inventarios.Productos;
+using Dominio.Modelo;
 using Dominio.Repositorio;
 
 using Microsoft.AspNetCore.Authorization;
@@ -10,7 +11,7 @@ using System.Linq;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    //[Authorize]
+    [Authorize(Roles = "logistica")]
     public class ProductoController : Controller
     {
         private readonly RepoProducto repositorio = new RepoProducto();
@@ -33,7 +34,7 @@ namespace Infraestructura.Controladores.Inventarios
             return NotFound();
         }
 
-        [HttpGet("buscar")] // GET api/producto/buscar
+        [HttpGet("buscar")]
         public ActionResult<Producto> Buscar([FromQuery] int id, [FromQuery] string codigo)
         {
             IEnumerable<Producto> lista = repositorio.Listar();
@@ -56,7 +57,11 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpPost]
         public IActionResult Insertar([FromBody] Producto datos)
         {
-            if (repositorio.Insertar(datos))
+            var repoExistencia = new RepoExistencia();
+
+            var servicio = new ServicioRegistradorProducto(repositorio, repoExistencia);
+            
+            if (servicio.Registrar(datos))
             {
                 return Accepted();
             }

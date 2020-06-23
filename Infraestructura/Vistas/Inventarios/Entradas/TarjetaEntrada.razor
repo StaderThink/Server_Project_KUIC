@@ -15,9 +15,7 @@
         }
         <p>@entrada.Fecha</p>
         <p>@entrada.Observacion.ToCapitalize()</p>
-        <button class="is-outline" @onclick="AgregarDetalle">Detalle</button>
         <div class="control is-grouped">
-            <button class="is-prime" @onclick="Editar">Editar</button>
 
             @if (cargando)
             {
@@ -41,7 +39,7 @@
 
     DetalleEntrada[] detalles { get; set; } = new DetalleEntrada[0];
 
-    DetalleEntrada detalle { get; set; } = new DetalleEntrada();
+    Producto[] productos { get; set; } = new Producto[0];
 
     bool cargando = false;
 
@@ -61,15 +59,5 @@
         }
 
         cargando = false;
-    }
-
-    void Editar()
-    {
-        navegador.NavigateTo($"/entrada/modificar/{entrada.Id}");
-    }
-
-    void AgregarDetalle()
-    {
-        navegador.NavigateTo($"/detalleEntrada/registrar/{entrada.Id}");
     }
 }

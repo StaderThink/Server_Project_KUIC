@@ -1,0 +1,45 @@
+﻿@inject NavigationManager navegador
+@inject HttpClient http
+
+<div class="control is-grouped">
+    <div class="grid xs-1 md-3 has-gap">
+        <div class="field">
+            <select class="input" @bind="detalle.Producto">
+                <option value="0" default readonly>Seleccionar...</option>
+                @foreach (Producto producto in productos)
+                {
+                    <option value="@producto.Id">@producto.Nombre.ToCapitalize()</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <input class="input" type="number" @bind="detalle.Cantidad" />
+        </div>
+        <div class="field">
+            <button @onclick="Eliminar" class="is-ghost">Quitar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    Producto[] productos { get; set; } = new Producto[0];
+
+    [Parameter]
+    public DetalleEntrada detalle { get; set; }
+
+    [Parameter]
+    public EventCallback<DetalleEntrada> OnDeleted { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        productos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+    }
+
+    public void Eliminar()
+    {
+        if (OnDeleted.HasDelegate)
+        {
+            OnDeleted.InvokeAsync(detalle);
+        }
+    }
+}

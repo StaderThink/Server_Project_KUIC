@@ -1,32 +1,34 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div class="card">
-    <div>
-        @if (categoria is null)
-        {
-            <b>Cargando...</b>
-        }
-        else
-        {
-            <p><b>@categoria.Nombre</b></p>
-        }
-        @if (producto is null)
-        {
-            <b>Cargando...</b>
-        }
+    <div class="card">
+        <div>
+            @if (categoria is null)
+            {
+                <b>Cargando...</b>
+            }
+            else
+            {
+                <p><b>@categoria.Nombre</b></p>
+            }
+            @if (producto is null)
+            {
+                <b>Cargando...</b>
+            }
 
-        else
-        {
+            else
+            {
 
-            <p>@producto.Nombre.ToCapitalize()</p>
-        }
+                <p>@producto.Nombre.ToCapitalize()</p>
+            }
+
+            <p>@existencia.Cantidad</p>
+        </div>
+
+        <div class="control is-grouped">
+            <button class="is-prime" @onclick="Entrada">+</button>
+        </div>
     </div>
-    <p>@existencia.Cantidad</p>
-    <div class="control is-grouped">
-        <button class="is-prime" @onclick="Editar">Editar</button>
-    </div>
-</div>
 
 @code {
 
@@ -55,8 +57,8 @@
         }
     }
 
-    void Editar()
+    async Task Entrada()
     {
-        navegador.NavigateTo($"/catalogo/modificar/{existencia.Id}");
+        navegador.NavigateTo("/entrada/registrar");
     }
 }
