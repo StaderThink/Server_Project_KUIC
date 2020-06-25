@@ -5,37 +5,40 @@ using Dominio.Repositorio;
 
 namespace Aplicacion.Servicio.Inventarios
 {
-    public sealed class ServicioRegistradorEntrada
+    public sealed class ServicioRegistradorSalida
     {
-        public bool Registrar(FormularioRegistrarEntrada formulario)
+        public bool Registrar(FormularioRegistrarSalida formulario)
         {
-            var repoEntrada = new RepoEntrada();
-            
+            var repoSalida = new RepoSalida();
+
             try
             {
-                var entrada = formulario.Entrada;
+                var entrada = formulario.Salida;
                 var detalles = formulario.Detalles;
 
                 entrada.Fecha = DateTime.Now;
 
-                if (repoEntrada.Insertar(entrada))
+                if (repoSalida.Insertar(entrada))
                 {
-                    var repoDetalle = new RepoDetalleEntrada();
+                    var repoDetalle = new RepoDetalleSalida();
                     var repoExistencia = new RepoExistencia();
 
-                    int id = repoEntrada.UltimoPorId();
+                    int id = repoSalida.UltimoPorId();
 
                     foreach (var detalle in detalles)
                     {
-                        detalle.Entrada = id;
+                        detalle.Salida = id;
 
                         if (repoExistencia.PorProducto(detalle.Producto) is Existencia existencia)
                         {
-                            existencia.Cantidad += detalle.Cantidad;
-                            repoExistencia.Editar(existencia);
+                            if (existencia.Cantidad > 0 && existencia.Cantidad >= detalle.Cantidad)
+                            {
+                                existencia.Cantidad -= detalle.Cantidad;
+                                repoExistencia.Editar(existencia);
+                            }
                         }
 
-                        repoDetalle.Insertar(detalle);
+                        repoDetalle.Insertar(detalle); 
                     }
 
                     return true;

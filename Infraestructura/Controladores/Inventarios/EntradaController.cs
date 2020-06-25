@@ -50,10 +50,13 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpDelete("{id}")]
         public IActionResult Eliminar(int id)
         {
-            Entrada entrada = repositorio.PorId(id);
+            var entrada = repositorio.PorId(id);
+
             if (entrada is Entrada)
             {
-                if (repositorio.Eliminar(entrada))
+                var servicioEliminador = new ServicioEliminadorEntrada();
+
+                if (servicioEliminador.Eliminar(entrada))
                 {
                     return Accepted();
                 }
@@ -68,6 +71,7 @@ namespace Infraestructura.Controladores.Inventarios
             if (repositorio.PorId(id) is Entrada)
             {
                 informacion.Id = id;
+
                 if (repositorio.Editar(informacion))
                 {
                     return Accepted();
