@@ -1,15 +1,8 @@
-﻿using Aplicacion.Modelo.Sesiones;
-
+﻿using System.Collections.Generic;
+using System.Security.Claims;
+using Aplicacion.Modelo.Sesiones;
 using Dominio.Modelo;
 using Dominio.Repositorio;
-
-using Microsoft.IdentityModel.Tokens;
-
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace Aplicacion.Servicio.Usuarios
 {
@@ -44,11 +37,12 @@ namespace Aplicacion.Servicio.Usuarios
 
             var listado = new List<Claim>
             {
+                new Claim(ClaimTypes.SerialNumber, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Dns, usuario.Documento),
                 new Claim(ClaimTypes.Email, usuario.Correo),
             };
 
-            // roles
+            // permisos
 
             if (cargo.Logistica)
                 listado.Add(new Claim(ClaimTypes.Role, "logistica"));

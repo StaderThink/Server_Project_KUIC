@@ -36,17 +36,25 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpGet]
         public IActionResult VerificarSesion()
         {
-            var cargaDocumento = HttpContext.User.Claims.First(carga => carga.Type == ClaimTypes.Dns);
-            var documento = cargaDocumento.Value;
-
-            var repo = new RepoUsuario();
-
-            if (repo.PorDocumento(documento) is Usuario usuario)
+            try
             {
-                return Ok(usuario);
+                var cargaDocumento = HttpContext.User.Claims.First(carga => carga.Type == ClaimTypes.Dns);
+                var documento = cargaDocumento.Value;
+
+                var repo = new RepoUsuario();
+
+                if (repo.PorDocumento(documento) is Usuario usuario)
+                {
+                    return Ok(usuario);
+                }
+
+                return BadRequest();
             }
 
-            return BadRequest();
+            catch
+            {
+                return BadRequest();
+            }
         }
     }
 }
