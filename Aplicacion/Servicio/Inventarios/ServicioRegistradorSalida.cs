@@ -13,12 +13,12 @@ namespace Aplicacion.Servicio.Inventarios
 
             try
             {
-                var entrada = formulario.Salida;
+                var salida = formulario.Salida;
                 var detalles = formulario.Detalles;
 
-                entrada.Fecha = DateTime.Now;
+                salida.Fecha = DateTime.Now;
 
-                if (repoSalida.Insertar(entrada))
+                if (repoSalida.Insertar(salida))
                 {
                     var repoDetalle = new RepoDetalleSalida();
                     var repoExistencia = new RepoExistencia();

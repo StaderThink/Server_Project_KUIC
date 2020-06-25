@@ -13,10 +13,12 @@
     </div>
 
     <div class="field">
-        @foreach (var detalle in detalles)
-        {
-            <ItemDetalle detalle="detalle" OnDeleted="EliminarElemento" />
-        }
+        <div class="grid has-gap">
+            @foreach (var detalle in detalles)
+            {
+                <ItemDetalle detalle="detalle" OnDeleted="EliminarElemento" />
+            }
+        </div>
     </div>
 
     <div class="field">
@@ -48,18 +50,25 @@
 
     async Task Enviar()
     {
-        var formulario = new FormularioRegistrarEntrada()
+        try
         {
-            Entrada = entrada,
-            Detalle = detalles
-        };
+            var formulario = new FormularioRegistrarEntrada()
+            {
+                Entrada = entrada,
+                Detalles = detalles
+            };
 
-        var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
+            var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
 
-        if (respuesta.IsSuccessStatusCode)
-        {
-            navegador.NavigateTo("/entrada");
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/entrada");
+            }
         }
 
+        catch
+        {
+            throw; // TODO
+        }
     }
 }

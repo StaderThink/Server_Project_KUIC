@@ -39,9 +39,7 @@ namespace Infraestructura.Controladores.Inventarios
         {
             IEnumerable<Producto> lista = repositorio.Listar();
 
-            Producto consulta = lista.First(producto => {
-                return producto.Id == id || producto.Codigo == codigo;
-            });
+            Producto consulta = lista.First(producto => producto.Id == id || producto.Codigo == codigo);
 
             if (consulta is Producto producto)
             {

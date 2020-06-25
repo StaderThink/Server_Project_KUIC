@@ -17,7 +17,7 @@ namespace Aplicacion.Servicio.Inventarios
                 detalleSalida.Add(new DetalleSalida
                 {
                     Cantidad = detalle.Cantidad,
-                    Producto = detalle.Producto
+                    Producto = detalle.Producto,
                 });
             }
 
@@ -30,6 +30,8 @@ namespace Aplicacion.Servicio.Inventarios
 
             try
             {
+                // generar salida
+                
                 var repoDetalle = new RepoDetalleEntrada();
                 var detalles = repoDetalle.ListarPorEntrada(entrada);
 
@@ -44,8 +46,14 @@ namespace Aplicacion.Servicio.Inventarios
                     Detalles = GenerarDetalleSalida(detalles)
                 };
 
+                servicioSalida.Registrar(formulario);
 
-                return servicioSalida.Registrar(formulario);
+                // eliminar entrada
+
+                repoDetalle.EliminarPorEntrada(entrada);
+
+                var repoEntrada = new RepoEntrada();
+                return repoEntrada.Eliminar(entrada);
             }
 
             catch

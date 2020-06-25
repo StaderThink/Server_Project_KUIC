@@ -10,6 +10,12 @@ namespace Dominio.Repositorio
         {
             using Conexion conexion = new Conexion();
             string consulta = "insert into salida (fecha, observacion, pedido) values (@Fecha, @Observacion, @Pedido)";
+
+            if (entidad.Pedido == 0)
+            {
+                consulta = "insert into salida (fecha, observacion) values (@Fecha, @Observacion)";
+            } 
+
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
