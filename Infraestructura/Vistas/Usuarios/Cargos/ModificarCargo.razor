@@ -18,8 +18,7 @@ else {
     <form @onsubmit="Enviar" @onsubmit:preventDefault>
         <div class="field">
             <label>Nombre del cargo</label>
-            <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" />
-            <small>Corto, pero descriptivo.</small>
+            <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" required />
         </div>
 
         <div class="grid has-gap">

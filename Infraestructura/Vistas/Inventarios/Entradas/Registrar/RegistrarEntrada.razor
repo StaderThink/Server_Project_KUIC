@@ -9,7 +9,7 @@
 
 <div class="form">
     <div class="control">
-        <button class="button is-prime" @onclick="AgregarElemento">+ Detalle</button>
+        <button class="button is-prime" @onclick="AgregarElemento">+ Producto</button>
     </div>
 
     <div class="field">
@@ -23,7 +23,8 @@
 
     <div class="field">
         <label for="observacion">Observación</label>
-        <input id="observacion" class="input" type="text" @bind="entrada.Observacion" />
+        <textarea id="observacion" class="input" type="text" @bind="entrada.Observacion"></textarea>
+        <small>Opcional</small>
     </div>
 
     <div class="control is-grouped">

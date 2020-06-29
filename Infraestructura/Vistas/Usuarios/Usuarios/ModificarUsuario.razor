@@ -10,7 +10,7 @@
     </blockquote>
 }
 
-<form @onsubmit="Enviar" @onsubmit:preventDefault>
+<form @onsubmit="Enviar">
     <div class="grid xs-1 md-2 has-gap">
         <div class="field">
             <label for="tipoDocumento">Tipo de documento</label>
@@ -19,7 +19,7 @@
 
         <div class="field">
             <label>Documento</label>
-            <input type="number" placeholder="###" class="input" @bind="usuario.Documento" disabled readonly />
+            <input type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="input" @bind="usuario.Documento" disabled readonly />
         </div>
 
         <div class="field">
@@ -34,7 +34,7 @@
 
         <div class="field">
             <label for="correo">Correo</label>
-            <input id="correo" type="email" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
+            <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
         </div>
 
         <div class="field">

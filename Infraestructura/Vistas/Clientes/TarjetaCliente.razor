@@ -1,8 +1,9 @@
 ﻿@inject HttpClient http
 
 <div class="card">
-    <p><b>@(cliente.Nombre.ToCapitalize())</b></p>
-    <p>RUT:  @cliente.Rut</p>
+    <h6>@(cliente.Nombre.ToCapitalize())</h6>
+
+    <p>RUT  @cliente.Rut</p>
 
     <span class="button is-static is-small">@(cliente.Activo ? "Activo" : "Inactivo")</span>
 

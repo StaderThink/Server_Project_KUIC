@@ -2,8 +2,10 @@
 @inject NavigationManager navegador
 
 <div class="card">
-    <p><b>@categoria.Nombre.ToCapitalize()</b></p>
+    <h6>@categoria.Nombre.ToCapitalize()</h6>
+
     <p>@categoria.Descripcion.ToCapitalize()</p>
+
     <div class="control is-grouped">
         <button class="is-prime" @onclick="Editar">Editar</button>
 

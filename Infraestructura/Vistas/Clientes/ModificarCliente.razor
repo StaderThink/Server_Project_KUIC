@@ -11,55 +11,64 @@
 
 else
 {
-<form @onsubmit="Enviar">
-    <div class="grid xs-1 md-2 has-gap">
-        <div class="field">
-            <label for="rut">RUT</label>
-            <input id="rut" type="number" placeholder="###" class="input" @bind="cliente.Rut" disabled readonly />
-            <small>Número de registro único tributario</small>
-        </div>
+    <AuthorizeView Roles="clientes">
+        <Authorized>
+            <form @onsubmit="Enviar">
+                <div class="grid xs-1 md-2 has-gap">
+                    <div class="field">
+                        <label>RUT</label>
+                        <input type="number" class="input" @bind="cliente.Rut" disabled readonly />
+                        <small>Número de registro único tributario</small>
+                    </div>
 
-        <div class="field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
-        </div>
+                    <div class="field">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
+                    </div>
 
-        <div class="field">
-            <label for="encargado">Encargado</label>
-            <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
-        </div>
+                    <div class="field">
+                        <label for="encargado">Encargado</label>
+                        <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
+                        <small>Nombre de la persona contacto con la empresa</small>
+                    </div>
 
-        <div class="field">
-            <label for="correo">Correo</label>
-            <input id="correo" type="email" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
-        </div>
+                    <div class="field">
+                        <label for="correo">Correo</label>
+                        <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
+                    </div>
 
-        <div class="field">
-            <label for="direccion">Direccion</label>
-            <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
-        </div>
+                    <div class="field">
+                        <label for="direccion">Direccion</label>
+                        <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
+                    </div>
 
-        <div class="field">
-            <label for="telefono">Teléfono</label>
-            <div class="control is-attached">
-                <span class="button is-static">+57</span>
-                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
-            </div>
-        </div>
+                    <div class="field">
+                        <label for="telefono">Teléfono</label>
+                        <div class="control is-attached">
+                            <span class="button is-static">+57</span>
+                            <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
+                        </div>
+                    </div>
 
-        <div class="field is-inline">
-            <label for="activo">Activo</label>
-            <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
-        </div>
-    </div>
+                    <div class="field is-inline">
+                        <label for="activo">Activo</label>
+                        <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
+                    </div>
+                </div>
 
-    <div class="field">
-        <div class="control is-grouped">
-            <button class="is-prime">Registrar</button>
-            <a href="/cliente" class="button is-outline">Cancelar</a>
-        </div>
-    </div>
-</form>
+                <div class="field">
+                    <div class="control is-grouped">
+                        <button class="is-prime">Registrar</button>
+                        <a href="/cliente" class="button is-outline">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </Authorized>
+
+        <NotAuthorized>
+            <h1>No estas autorizado</h1>
+        </NotAuthorized>
+    </AuthorizeView>
 }
 
 @code {

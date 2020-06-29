@@ -16,12 +16,13 @@ else
     <form @onsubmit="Enviar">
         <div class="field">
             <label for="nombre">Nombre</label>
-            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required/>
+            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
         </div>
 
         <div class="field">
             <label for="descripcion">Descripción</label>
-            <input id="descripcion" class="input" type="text" @bind="categoria.Descripcion" required/>
+            <textarea id="descripcion" class="input" type="text" @bind="categoria.Descripcion"></textarea>
+            <small>Opcional</small>
         </div>
 
         <div class="control is-grouped">

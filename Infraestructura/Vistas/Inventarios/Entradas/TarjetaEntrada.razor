@@ -1,34 +1,33 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-    <div class="card">
-        @if(detalles is null)
+<div class="card">
+    @if(detalles is null)
+    {
+        <p>Espere...</p>
+    }
+
+    else {
+        <p>@detalles.Count() Productos(s). <a>Ver detalle</a></p>
+    }
+
+    <p>@entrada.Fecha.ToShortDateString()</p>
+
+    <p>@entrada.Observacion.ToCapitalize()</p>
+
+    <div class="control is-grouped">
+        @if (cargando)
         {
-            <div class="is-loader"></div>
+            <button class="is-outline has-loader" disabled>Eliminar</button>
         }
 
-        else {
-            @foreach(DetalleEntrada detalle in detalles) {
-                <p>@detalle.Producto</p>
-                <p>@detalle.Cantidad</p>
-            }
+        else
+        {
+            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
         }
-        <p>@entrada.Fecha</p>
-        <p>@entrada.Observacion.ToCapitalize()</p>
-        <div class="control is-grouped">
-
-            @if (cargando)
-            {
-                <button class="is-outline has-loader" disabled>Eliminar</button>
-            }
-
-            else
-            {
-                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
-            }
-        </div>
-
     </div>
+
+</div>
 
 @code {
     [Parameter]

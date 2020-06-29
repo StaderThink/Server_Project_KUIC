@@ -8,78 +8,87 @@
 
 @if (mensaje is string)
 {
-    <blockquote class="is-warn">
+    <blockquote class="is-error">
         <p>@mensaje</p>
     </blockquote>
 }
 
-<form @onsubmit="Enviar" @onsubmit:preventDefault>
-    <div class="grid xs-1 md-2 has-gap">
-        <div class="field">
-            <label for="rut">RUT</label>
-            <input id="rut" type="number" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="cliente.Rut" @onfocusout="BuscarExistencia" required />
+<AuthorizeView Roles="clientes">
+    <Authorized>
+        <form @onsubmit="Enviar">
+            <div class="grid xs-1 md-2 has-gap">
+                <div class="field">
+                    <label for="rut">RUT</label>
+                    <input id="rut" type="number" pattern="^\d{9}$" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="cliente.Rut" @onfocusout="BuscarExistencia" required />
 
-            @if (yaExiste)
-            {
-                <small class="is-error">Este RUT ya ha sido registrado</small>
-            }
+                    @if (yaExiste)
+                    {
+                        <small class="is-error">Este número ya ha sido registrado</small>
+                    }
 
-            else
-            {
-                <small>Número de registro único tributario</small>
-            }
-        </div>
+                    else
+                    {
+                        <small>Número de <abbr title="Registro Único Tributario">RUT</abbr></small>
+                    }
+                </div>
 
-        <div class="field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
-        </div>
+                <div class="field">
+                    <label for="nombre">Nombre de la empresa</label>
+                    <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
+                </div>
 
-        <div class="field">
-            <label for="encargado">Encargado</label>
-            <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
-        </div>
+                <div class="field">
+                    <label for="encargado">Encargado</label>
+                    <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
+                    <small>Nombre de la persona contacto con la empresa</small>
+                </div>
 
-        <div class="field">
-            <label for="correo">Correo</label>
-            <input id="correo" type="email" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
-        </div>
+                <div class="field">
+                    <label for="correo">Correo</label>
+                    <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
+                </div>
 
-        <div class="field">
-            <label for="direccion">Direccion</label>
-            <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
-        </div>
+                <div class="field">
+                    <label for="direccion">Direccion</label>
+                    <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
+                </div>
 
-        <div class="field">
-            <label for="telefono">Teléfono</label>
-            <div class="control is-attached">
-                <span class="button is-static">+57</span>
-                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <div class="control is-attached">
+                        <span class="button is-static">+57</span>
+                        <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
+                    </div>
+                </div>
+
+                <div class="field is-inline">
+                    <label for="activo">Activo</label>
+                    <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
+                </div>
             </div>
-        </div>
 
-        <div class="field is-inline">
-            <label for="activo">Activo</label>
-            <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
-        </div>
-    </div>
+            <div class="field">
+                <div class="control is-grouped">
+                    @if (cargando)
+                    {
+                        <button class="is-prime has-loader" disabled>Registrar</button>
+                    }
 
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando)
-            {
-                <button class="is-prime has-loader" disabled>Registrar</button>
-            }
+                    else
+                    {
+                        <button type="submit" class="is-prime" disabled="@yaExiste">Registrar</button>
+                    }
 
-            else
-            {
-                <button class="is-prime" disabled="@yaExiste">Registrar</button>
-            }
+                    <a href="/cliente" class="button is-outline">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </Authorized>
 
-            <a href="/cliente" class="button is-outline">Cancelar</a>
-        </div>
-    </div>
-</form>
+    <NotAuthorized>
+        <h1>Oops... Parece que no tienes permisos</h1>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     Cliente cliente { get; set; } = new Cliente();
@@ -103,15 +112,7 @@
 
             else
             {
-                if (respuesta.StatusCode == HttpStatusCode.Unauthorized)
-                {
-                    mensaje = "¿Porque estas en esta ruta sin no tienes autorización?";
-                }
-
-                else
-                {
-                    mensaje = "Hubo un error al insertar";
-                }
+                mensaje = "Hubo un error al insertar";
             }
         }
 

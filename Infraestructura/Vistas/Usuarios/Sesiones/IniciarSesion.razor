@@ -13,11 +13,10 @@
         <label>Documento</label>
 
         <div class="control is-attached">
-            <span class="button is-static">CC</span>
-            <input type="text" pattern="[0-9]+" minlength="7" @bind="documento" placeholder="###" class="input" />
+            <input type="text" pattern="^[0-9]{6,10}$" minlength="7" @bind="documento" placeholder="###" class="input" />
         </div>
 
-        <small>Número de cédula de ciudadanía</small>
+        <small>Número de documento de identidad (CC o NIT)</small>
     </div>
 
     <div class="field">

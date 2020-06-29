@@ -7,14 +7,14 @@
 <h2>Registrar usuario</h2>
 
 @if (mensaje is string) {
-    <blockquote class="is-warn">
+    <blockquote class="is-error">
         <p>@mensaje</p>
     </blockquote>
 }
 
-<AuthorizeView>
+<AuthorizeView Roles="usuarios">
     <Authorized>
-        <form @onsubmit="Enviar" @onsubmit:preventDefault>
+        <form @onsubmit="Enviar">
             <div class="grid xs-1 md-2 has-gap">
                 <div class="field">
                     <label for="tipoDocumento">Tipo de documento</label>
@@ -28,9 +28,9 @@
 
                 <div class="field">
                     <label for="documento">Documento</label>
-                    <input id="documento" type="number" placeholder="###" class="@(documentoYaExiste ? "input is-error" : "input")" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required />
+                    <input id="documento" type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required />
 
-                    @if (documentoYaExiste)
+                    @if (yaExiste)
                     {
                         <small class="is-error">Documento ya ha sido registrado</small>
                     }
@@ -53,7 +53,7 @@
 
                 <div class="field">
                     <label for="correo">Correo</label>
-                    <input id="correo" type="email" pattern="[a-z_\.]+@@[a-z-](\.[a-z])+" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
+                    <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
                 </div>
 
                 <div class="field">
@@ -84,7 +84,7 @@
 
                     else
                     {
-                        <button class="is-prime" disabled="@documentoYaExiste">Registrar</button>
+                        <button class="is-prime" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
                     }
 
                     <a href="/usuario" class="button is-outline">Cancelar</a>
@@ -104,7 +104,7 @@
 
     Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
 
-    bool documentoYaExiste = false;
+    bool yaExiste = false;
     string mensaje;
     bool cargando = false;
 
@@ -158,7 +158,7 @@
         try {
             if (string.IsNullOrWhiteSpace(usuario.Documento))
             {
-                documentoYaExiste = false;
+                yaExiste = false;
                 return;
             }
 
@@ -166,16 +166,16 @@
 
             if (respuesta.IsSuccessStatusCode) {
                 var existencias = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
-                documentoYaExiste = existencias.Length > 0;
+                yaExiste = existencias.Length > 0;
             }
 
             else {
-                documentoYaExiste = true;
+                yaExiste = true;
             }
         }
 
         catch {
-            documentoYaExiste = true;
+            yaExiste = true;
         }
     }
 }
