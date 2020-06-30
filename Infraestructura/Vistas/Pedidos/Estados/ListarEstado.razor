@@ -1,0 +1,45 @@
+﻿@inject HttpClient http
+
+@page "/estado"
+@layout AppLayout
+
+@if (estados is null)
+{
+    <div class="loader is-medium"></div>
+}
+
+else
+{
+    <h3>Listar estados</h3>
+
+    <a class="button is-prime" href="/estado/registrar">Registrar estado</a>
+
+    <div class="grid xs-1 md-2 has-gap">
+        @foreach (Estado estado in estados)
+        {
+            <TarjetaEstado estado="@estado" OnEstadoEliminado="ObtenerListado" />
+        }
+    </div>
+}
+
+@code {
+    Estado[] estados { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ObtenerListado();
+    }
+
+    async Task ObtenerListado()
+    {
+        try
+        {
+            estados = await http.GetFromJsonAsync<Estado[]>("/api/estado");
+        }
+
+        catch
+        {
+            estados = new Estado[0];
+        }
+    }
+}

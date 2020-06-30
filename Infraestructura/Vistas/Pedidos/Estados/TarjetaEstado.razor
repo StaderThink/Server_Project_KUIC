@@ -1,0 +1,48 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+<div class="card">
+    <h6>@(estado.Nombre.ToCapitalize())</h6>
+
+    <div class="control is-grouped">
+        <button class="is-prime" @onclick="Editar">Editar</button>
+
+        @if (cargando)
+        {
+            <button class="is-outline has-loader" disabled>Borrar</button>
+        }
+
+        else
+        {
+            <button class="is-outline" @onclick="Eliminar">Borrar</button>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Estado estado { get; set; }
+
+    [Parameter]
+    public EventCallback<Estado> OnEstadoEliminado { get; set; }
+
+    bool cargando = false;
+
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/estado/{estado.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnEstadoEliminado.HasDelegate)
+        {
+            await OnEstadoEliminado.InvokeAsync(estado);
+        }
+
+        cargando = false;
+    }
+
+    void Editar()
+    {
+        navegador.NavigateTo($"/estado/modificar/{estado.Id}");
+    }
+}

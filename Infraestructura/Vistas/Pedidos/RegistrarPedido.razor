@@ -1,0 +1,123 @@
+﻿@using System.Security.Claims
+@using static System.Globalization.CultureInfo
+
+@inject HttpClient http
+@inject NavigationManager navegador
+@inject AuthenticationStateProvider autentificacion
+
+@page "/pedido/registrar"
+@layout AppLayout
+
+<h3>Registrar Pedido</h3>
+<form @onsubmit="Enviar">
+    <div class="grid xs-1 md-2 has-gap">
+       
+        <div class="field">
+            <label>Cliente</label>
+            <select class="input" @bind="pedido.Cliente" required>
+                <option value="0" disabled>Seleccionar...</option>
+
+                @foreach (Cliente cliente in cliente)
+                {
+                    <option value="@cliente.Id">@(cliente.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <label for="fecha">Fecha</label>
+            <input id="fecha" class="input" type="datetime-local" @bind="pedido.Fecha" @bind:format="@CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
+        </div>
+        <div class="field">
+            <label>Estado</label>
+            <select class="input" @bind="pedido.Estado" required>
+                <option value="0" disabled>Seleccionar...</option>
+
+                @foreach (Estado estado in estados)
+                {
+                    <option value="@estado.Id">@(estado.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <label for="descuento">Descuento</label>
+            <div class="control is-attached">
+                <span class="button is-static">%</span>
+                <input id="descuento" type="number" placeholder="###" minlength="1" class="input" @bind="pedido.Descuento" required />
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="field">
+        <div class="control is-grouped">
+            <button class="is-prime">Registrar</button>
+            <a href="/pedido" class="button is-outline">Cancelar</a>
+        </div>
+    </div>
+</form>
+
+@code {
+    Cliente[] cliente { get; set; } = new Cliente[0];
+    Usuario[] usuarios { get; set; } = new Usuario[0];
+    Estado[] estados { get; set; } = new Estado[0];
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
+        cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
+        estados = await http.GetFromJsonAsync<Estado[]>("/api/estado");
+    }
+    List<DetallePedido> detalles = new List<DetallePedido>();
+
+    private void AgregarElemento()
+    {
+        detalles.Add(new DetallePedido());
+    }
+
+    private void EliminarElemento(DetallePedido detalle)
+    {
+        detalles.Remove(detalle);
+    }
+
+    Pedido pedido { get; set; } = new Pedido();
+    bool cargando = false;
+
+    async Task Enviar()
+    {
+        cargando = true;
+
+        try
+        {
+            var estado = await autentificacion.GetAuthenticationStateAsync();
+            var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
+
+            if (serial is null)
+            {
+                // TODO
+            }
+
+            else
+            {
+                int id = int.Parse(serial.Value);
+                pedido.Asesor = id;
+
+                var respuesta = await http.PostAsJsonAsync("/api/pedido", pedido);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/pedido");
+                }
+            }
+        }
+
+        catch
+        {
+            // TODO
+        }
+
+        finally
+        {
+            cargando = false;
+        }
+    }
+}

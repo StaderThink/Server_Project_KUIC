@@ -35,7 +35,7 @@ namespace Dominio.Repositorio
         public bool Insertar(Pedido entidad)
         {
             using Conexion conexion = new Conexion();
-            string consulta = $@"insert into (fecha, cliente, asesor, estado, cancelado, descuento, observacion) 
+            string consulta = $@"insert into pedido (fecha, cliente, asesor, estado, cancelado, descuento, observacion) 
                             values (@Fecha, @Cliente, @Asesor, @Estado, @Cancelado, @Descuento, @Observacion)";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;

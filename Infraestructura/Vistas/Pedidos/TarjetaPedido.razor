@@ -1,0 +1,80 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+    <div class="card">
+        @if (detalles is null)
+        {
+            <div class="is-loader"></div>
+        }
+
+        else
+        {
+            <p>@detalles.Count() Productos(s). <a>Ver detalle</a></p>
+        }
+
+        <p>@pedido.Fecha.ToShortDateString()</p>
+        <p>@pedido.Observacion.ToCapitalize()</p>
+        <p>
+            @if (usuario is null)
+            {
+                <span>Sin nombre</span>
+            }
+
+            else
+            {
+                <span>@usuario.Nombre</span>
+            }
+        </p>
+
+        <div class="control is-grouped">
+
+            @if (cargando)
+            {
+                <button class="is-outline has-loader" disabled>Eliminar</button>
+            }
+
+            else
+            {
+                <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+            }
+        </div>
+
+    </div>
+
+@code {
+    [Parameter]
+    public Pedido pedido { get; set; }
+
+    [Parameter]
+    public EventCallback<Pedido> OnPedidoEliminado { get; set; }
+
+    DetallePedido[] detalles { get; set; } = new DetallePedido[0];
+
+    Producto[] productos { get; set; } = new Producto[0];
+
+    Cliente clientes { get; set; }
+    Usuario usuario { get; set; }
+
+    bool cargando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        detalles = await http.GetFromJsonAsync<DetallePedido[]>($"/api/detallePedido/pedido/{pedido.Id}");
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{pedido.Asesor}");
+        clientes = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
+
+    }
+
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/pedido/{pedido.Id}");
+
+        if (respuesta.IsSuccessStatusCode && OnPedidoEliminado.HasDelegate)
+        {
+            await OnPedidoEliminado.InvokeAsync(pedido);
+        }
+
+        cargando = false;
+    }
+}

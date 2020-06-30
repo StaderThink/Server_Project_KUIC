@@ -32,7 +32,7 @@ namespace Dominio.Repositorio
         public bool Insertar(Estado entidad)
         {
             using Conexion conexion = new Conexion();
-            string consulta = $@"insert into (nombre, orden, cancelable) 
+            string consulta = $@"insert into estado (nombre, orden, cancelable) 
                             values (@Nombre, @Orden, @Cancelable)";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;

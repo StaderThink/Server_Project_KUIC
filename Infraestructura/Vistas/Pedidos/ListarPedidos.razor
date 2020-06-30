@@ -1,35 +1,28 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-@page "/cliente"
-@page "/cliente/{busqueda}"
+@page "/pedido"
+@page "/pedido/{busqueda}"
 @layout AppLayout
 
-<AuthorizeView Roles="clientes">
+<AuthorizeView Roles="pedidos">
     <Authorized>
         @if (cargando)
         {
             <div class="loader is-medium"></div>
-
         }
         else
         {
-            <h2>Listar clientes</h2>
+            <h2>Listar pedidos</h2>
 
-            <a class="button is-prime" href="/cliente/registrar">Registrar cliente</a>
-            @if (lista is null)
-            {
-                <p>Algo salio muy mal...</p>
-            }
-            else
-            {
+            <a class="button is-prime" href="/pedido/registrar">Registrar pedido</a>
+
             <div class="grid has-gap xs-1 md-2">
-                @foreach (var cliente in lista)
+                @foreach (var pedido in lista)
                 {
-                    <TarjetaCliente cliente="cliente" onDeleted="ObtenerListado" />
+                    <TarjetaPedido pedido="pedido" OnPedidoEliminado="ObtenerListado" />
                 }
             </div>
-            }
         }
     </Authorized>
 
@@ -39,7 +32,7 @@
 </AuthorizeView>
 
 @code {
-    Cliente[] lista { get; set; }
+    Pedido[] lista { get; set; }
 
     bool cargando = true;
 
@@ -54,13 +47,13 @@
     private async Task ObtenerListado()
     {
         cargando = true;
-        HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente?buscar={busqueda}");
+        HttpResponseMessage respuesta = await http.GetAsync($"/api/pedido?buscar={busqueda}");
 
         try
         {
             if (respuesta.StatusCode == HttpStatusCode.OK)
             {
-                lista = await respuesta.Content.ReadFromJsonAsync<Cliente[]>();
+                lista = await respuesta.Content.ReadFromJsonAsync<Pedido[]>();
             }
 
             else
@@ -71,7 +64,7 @@
 
         catch (Exception ex)
         {
-            lista = new Cliente[0];
+            lista = new Pedido[0];
             Console.WriteLine(ex);
         }
 

@@ -8,16 +8,17 @@
             <option>Espere...</option>
         }
 
-        else { 
-        <option value="0" disabled>Seleccionar...</option>
-        @foreach (Producto producto in productos)
+        else
         {
-            <option value="@producto.Id">@producto.Nombre.ToCapitalize()</option>
-        }
+            <option value="0" disabled>Seleccionar...</option>
+            @foreach (Producto producto in productos)
+            {
+                <option value="@producto.Id">@producto.Nombre.ToCapitalize()</option>
+            }
         }
     </select>
 
-    <input class="input is-grow" type="number" @bind="detalle.Cantidad" />
+    <input class="input is-grow" type="number" @bind="detalle.Cantidad" required />
 
     <button class="is-outline" @onclick="Eliminar">Quitar</button>
 </div>
@@ -26,10 +27,10 @@
     Producto[] productos { get; set; } = new Producto[0];
 
     [Parameter]
-    public DetalleEntrada detalle { get; set; }
+    public DetallePedido detalle { get; set; }
 
     [Parameter]
-    public EventCallback<DetalleEntrada> OnDeleted { get; set; }
+    public EventCallback<DetallePedido> OnDeleted { get; set; }
 
     bool cargando = true;
 

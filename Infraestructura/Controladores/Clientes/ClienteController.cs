@@ -9,8 +9,8 @@ using System.Linq;
 
 namespace Infraestructura.Controladores.Clientes
 {
+    [Authorize (Roles = "clientes")]
     [Route("api/[controller]")]
-    [Authorize]
     public class ClienteController : Controller
     {
         private readonly RepoCliente repositorio = new RepoCliente();
