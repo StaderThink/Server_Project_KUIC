@@ -1,4 +1,6 @@
-﻿using Dominio.Modelo;
+﻿using Aplicacion.Modelo.Inventarios;
+using Aplicacion.Servicio.Inventarios;
+using Dominio.Modelo;
 using Dominio.Repositorio;
 
 using Microsoft.AspNetCore.Authorization;
@@ -9,7 +11,7 @@ using System.Collections.Generic;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "logistica")]
     public class SalidaController : Controller
     {
         private readonly RepoSalida repo = new RepoSalida();
@@ -33,12 +35,15 @@ namespace Infraestructura.Controladores.Inventarios
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Salida datos)
+        public IActionResult Insertar([FromBody] FormularioRegistrarSalida formulario)
         {
-            if (repo.Insertar(datos))
+            var servicio = new ServicioRegistradorSalida();
+
+            if (servicio.Registrar(formulario))
             {
                 return Accepted();
             }
+
             return BadRequest();
         }
 

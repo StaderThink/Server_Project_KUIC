@@ -16,15 +16,7 @@
     <p>@entrada.Observacion.ToCapitalize()</p>
 
     <div class="control is-grouped">
-        @if (cargando)
-        {
-            <button class="is-outline has-loader" disabled>Eliminar</button>
-        }
-
-        else
-        {
-            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
-        }
+        <button class="is-outline" @onclick="Salida">Eliminar</button>
     </div>
 
 </div>
@@ -58,5 +50,10 @@
         }
 
         cargando = false;
+    }
+
+    void Salida()
+    {
+        navegador.NavigateTo($"/salida/registrar");
     }
 }

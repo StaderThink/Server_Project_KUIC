@@ -1,0 +1,82 @@
+﻿@layout AppLayout
+@inject NavigationManager navegador
+@inject HttpClient http
+
+@using Aplicacion.Modelo.Inventarios
+@page "/salida/registrar"
+
+<h3>Registrar Salida</h3>
+
+@if (mensaje is string)
+{
+    <blockquote class="is-error">
+        <p>@mensaje</p>
+    </blockquote>
+}
+
+<div class="form">
+    <div class="control">
+        <button class="button is-prime" @onclick="AgregarElemento">+ Producto</button>
+    </div>
+
+    <div class="field">
+        <div class="grid has-gap">
+            @foreach (var detalle in detalles)
+            {
+                <ItemDetalle detalle="detalle" OnDeleted="EliminarElemento" />
+            }
+        </div>
+    </div>
+
+    <div class="field">
+        <label for="observacion">Observación</label>
+        <textarea id="observacion" class="input" type="text" @bind="salida.Observacion"></textarea>
+        <small>Opcional</small>
+    </div>
+
+    <div class="control is-grouped">
+        <button class="is-prime" @onclick="Enviar">Registrar</button>
+        <a href="/entrada" class="button is-outline">Cancelar</a>
+    </div>
+
+</div>
+
+@code {
+    string mensaje;
+
+    Salida salida { get; set; } = new Salida();
+
+    List<DetalleSalida> detalles = new List<DetalleSalida>();
+
+    private void AgregarElemento()
+    {
+        detalles.Add(new DetalleSalida());
+    }
+
+    private void EliminarElemento(DetalleSalida detalle)
+    {
+        detalles.Remove(detalle);
+    }
+
+    async Task Enviar()
+    {
+        try
+        {
+            var formulario = new FormularioRegistrarSalida()
+            {
+                Salida = salida,
+                Detalles = detalles
+            };
+            var respuesta = await http.PostAsJsonAsync("/api/salida", formulario);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/salida");
+            }
+        }
+        catch
+        {
+            mensaje = "Hubo un error al insertar";
+        }
+    }
+}

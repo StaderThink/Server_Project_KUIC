@@ -9,7 +9,7 @@ using System.Collections.Generic;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "logistica")]
     public class ExistenciaController : Controller
     {
         private readonly RepoExistencia existencia = new RepoExistencia();

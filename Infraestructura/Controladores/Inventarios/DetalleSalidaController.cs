@@ -5,11 +5,12 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "logistica")]
     public class DetalleSalidaController : Controller
     {
         private readonly RepoDetalleSalida repo = new RepoDetalleSalida();
@@ -30,6 +31,17 @@ namespace Infraestructura.Controladores.Inventarios
                 return detalle;
             }
             return NotFound();
+        }
+
+        [HttpGet("salida/{salidaId}")] // GET /api/detalleEntrada/entrada/5
+        public IEnumerable<DetalleSalida> ListarPorSalida(int salidaId)
+        {
+            IEnumerable<DetalleSalida> lista = repo.Listar();
+
+            return
+                from detalle in lista
+                where detalle.Salida == salidaId
+                select detalle;
         }
 
         [HttpPost]

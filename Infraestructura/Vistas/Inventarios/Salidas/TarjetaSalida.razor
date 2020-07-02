@@ -1,0 +1,37 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+    <div class="card">
+        @if (detalles is null)
+        {
+            <p>Espere...</p>
+        }
+        else
+        {
+            foreach (DetalleSalida detalle in detalles)
+            {
+                <p>@detalle.Producto</p>
+                <p>@detalle.Cantidad</p>
+            }
+        }
+        <p>@salida.Fecha.ToShortDateString()</p>
+        <p>@salida.Pedido</p>
+        <p>@salida.Observacion.ToCapitalize()</p>
+    </div>
+   
+@code {
+    [Parameter]
+    public Salida salida { get; set; }
+
+    [Parameter]
+    public EventCallback<Salida> OnSalidaEliminada { get; set; }
+
+    DetalleSalida[] detalles { get; set; } = new DetalleSalida[0];
+
+    Pedido[] pedidos { get; set; } = new Pedido[0];
+
+    protected override async Task OnInitializedAsync()
+    {
+        detalles = await http.GetFromJsonAsync<DetalleSalida[]>($"/api/detalleSalida/salida/{salida.Id}");
+    }
+}

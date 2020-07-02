@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "logistica")]
     public class EntradaController : Controller
     {
         private readonly RepoEntrada repositorio = new RepoEntrada();

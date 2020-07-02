@@ -10,7 +10,7 @@ using System.Linq;
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
+    [Authorize(Roles = "logistica")]
     public class DetalleEntradaController : Controller
     {
         private readonly RepoDetalleEntrada repo = new RepoDetalleEntrada();
