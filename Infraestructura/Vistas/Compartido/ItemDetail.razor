@@ -1,0 +1,39 @@
+﻿<div class="control is-attached">
+    <select id="producto" class="input" @bind="detalle.Producto" required>
+        @foreach (var producto in listadoProductos)
+        {
+            <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
+        }
+    </select>
+
+    <input class="input" type="number" @bind="detalle.Cantidad" />
+
+    <button class="is-outline" @onclick="Eliminar">Quitar</button>
+</div>
+
+@code {
+    [Parameter]
+    public Producto[] listadoProductos { get; set; }
+
+    [Parameter]
+    public IDetalle detalle { get; set; }
+
+    [Parameter]
+    public EventCallback<IDetalle> OnDeleted { get; set; }
+
+    protected override void OnInitialized()
+    {
+        if (listadoProductos.Length > 0)
+        {
+            detalle.Producto = listadoProductos[0].Id;
+        }
+    }
+
+    public void Eliminar()
+    {
+        if (OnDeleted.HasDelegate)
+        {
+            OnDeleted.InvokeAsync(detalle);
+        }
+    }
+}

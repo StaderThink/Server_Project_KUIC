@@ -1,6 +1,6 @@
 ﻿namespace Dominio.Modelo
 {
-    public sealed class DetalleSalida : IEntidad
+    public sealed class DetalleSalida : IEntidad, IDetalle
     {
         public int Id { get; set; }
         public int Cantidad { get; set; }

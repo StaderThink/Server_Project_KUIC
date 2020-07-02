@@ -23,7 +23,7 @@
         <div class="grid has-gap">
             @foreach (var detalle in detalles)
             {
-                <ItemDetalle detalle="detalle" OnDeleted="EliminarElemento" />
+                <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
             }
         </div>
     </div>
@@ -47,15 +47,29 @@
     Salida salida { get; set; } = new Salida();
 
     List<DetalleSalida> detalles = new List<DetalleSalida>();
+    Producto[] listaProductos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            listaProductos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+        }
+
+        catch
+        {
+            listaProductos = new Producto[0];
+        }
+    }
 
     private void AgregarElemento()
     {
         detalles.Add(new DetalleSalida());
     }
 
-    private void EliminarElemento(DetalleSalida detalle)
+    private void EliminarElemento(IDetalle detalle)
     {
-        detalles.Remove(detalle);
+        detalles.Remove((DetalleSalida) detalle);
     }
 
     async Task Enviar()
@@ -67,6 +81,7 @@
                 Salida = salida,
                 Detalles = detalles
             };
+
             var respuesta = await http.PostAsJsonAsync("/api/salida", formulario);
 
             if (respuesta.IsSuccessStatusCode)
