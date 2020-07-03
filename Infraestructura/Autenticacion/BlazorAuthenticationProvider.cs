@@ -18,12 +18,12 @@ namespace Infraestructura.Autenticacion
 {
     public sealed class BlazorAuthenticationProvider: AuthenticationStateProvider
     {
-        private readonly HttpClient _http;
+        private readonly HttpClient http;
         private readonly ILocalStorageService _localStorage;
 
         public BlazorAuthenticationProvider(HttpClient http, ILocalStorageService localStorage)
         {
-            _http = http;
+            this.http = http;
             _localStorage = localStorage;
         }
 
@@ -35,9 +35,9 @@ namespace Infraestructura.Autenticacion
 
             if (token is string)
             {
-                _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+                http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
-                var respuesta = await _http.GetAsync("/api/sesion");
+                var respuesta = await http.GetAsync("/api/sesion");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
@@ -69,7 +69,7 @@ namespace Infraestructura.Autenticacion
         public async Task IniciarSesion(string documento, string clave)
         {
             var credencial = new Credencial(documento, clave);
-            var respuesta = await _http.PostAsJsonAsync("/api/sesion", credencial);
+            var respuesta = await http.PostAsJsonAsync("/api/sesion", credencial);
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -78,6 +78,11 @@ namespace Infraestructura.Autenticacion
 
                 NotifyAuthenticationStateChanged(ObtenerIdentidad());
             }
+
+            else
+            {
+                throw new ArgumentException("Credenciales invalidas");
+            } 
         }
 
         public async Task CerrarSesion()

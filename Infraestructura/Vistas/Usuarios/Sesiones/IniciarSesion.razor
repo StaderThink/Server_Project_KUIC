@@ -1,11 +1,13 @@
 ﻿@inject AuthenticationStateProvider proveedor
+@inject ILocalStorageService localStorage
+
 @using Autenticacion
 
 <h1>Iniciar sesión</h1>
 
-@if (error)
+@if (!string.IsNullOrEmpty(mensaje))
 {
-    <blockquote class="is-error">Hubo un error iniciando sesión</blockquote>
+    <blockquote class="is-error">@mensaje</blockquote>
 }
 
 <div class="form">
@@ -33,7 +35,7 @@
 
             else
             {
-                <button class="is-primary" @onclick="Iniciar">Ingresar</button>
+                <button class="is-primary" @onclick="Iniciar" disabled="@(intentos == 3)">Ingresar</button>
             }
         </div>
     </div>
@@ -43,11 +45,54 @@
     string documento;
     string clave;
 
-    bool cargando = false;
-    bool error = false;
+    string mensaje;
+
+    bool cargando = true;
+
+    int intentos = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        bool hayTiempoEspera = await localStorage.ContainKeyAsync("tiempo_espera_login");
+
+        if (hayTiempoEspera)
+        {
+            DateTime tiempoEspera = DateTime.Now;
+
+            try
+            {
+                tiempoEspera = await localStorage.GetItemAsync<DateTime>("tiempo_espera_login");
+            }
+
+            catch
+            {
+                mensaje = "Hubo un fallo recuperando tu sesión, por favor recarga la página";
+                await localStorage.SetItemAsync("tiempo_espera_login", DateTime.Now.AddMinutes(5));
+            }
+
+            if (DateTime.Now > tiempoEspera)
+            {
+                intentos = 0;
+                await localStorage.RemoveItemAsync("tiempo_espera_login");
+            }
+
+            else
+            {
+                var tiempoRestante = tiempoEspera - DateTime.Now;
+                string textoMinutos = tiempoRestante.Minutes == 1 ? "minuto" : "minutos";
+
+                intentos = 3;
+                mensaje = $"Faltan {tiempoRestante.Minutes} {textoMinutos}, por favor espera para volver a intentar iniciar sesión";
+            }
+        }
+
+        cargando = false;
+    }
 
     async Task Iniciar()
     {
+        mensaje = string.Empty;
+
         try
         {
             cargando = true;
@@ -56,10 +101,20 @@
             await nuevoProveedor.IniciarSesion(documento, clave);
         }
 
-        catch (Exception ex)
+        catch
         {
-            error = true;
-            Console.WriteLine(ex.ToString());
+            if (intentos == 2)
+            {
+                mensaje = "Has superado el número de intentos permitidos, espera 5 minutos para volver a intentar.";
+                await localStorage.SetItemAsync("tiempo_espera_login", DateTime.Now.AddMinutes(5));
+            }
+
+            else
+            {
+                mensaje = "Por favor revisa tus credenciales. También puedes contactar al administrador del sistema";
+            }
+
+            intentos++;
         }
 
         finally
