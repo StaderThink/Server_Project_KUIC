@@ -7,16 +7,16 @@
     <p>@categoria.Descripcion.ToCapitalize()</p>
 
     <div class="control is-grouped">
-        <button class="is-prime" @onclick="Editar">Editar</button>
+        <button class="is-primary" @onclick="Editar">Editar</button>
 
         @if (cargando)
         {
-            <button class="is-outline has-loader" disabled>Eliminar</button>
+            <button class="is-outlined has-loader" disabled>Eliminar</button>
         }
 
         else
         {
-            <button class="is-outline" @onclick="Eliminar">Eliminar</button>
+            <button class="is-outlined" @onclick="Eliminar">Eliminar</button>
         }
     </div>
 </div>

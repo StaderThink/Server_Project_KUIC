@@ -79,15 +79,15 @@
                 <div class="control is-grouped">
                     @if (cargando)
                     {
-                        <button class="is-prime has-loader" disabled>Registrar</button>
+                        <button class="is-primary has-loader" disabled>Registrar</button>
                     }
 
                     else
                     {
-                        <button class="is-prime" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
+                        <button class="is-primary" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
                     }
 
-                    <a href="/usuario" class="button is-outline">Cancelar</a>
+                    <a href="/usuario" class="button is-outlined">Cancelar</a>
                 </div>
             </div>
         </form>

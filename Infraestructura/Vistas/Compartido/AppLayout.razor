@@ -5,18 +5,16 @@
 @inject AuthenticationStateProvider authProvider
 @inject NavigationManager navegador
 
-<header>
-    <div class="logo">
-        <a href="/" class="button is-outline is-small">aurelia</a>
-    </div>
+<header class="navbar">
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <SearchBox />
+        </div>
 
-    <div class="search">
-        <SearchBox />
+        <div class="navbar-end">
+            <a @onclick="CerrarSession">Cerrar sesion</a>
+        </div>
     </div>
-
-    <nav>
-        <a @onclick="CerrarSession">Cerrar sesion</a>
-    </nav>
 </header>
 
 <main class="content has-gap">

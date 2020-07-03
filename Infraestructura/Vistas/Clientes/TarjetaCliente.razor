@@ -8,16 +8,16 @@
     <span class="button is-static is-small">@(cliente.Activo ? "Activo" : "Inactivo")</span>
 
     <div class="control is-grouped">
-        <a href="/cliente/modificar/@cliente.Id" class="button is-prime">Editar</a>
+        <a href="/cliente/modificar/@cliente.Id" class="button is-primary">Editar</a>
 
         @if (cargando)
         {
-            <button class="is-outline has-loader" disabled>Borrar</button>
+            <button class="is-outlined has-loader" disabled>Borrar</button>
         }
 
         else
         {
-            <button class="is-outline" @onclick="Eliminar">Borrar</button>
+            <button class="is-outlined" @onclick="Eliminar">Borrar</button>
         }
     </div>
 </div>

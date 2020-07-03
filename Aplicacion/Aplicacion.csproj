@@ -14,4 +14,8 @@
     <ProjectReference Include="..\Dominio\Dominio.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Servicio\Pedidos\" />
+  </ItemGroup>
+
 </Project>

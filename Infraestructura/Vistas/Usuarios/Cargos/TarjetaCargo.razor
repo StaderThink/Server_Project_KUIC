@@ -5,14 +5,14 @@
     <h6>@(cargo.Nombre.ToCapitalize())</h6>
 
     <div class="control is-grouped">
-        <button class="is-prime" @onclick="Editar">Editar</button>
+        <button class="is-primary" @onclick="Editar">Editar</button>
 
         @if (cargando) {
-            <button class="is-outline has-loader" disabled>Borrar</button>
+            <button class="is-outlined has-loader" disabled>Borrar</button>
         }
 
         else {
-            <button class="is-outline" @onclick="Eliminar">Borrar</button>
+            <button class="is-outlined" @onclick="Eliminar">Borrar</button>
         }
     </div>
 </div>
