@@ -5,9 +5,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace Aplicacion.Seguridad
+namespace Aplicacion.Sesion
 {
-    public sealed class ProveedorJWT
+    public sealed class ProveedorTokenSesion
     {
         public string GenerarToken(ClaimsPrincipal identidad)
         {

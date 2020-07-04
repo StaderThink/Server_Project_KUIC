@@ -1,0 +1,76 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@layout AppLayout
+
+<AuthorizeView Roles="usuarios">
+    <Authorized>
+        @if (cargando)
+        {
+            <div class="loader is-medium"></div>
+        }
+
+        else
+        {
+            <h3>Listar usuarios</h3>
+
+            <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
+
+            @if (lista is null)
+            {
+                <p>Algo salio muy mal...</p>
+            }
+
+            else
+            {
+                <div class="grid has-gap xs-1 md-2">
+                    @foreach (var usuario in lista)
+                    {
+                        <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                    }
+                </div>
+            }
+        }
+    </Authorized>
+
+    <NotAuthorized>
+        <h2>No tienes permisos para acceder a esta vista</h2>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    Usuario[] lista { get; set; }
+
+    bool cargando = true;
+
+    [Parameter]
+    public string busqueda { get; set; } = "";
+
+    protected override async Task OnInitializedAsync() {
+        await ObtenerListado();
+    }
+
+    private async Task ObtenerListado() {
+        cargando = true;
+        var respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
+
+        try {
+            if (respuesta.StatusCode == HttpStatusCode.OK) {
+                lista = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
+            }
+
+            else {
+                lista = null;
+            }
+        }
+
+        catch (Exception ex) {
+            lista = new Usuario[0];
+            Console.WriteLine(ex);
+        }
+
+        finally {
+            cargando = false;
+        }
+    }
+}

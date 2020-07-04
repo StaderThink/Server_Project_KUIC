@@ -1,0 +1,180 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@layout AppLayout
+
+<h2>Registrar usuario</h2>
+
+@if (mensaje is string) {
+    <blockquote class="is-error">
+        <p>@mensaje</p>
+    </blockquote>
+}
+
+<AuthorizeView Roles="usuarios">
+    <Authorized>
+        <form @onsubmit="Enviar">
+            <div class="grid xs-1 md-2 has-gap">
+                <div class="field">
+                    <label for="tipoDocumento">Tipo de documento</label>
+                    <select id="tipoDocumento" class="input" @bind="usuario.TipoDocumento" required>
+                        @foreach (TipoDocumento tipo in tiposDeDocumento)
+                        {
+                            <option value="@tipo">@tipo</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="documento">Documento</label>
+                    <input id="documento" type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required />
+
+                    @if (yaExiste)
+                    {
+                        <small class="is-error">Documento ya ha sido registrado</small>
+                    }
+
+                    else
+                    {
+                        <small>Número de documento de identidad</small>
+                    }
+                </div>
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input id="nombre" type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
+                </div>
+
+                <div class="field">
+                    <label for="apellido">Apellido</label>
+                    <input id="apellido" type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
+                </div>
+
+                <div class="field">
+                    <label for="correo">Correo</label>
+                    <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
+                </div>
+
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <div class="control is-attached">
+                        <span class="button is-static">+57</span>
+                        <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="cargo">Cargo</label>
+                    <select id="cargo" class="input" @bind="usuario.Cargo" required>
+                        @foreach (Cargo cargo in cargos)
+                        {
+                            <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="field">
+                <div class="control is-grouped">
+                    @if (cargando)
+                    {
+                        <button class="is-primary has-loader" disabled>Registrar</button>
+                    }
+
+                    else
+                    {
+                        <button class="is-primary" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
+                    }
+
+                    <a href="/usuario" class="button is-outlined">Cancelar</a>
+                </div>
+            </div>
+        </form>
+    </Authorized>
+
+    <NotAuthorized>
+        <h1>No tienes permisos para estar aquí</h1>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    Cargo[] cargos { get; set; } = new Cargo[0];
+    Usuario usuario { get; set; } = new Usuario();
+
+    Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+
+    bool yaExiste = false;
+    string mensaje;
+    bool cargando = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        }
+
+        catch
+        {
+            cargos = new Cargo[0];
+        }
+    }
+
+    async Task Enviar()
+    {
+        cargando = true;
+
+        try
+        {
+
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
+
+            if (respuesta.IsSuccessStatusCode) {
+                navegador.NavigateTo("/usuario");
+            }
+
+            else {
+                if (respuesta.StatusCode == HttpStatusCode.Unauthorized) {
+                    mensaje = "No tienes autorización para realizar esta acción";
+                }
+
+                else {
+                    mensaje = "Hubo un error al insertar";
+                }
+            }
+        }
+
+        catch {
+            mensaje = "Hubo un error al insertar";
+        }
+
+        finally {
+            cargando = false;
+        }
+    }
+
+    async Task BuscarExistencia() {
+        try {
+            if (string.IsNullOrWhiteSpace(usuario.Documento))
+            {
+                yaExiste = false;
+                return;
+            }
+
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={usuario.Documento}");
+
+            if (respuesta.IsSuccessStatusCode) {
+                var existencias = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
+                yaExiste = existencias.Length > 0;
+            }
+
+            else {
+                yaExiste = true;
+            }
+        }
+
+        catch {
+            yaExiste = true;
+        }
+    }
+}

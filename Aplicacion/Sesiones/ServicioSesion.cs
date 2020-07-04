@@ -1,23 +1,23 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
-using Aplicacion.Modelo.Sesiones;
-using Dominio.Modelo;
-using Dominio.Repositorio;
+using Aplicacion.Sesiones.Formularios;
+using Dominio.Usuarios;
+using Dominio.Cargos;
 
-namespace Aplicacion.Servicio.Usuarios
+namespace Aplicacion.Sesiones
 {
     public sealed class ServicioSesion
     {
-        private readonly RepoUsuario _repo;
+        private readonly RepositorioUsuario repositorio;
 
         public ServicioSesion()
         {
-            _repo = new RepoUsuario();
+            repositorio = new RepositorioUsuario();
         }
 
-        public Usuario ValidarCredencial(Credencial credencial)
+        public Usuario ValidarCredencial(FormularioCredencial credencial)
         {
-            var usuario = _repo.PorDocumento(credencial.Documento);
+            var usuario = repositorio.PorDocumento(credencial.Documento);
 
             if (usuario is Usuario)
             {
@@ -32,8 +32,8 @@ namespace Aplicacion.Servicio.Usuarios
 
         public ClaimsPrincipal GenerarIdentidad(Usuario usuario)
         {
-            var repoCargo = new RepoCargo();
-            var cargo = repoCargo.PorId(usuario.Cargo);
+            var repositorioCargo = new RepositorioCargo();
+            var cargo = repositorioCargo.PorId(usuario.Cargo);
 
             var listado = new List<Claim>
             {

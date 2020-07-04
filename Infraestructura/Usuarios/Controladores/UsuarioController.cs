@@ -1,25 +1,26 @@
-﻿using Aplicacion.Servicio.Usuarios;
-
-using Dominio.Modelo;
-using Dominio.Repositorio;
-
+﻿using System.Collections.Generic;
+using System.Linq;
+using Aplicacion.Usuarios;
+using Dominio.Usuarios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Infraestructura.Controladores.Usuarios
+namespace Infraestructura.Usuarios
 {
     [Authorize(Roles = "usuarios")]
     [Route("api/[controller]")]
     public class UsuarioController : Controller
     {
-        private readonly RepoUsuario repo = new RepoUsuario();
+        private readonly RepositorioUsuario repositorio;
+
+        public UsuarioController()
+        {
+            repositorio = new RepositorioUsuario();
+        }
 
         private IEnumerable<Usuario> Busqueda(string criterio = "")
         {
-            IEnumerable<Usuario> lista = repo.Listar();
+            IEnumerable<Usuario> lista = repositorio.Listar();
 
             criterio = criterio?.ToLower() ?? "";
 
@@ -50,7 +51,7 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpGet("{id}")]
         public ActionResult<Usuario> Obtener(int id)
         {
-            if (repo.PorId(id) is Usuario usuario)
+            if (repositorio.PorId(id) is Usuario usuario)
             {
                 return usuario;
             }
@@ -61,7 +62,7 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpPost]
         public IActionResult Insertar([FromBody] Usuario usuario)
         {
-            ServicioRegistradorUsuario servicio = new ServicioRegistradorUsuario(repo);
+            ServicioRegistradorUsuario servicio = new ServicioRegistradorUsuario();
 
             if (servicio.Registrar(usuario))
                 return Ok();
@@ -72,11 +73,11 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpPut("{id}")]
         public IActionResult Editar(int id, [FromBody] Usuario usuario)
         {
-            if (repo.PorId(id) is Usuario)
+            if (repositorio.PorId(id) is Usuario)
             {
                 usuario.Id = id;
 
-                if (repo.Editar(usuario))
+                if (repositorio.Editar(usuario))
                 {
                     return Ok();
                 }
@@ -90,9 +91,9 @@ namespace Infraestructura.Controladores.Usuarios
         [HttpDelete("{id}")]
         public IActionResult Eliminar(int id)
         {
-            if (repo.PorId(id) is Usuario usuario)
+            if (repositorio.PorId(id) is Usuario usuario)
             {
-                if (repo.Eliminar(usuario))
+                if (repositorio.Eliminar(usuario))
                 {
                     return Ok();
                 }
