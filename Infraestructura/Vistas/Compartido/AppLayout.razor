@@ -5,23 +5,32 @@
 @inject AuthenticationStateProvider authProvider
 @inject NavigationManager navegador
 
-<header class="navbar">
-    <div class="navbar-menu">
-        <div class="navbar-start">
-            <SearchBox />
-        </div>
+<header class="main-header">
+    <div class="logo">
+        <ion-icon name="file-tray-outline"></ion-icon>
+        <strong>Aurelia</strong>
+    </div>
+        
+    <SearchBox />
 
-        <div class="navbar-end">
-            <a @onclick="CerrarSession">Cerrar sesion</a>
-        </div>
+    <div class="options">
+        <AuthorizeView>
+            <Authorized>
+                <button class="button is-light" @onclick="CerrarSession">Cerrar Sesión</button>
+            </Authorized>
+
+            <NotAuthorized>
+                <a href="/" class="button is-primary">Iniciar Sesión</a>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
 </header>
 
-<main class="content has-gap">
+<main class="section">
     @Body
 </main>
 
-@functions {
+@code {
     async Task CerrarSession() {
         var proveedor = (BlazorAuthenticationProvider) authProvider;
 

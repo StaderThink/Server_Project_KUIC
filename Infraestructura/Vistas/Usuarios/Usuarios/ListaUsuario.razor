@@ -14,24 +14,30 @@
 
         else
         {
-            <h3>Listar usuarios</h3>
+            <div class="container">
+                <h2 class="title is-2">Usuarios</h2>
 
-            <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
-
-            @if (lista is null)
-            {
-                <p>Algo salio muy mal...</p>
-            }
-
-            else
-            {
-                <div class="grid has-gap xs-1 md-2">
-                    @foreach (var usuario in lista)
-                    {
-                        <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
-                    }
+                <div class="buttons">
+                    <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
                 </div>
-            }
+
+                @if (lista is null)
+                {
+                    <p>Algo salio muy mal...</p>
+                }
+
+                else
+                {
+                    <div class="columns is-multiline">
+                        @foreach (var usuario in lista)
+                        {
+                            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                                <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
         }
     </Authorized>
 
