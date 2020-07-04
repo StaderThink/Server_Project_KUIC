@@ -1,21 +1,36 @@
 ﻿@inject HttpClient http
 
 <div class="card">
-    <h6>@(usuario.Nombre.ToCapitalize())</h6>
+    <div class="card-content">
+        <div class="content">
+            <h6 class="title is-6">@(usuario.Nombre.ToCapitalize())</h6>
 
-    <p>@usuario.TipoDocumento @usuario.Documento</p>
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                    <div class="tags has-addons">
+                        <div class="tag is-dark">@usuario.TipoDocumento</div>
+                        <div class="tag is-light">@usuario.Documento</div>
+                    </div>
+                </div>
 
-    <span class="button is-static is-small">@(usuario.Activo ? "Activo" : "Inactivo")</span>
+                <div class="control">
+                    <div class="tag is-light">@(usuario.Activo ? "Activo" : "Inactivo")</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <div class="control is-grouped">
-        <a href="/usuario/modificar/@usuario.Id" class="button is-primary">Editar</a>
+    <div class="card-footer">
+        <a href="/usuario/modificar/@usuario.Id" class="card-footer-item">Editar</a>
 
-        @if (cargando) {
-            <button class="is-outlined has-loader" disabled>Borrar</button>
+        @if (cargando)
+        {
+            <a class="card-footer-item" disabled>Borrar</a>
         }
 
-        else {
-            <button class="is-outlined" @onclick="Eliminar">Borrar</button>
+        else
+        {
+            <a class="card-footer-item" @onclick="Eliminar">Borrar</a>
         }
     </div>
 </div>

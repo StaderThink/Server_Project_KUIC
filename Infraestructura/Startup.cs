@@ -1,7 +1,8 @@
+using System;
+using System.Net.Http;
+using System.Text;
 using Blazored.LocalStorage;
-
-using Infraestructura.Autenticacion;
-
+using Infraestructura.Sesiones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,10 +11,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-
-using System;
-using System.Net.Http;
-using System.Text;
 
 namespace Infraestructura
 {
@@ -61,7 +58,7 @@ namespace Infraestructura
                 }
             );
 
-            services.AddScoped<AuthenticationStateProvider, BlazorAuthenticationProvider>();
+            services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacion>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

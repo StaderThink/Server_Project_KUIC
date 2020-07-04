@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using System.Collections.Generic;
 
-namespace Infraestructura.Controladores.Usuarios
+namespace Infraestructura.Cargos.Controladores
 {
     [Authorize(Roles = "usuarios")]
     [Route("api/[controller]")]

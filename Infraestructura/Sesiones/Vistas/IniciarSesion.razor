@@ -1,8 +1,6 @@
 ﻿@inject AuthenticationStateProvider proveedor
 @inject ILocalStorageService localStorage
 
-@using Autenticacion
-
 <h1>Iniciar sesión</h1>
 
 @if (!string.IsNullOrEmpty(mensaje))
@@ -97,7 +95,7 @@
         {
             cargando = true;
 
-            var nuevoProveedor = (BlazorAuthenticationProvider) proveedor;
+            var nuevoProveedor = (ProveedorAutenticacion) proveedor;
             await nuevoProveedor.IniciarSesion(documento, clave);
         }
 

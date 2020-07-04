@@ -1,7 +1,5 @@
 ﻿@inherits LayoutComponentBase
 
-@using Autenticacion
-
 @inject AuthenticationStateProvider authProvider
 @inject NavigationManager navegador
 
@@ -32,7 +30,7 @@
 
 @code {
     async Task CerrarSession() {
-        var proveedor = (BlazorAuthenticationProvider) authProvider;
+        var proveedor = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
 
         await proveedor.CerrarSesion();
         navegador.NavigateTo("/");

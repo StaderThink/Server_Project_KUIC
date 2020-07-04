@@ -10,14 +10,14 @@ using Blazored.LocalStorage;
 using Dominio.Usuarios;
 using Microsoft.AspNetCore.Components.Authorization;
 
-namespace Infraestructura.Autenticacion
+namespace Infraestructura.Sesiones
 {
-    public sealed class BlazorAuthenticationProvider: AuthenticationStateProvider
+    public sealed class ProveedorAutenticacion: AuthenticationStateProvider
     {
         private readonly HttpClient http;
         private readonly ILocalStorageService _localStorage;
 
-        public BlazorAuthenticationProvider(HttpClient http, ILocalStorageService localStorage)
+        public ProveedorAutenticacion(HttpClient http, ILocalStorageService localStorage)
         {
             this.http = http;
             _localStorage = localStorage;

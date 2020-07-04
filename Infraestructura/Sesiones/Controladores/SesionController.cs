@@ -7,7 +7,7 @@ using Dominio.Usuarios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Infraestructura.Controladores.Usuarios
+namespace Infraestructura.Sesiones.Controladores
 {
     [Route("api/[controller]")]
     public class SesionController : ControllerBase
