@@ -1,5 +1,4 @@
-﻿using Dominio.Modelo;
-using Dominio.Repositorio;
+﻿using Dominio.Cargos;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +11,11 @@ namespace Infraestructura.Controladores.Usuarios
     [Route("api/[controller]")]
     public class CargoController : Controller
     {
-        private readonly RepoCargo repo;
+        private readonly RepositorioCargo repo;
 
         public CargoController()
         {
-            repo = new RepoCargo();
+            repo = new RepositorioCargo();
         }
 
         [HttpGet]

@@ -1,0 +1,123 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+
+@layout AppLayout
+
+@if (mensaje is string) {
+    <blockquote class="is-warn">
+        <p>@mensaje</p>
+    </blockquote>
+}
+
+<form @onsubmit="Enviar">
+    <div class="grid xs-1 md-2 has-gap">
+        <div class="field">
+            <label for="tipoDocumento">Tipo de documento</label>
+            <input id="tipoDocumento" type="text" class="input" @bind="usuario.TipoDocumento" disabled readonly />
+        </div>
+
+        <div class="field">
+            <label>Documento</label>
+            <input type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="input" @bind="usuario.Documento" disabled readonly />
+        </div>
+
+        <div class="field">
+            <label for="nombre">Nombre</label>
+            <input id="nombre" type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
+        </div>
+
+        <div class="field">
+            <label for="apellido">Apellido</label>
+            <input id="apellido" type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
+        </div>
+
+        <div class="field">
+            <label for="correo">Correo</label>
+            <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
+        </div>
+
+        <div class="field">
+            <label for="telefono">Teléfono</label>
+            <div class="control is-attached">
+                <span class="button is-static">+57</span>
+                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
+            </div>
+        </div>
+
+        <div class="field">
+            <label for="cargo">Cargo</label>
+            <select id="cargo" class="input" @bind="usuario.Cargo" required>
+                @foreach (Cargo cargo in cargos) {
+                    <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
+
+        <div class="field">
+            <label for="activo">Activo</label>
+            <input id="activo" type="checkbox" class="checkbox" @bind="usuario.Activo" />
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control is-grouped">
+            @if (cargando) {
+                <button class="is-primary has-loader" disabled>Guardar</button>
+            }
+
+            else {
+                <button class="is-primary" disabled="@invalido">Guardar</button>
+            }
+
+            <a href="/usuario" class="button is-outlined">Cancelar</a>
+        </div>
+    </div>
+</form>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    Cargo[] cargos { get; set; } = new Cargo[0];
+    Usuario usuario { get; set; } = new Usuario();
+
+    Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+
+    bool cargando = false;
+    string mensaje;
+
+    bool invalido {
+        get {
+            return usuario.Cargo == 0;
+        }
+    }
+
+    protected override async Task OnInitializedAsync() {
+        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Id}");
+    }
+
+    async Task Enviar() {
+        cargando = true;
+
+        try {
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/usuario/{Id}", usuario);
+
+            if (respuesta.IsSuccessStatusCode) {
+                navegador.NavigateTo("/usuario");
+            }
+
+            else {
+                mensaje = "No se logro realizar el registro";
+            }
+        }
+
+        catch {
+            mensaje = "Hubo un error insertando el registro";
+        }
+
+        finally {
+            cargando = false;
+        }
+    }
+}

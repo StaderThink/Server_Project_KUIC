@@ -1,21 +1,14 @@
-﻿using Dominio.Modelo;
-using Dominio.Repositorio;
-
+﻿using Dominio.Usuarios;
 using System;
 
-namespace Aplicacion.Servicio.Usuarios
+namespace Aplicacion.Usuarios
 {
     public sealed class ServicioRegistradorUsuario
     {
-        private readonly IRepo<Usuario> repo;
-
-        public ServicioRegistradorUsuario(IRepo<Usuario> repo)
-        {
-            this.repo = repo;
-        }
-
         public bool Registrar(Usuario usuario)
         {
+            var repoUsuario = new RepositorioUsuario();
+
             // valores por defecto
 
             usuario.Clave = Guid.NewGuid().ToString()[0..8];
@@ -24,7 +17,7 @@ namespace Aplicacion.Servicio.Usuarios
             usuario.Actualizado = DateTime.Now;
             usuario.Creado = DateTime.Now;
 
-            return repo.Insertar(usuario);
+            return repoUsuario.Insertar(usuario);
         }
     }
 }

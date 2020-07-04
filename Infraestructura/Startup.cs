@@ -46,7 +46,7 @@ namespace Infraestructura
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddRazorPages().WithRazorPagesRoot("/Vistas");
+            services.AddRazorPages().WithRazorPagesRoot("/");
             services.AddServerSideBlazor();
             services.AddBlazoredLocalStorage();
 
