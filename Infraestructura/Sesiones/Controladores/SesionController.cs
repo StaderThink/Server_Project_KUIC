@@ -15,12 +15,12 @@ namespace Infraestructura.Sesiones.Controladores
         [HttpPost]
         public IActionResult IniciarSesion([FromBody] FormularioCredencial credencial)
         {
-            var servicio = new ServicioSesion();
+            ServicioSesion servicio = new ServicioSesion();
 
             if (servicio.ValidarCredencial(credencial) is Usuario usuario)
             {
-                var criptografo = new ProveedorTokenSesion();
-                var identidad = servicio.GenerarIdentidad(usuario);
+                ProveedorTokenSesion criptografo = new ProveedorTokenSesion();
+                ClaimsPrincipal identidad = servicio.GenerarIdentidad(usuario);
 
                 return Ok(criptografo.GenerarToken(identidad));
             }
@@ -34,10 +34,10 @@ namespace Infraestructura.Sesiones.Controladores
         {
             try
             {
-                var cargaDocumento = HttpContext.User.Claims.First(carga => carga.Type == ClaimTypes.Dns);
-                var documento = cargaDocumento.Value;
+                Claim cargaDocumento = HttpContext.User.Claims.First(carga => carga.Type == ClaimTypes.Dns);
+                string documento = cargaDocumento.Value;
 
-                var repo = new RepositorioUsuario();
+                RepositorioUsuario repo = new RepositorioUsuario();
 
                 if (repo.PorDocumento(documento) is Usuario usuario)
                 {
@@ -59,7 +59,7 @@ namespace Infraestructura.Sesiones.Controladores
         {
             try
             {
-                var servicioReestablecerClave = new ServicioReestablecerClave();
+                ServicioReestablecerClave servicioReestablecerClave = new ServicioReestablecerClave();
 
                 if (servicioReestablecerClave.ReestablecerClave(formulario))
                 {

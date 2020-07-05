@@ -1,5 +1,5 @@
-﻿using Dominio.Usuarios;
-using System;
+﻿using System;
+using Dominio.Usuarios;
 
 namespace Aplicacion.Usuarios
 {
@@ -7,7 +7,7 @@ namespace Aplicacion.Usuarios
     {
         public bool Registrar(Usuario usuario)
         {
-            var repoUsuario = new RepositorioUsuario();
+            RepositorioUsuario repoUsuario = new RepositorioUsuario();
 
             // valores por defecto
 

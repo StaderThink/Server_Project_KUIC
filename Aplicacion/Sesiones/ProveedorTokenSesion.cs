@@ -1,9 +1,8 @@
-﻿using Microsoft.IdentityModel.Tokens;
-
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Aplicacion.Sesion
 {
@@ -13,10 +12,10 @@ namespace Aplicacion.Sesion
         {
             string tokenSecreto = Environment.GetEnvironmentVariable("TOKEN");
 
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
-            var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
+            SymmetricSecurityKey llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
+            SigningCredentials credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken
+            JwtSecurityToken token = new JwtSecurityToken
             (
                 issuer: tokenSecreto,
                 audience: tokenSecreto,
@@ -25,7 +24,7 @@ namespace Aplicacion.Sesion
                 signingCredentials: credenciales
             );
 
-            var criptografo = new JwtSecurityTokenHandler();
+            JwtSecurityTokenHandler criptografo = new JwtSecurityTokenHandler();
             return criptografo.WriteToken(token);
         }
     }

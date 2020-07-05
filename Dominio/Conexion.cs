@@ -1,13 +1,11 @@
-﻿using Dapper;
-
-using MySql.Data.MySqlClient;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Dapper;
+using MySql.Data.MySqlClient;
 
 namespace Dominio
 {
-    public sealed class Conexion : IDisposable
+    internal sealed class Conexion : IDisposable
     {
         private readonly MySqlConnection _conexion;
 

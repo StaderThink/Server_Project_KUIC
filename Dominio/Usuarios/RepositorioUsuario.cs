@@ -6,7 +6,7 @@ namespace Dominio.Usuarios
     {
         public bool Editar(Usuario entidad)
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
 
             string consulta = @$"
 				update usuario set
@@ -21,7 +21,7 @@ namespace Dominio.Usuarios
 				where id = @Id
 			";
 
-            var temporal = PorId(entidad.Id);
+            Usuario temporal = PorId(entidad.Id);
 
             if (entidad.Clave == null)
             {
@@ -34,7 +34,7 @@ namespace Dominio.Usuarios
 
         public bool Eliminar(Usuario entidad)
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
 
             string consulta = "delete from usuario where id = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
@@ -44,7 +44,7 @@ namespace Dominio.Usuarios
 
         public bool Insertar(Usuario entidad)
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
 
             string consulta = @$"
 				call crear_usuario(
@@ -59,13 +59,13 @@ namespace Dominio.Usuarios
 
         public IEnumerable<Usuario> Listar()
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Usuario>("select * from usuario");
         }
 
         public Usuario PorId(int id)
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
             string consulta = "select * from usuario where id = @id";
 
             return conexion.Obtener<Usuario>(consulta, new { id });
@@ -73,7 +73,7 @@ namespace Dominio.Usuarios
 
         public Usuario PorDocumento(string documento)
         {
-            using var conexion = new Conexion();
+            using Conexion conexion = new Conexion();
             string consulta = "select * from usuario where documento = @documento";
 
             return conexion.Obtener<Usuario>(consulta, new { documento });

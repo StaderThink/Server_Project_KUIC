@@ -9,8 +9,8 @@ namespace Aplicacion.Sesion
         {
             try
             {
-                var repoUsuario = new RepositorioUsuario();
-                
+                RepositorioUsuario repoUsuario = new RepositorioUsuario();
+
                 if (repoUsuario.PorDocumento(formulario.Documento) is Usuario usuario)
                 {
                     if (usuario.Expedicion == formulario.FechaExpedicion)

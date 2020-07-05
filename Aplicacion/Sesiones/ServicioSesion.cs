@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using Aplicacion.Sesiones.Formularios;
-using Dominio.Usuarios;
 using Dominio.Cargos;
+using Dominio.Usuarios;
 
 namespace Aplicacion.Sesiones
 {
@@ -17,7 +17,7 @@ namespace Aplicacion.Sesiones
 
         public Usuario ValidarCredencial(FormularioCredencial credencial)
         {
-            var usuario = repositorio.PorDocumento(credencial.Documento);
+            Usuario usuario = repositorio.PorDocumento(credencial.Documento);
 
             if (usuario is Usuario)
             {
@@ -32,10 +32,10 @@ namespace Aplicacion.Sesiones
 
         public ClaimsPrincipal GenerarIdentidad(Usuario usuario)
         {
-            var repositorioCargo = new RepositorioCargo();
-            var cargo = repositorioCargo.PorId(usuario.Cargo);
+            RepositorioCargo repositorioCargo = new RepositorioCargo();
+            Cargo cargo = repositorioCargo.PorId(usuario.Cargo);
 
-            var listado = new List<Claim>
+            List<Claim> listado = new List<Claim>
             {
                 new Claim(ClaimTypes.SerialNumber, usuario.Id.ToString()),
                 new Claim(ClaimTypes.Dns, usuario.Documento),
@@ -55,7 +55,7 @@ namespace Aplicacion.Sesiones
             if (cargo.Clientes)
                 listado.Add(new Claim(ClaimTypes.Role, "clientes"));
 
-            var identidad = new ClaimsIdentity(listado, "bearerToken");
+            ClaimsIdentity identidad = new ClaimsIdentity(listado, "bearerToken");
             return new ClaimsPrincipal(identidad);
         }
     }

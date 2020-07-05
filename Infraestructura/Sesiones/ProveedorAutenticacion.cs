@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Infraestructura.Sesiones
 {
-    public sealed class ProveedorAutenticacion: AuthenticationStateProvider
+    public sealed class ProveedorAutenticacion : AuthenticationStateProvider
     {
         private readonly HttpClient http;
         private readonly ILocalStorageService _localStorage;
@@ -27,20 +27,20 @@ namespace Infraestructura.Sesiones
         {
             AuthenticationState estado = new AuthenticationState(new ClaimsPrincipal());
 
-            var token = await _localStorage.GetItemAsync<string>("token");
+            string token = await _localStorage.GetItemAsync<string>("token");
 
             if (token is string)
             {
                 http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
-                var respuesta = await http.GetAsync("/api/sesion");
+                HttpResponseMessage respuesta = await http.GetAsync("/api/sesion");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
-                    var usuario = await respuesta.Content.ReadFromJsonAsync<Usuario>();
-                    var servicio = new ServicioSesion();
+                    Usuario usuario = await respuesta.Content.ReadFromJsonAsync<Usuario>();
+                    ServicioSesion servicio = new ServicioSesion();
 
-                    var identidad = servicio.GenerarIdentidad(usuario);
+                    ClaimsPrincipal identidad = servicio.GenerarIdentidad(usuario);
                     estado = new AuthenticationState(identidad);
                 }
             }
@@ -53,7 +53,7 @@ namespace Infraestructura.Sesiones
             try
             {
                 return await ObtenerIdentidad();
-            } 
+            }
 
             catch (Exception ex)
             {
@@ -64,8 +64,8 @@ namespace Infraestructura.Sesiones
 
         public async Task IniciarSesion(string documento, string clave)
         {
-            var credencial = new FormularioCredencial(documento, clave);
-            var respuesta = await http.PostAsJsonAsync("/api/sesion", credencial);
+            FormularioCredencial credencial = new FormularioCredencial(documento, clave);
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/sesion", credencial);
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -78,7 +78,7 @@ namespace Infraestructura.Sesiones
             else
             {
                 throw new ArgumentException("Credenciales invalidas");
-            } 
+            }
         }
 
         public async Task CerrarSesion()

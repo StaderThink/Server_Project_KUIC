@@ -1,9 +1,7 @@
-﻿using Dominio.Cargos;
-
+﻿using System.Collections.Generic;
+using Dominio.Cargos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
-using System.Collections.Generic;
 
 namespace Infraestructura.Cargos.Controladores
 {
