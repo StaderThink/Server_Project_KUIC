@@ -3,24 +3,36 @@
 @page "/entrada"
 @layout AppLayout
 
-<h3>Listar Entradas</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Listar Entradas</h3>
 
-@if (entradas == null)
-{
-    <div class="loader is-medium">
-
-    </div>
-}
-else
-{
-    <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Entrada entrada in entradas)
-        {
-            <TarjetaEntrada entrada="entrada" OnEntradaEliminada="ObtenerListado"></TarjetaEntrada>
-        }
-    </div>
-}
+            @if (entradas == null)
+            {
+                <div class="buttons">
+                    <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
+                </div>
+                <div class="loader is-medium"></div>
+            }
+            else
+            {
+                <div class="buttons">
+                    <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
+                </div>
+                <div class="columns is-multiline">
+                    @foreach (Entrada entrada in entradas)
+                    {
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <TarjetaEntrada entrada="entrada" OnEntradaEliminada="ObtenerListado"></TarjetaEntrada>
+                        </div>
+                    }
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permiso para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Entrada[] entradas { get; set; }

@@ -4,92 +4,99 @@
 @page "/producto/registrar"
 @layout AppLayout
 
-<h3>Registrar nuevo producto</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3>Registrar nuevo producto</h3>
 
-@if (categorias.Length == 0)
-{
-    <blockquote class="is-warn">
-        <p>@noExistenCategorias</p>
-        <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
-    </blockquote>
-}
+            @if (categorias.Length == 0)
+            {
+                <blockquote class="is-warn">
+                    <p>@noExistenCategorias</p>
+                    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+                </blockquote>
+            }
 
-else
-{
-    <form @onsubmit="Enviar">
-        <div class="grid xs-1 md-2 has-gap">
-            <div class="field">
-                <label for="texto">Nombre</label>
-                <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
-            </div>
+            else
+            {
+                <form @onsubmit="Enviar">
+                    <div class="columns is-multiline">
+                        <div class="field">
+                            <label class="label" for="texto">Nombre</label>
+                            <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
+                        </div>
 
-            <div class="field">
-                <label for="codigo">Código</label>
-                <input id="codigo" class="input" type="number" pattern="[0-9]{5}" placeholder="#####" @bind="producto.Codigo" required />
-                <small>Código de 5 digitos</small>
-            </div>
+                        <div class="field">
+                            <label class="label" for="codigo">Código</label>
+                            <input id="codigo" class="input" type="number" pattern="[0-9]{5}" placeholder="#####" @bind="producto.Codigo" required />
+                            <small>Código de 5 digitos</small>
+                        </div>
 
-            <div class="field column xs-1 md-2">
-                <label for="descripcion">Descripción</label>
-                <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
-            </div>
+                        <div class="field column xs-1 md-2">
+                            <label class="label" for="descripcion">Descripción</label>
+                            <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
+                        </div>
 
-            <div class="field">
-                <label for="precio">Precio</label>
-                <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
-            </div>
+                        <div class="field">
+                            <label class="label" for="precio">Precio</label>
+                            <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
+                        </div>
 
-            <div class="field">
-                <label>Presentación</label>
-                <select class="input" @bind="producto.Presentacion" required>
-                    @foreach (Presentacion presentacion in presentaciones)
-                    {
-                        <option value="@presentacion">@presentacion</option>
-                    }
-                </select>
-            </div>
+                        <div class="field">
+                            <label class="label">Presentación</label>
+                            <select class="input" @bind="producto.Presentacion" required>
+                                @foreach (Presentacion presentacion in presentaciones)
+                                {
+                                    <option value="@presentacion">@presentacion</option>
+                                }
+                            </select>
+                        </div>
 
-            <div class="field">
-                <label for="min_cantidad">Cantidad</label>
-                <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
-            </div>
+                        <div class="field">
+                            <label class="label" for="min_cantidad">Cantidad</label>
+                            <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
+                        </div>
 
-            <div class="field">
-                <label>Magnitud</label>
-                <select class="input" @bind="producto.Magnitud" required>
-                    @foreach (Magnitud magnitud in magnitudes)
-                    {
-                        <option value="@magnitud">@magnitud</option>
-                    }
-                </select>
-            </div>
+                        <div class="field">
+                            <label class="label">Magnitud</label>
+                            <select class="input" @bind="producto.Magnitud" required>
+                                @foreach (Magnitud magnitud in magnitudes)
+                                {
+                                    <option value="@magnitud">@magnitud</option>
+                                }
+                            </select>
+                        </div>
 
-            <div class="field">
-                <label for="min_peso">Peso</label>
-                <div class="control is-attached">
-                    <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
-                    <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
-                </div>
-                <small>Peso mínimo y máximo</small>
-            </div>
+                        <div class="field">
+                            <label class="label" for="min_peso">Peso</label>
+                            <div class="control is-attached">
+                                <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
+                                <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
+                            </div>
+                            <small>Peso mínimo y máximo</small>
+                        </div>
 
-            <div class="field">
-                <label>Categoria</label>
-                <select class="input" @bind="producto.Categoria">
-                    @foreach (Categoria categoria in categorias)
-                    {
-                        <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
-                    }
-                </select>
-            </div>
-        </div>
+                        <div class="field">
+                            <label class="label">Categoria</label>
+                            <select class="input" @bind="producto.Categoria">
+                                @foreach (Categoria categoria in categorias)
+                                {
+                                    <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
 
-        <div class="control is-grouped">
-            <button class="is-primary">Registrar</button>
-            <a href="/producto" class="button is-outlined">Cancelar</a>
-        </div>
-    </form>
-}
+                    <div class="control is-grouped">
+                        <button class="is-primary">Registrar</button>
+                        <a href="/producto" class="button is-outlined">Cancelar</a>
+                    </div>
+                </form>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Array magnitudes = Enum.GetValues(typeof(Magnitud));

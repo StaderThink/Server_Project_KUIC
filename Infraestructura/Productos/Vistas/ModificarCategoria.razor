@@ -4,34 +4,32 @@
 @page "/categoria/modificar/{Id:int}"
 @layout AppLayout
 
-@if (categoria is null)
-{
-    <div class="loader is-medium"></div>
-}
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Editar categoria</h3>
 
-else
-{
-    <h3>Editar categoria</h3>
+            <form @onsubmit="Enviar">
+                <div class="field">
+                    <label class="label" for="nombre">Nombre</label>
+                    <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
+                </div>
 
-    <form @onsubmit="Enviar">
-        <div class="field">
-            <label for="nombre">Nombre</label>
-            <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
-        </div>
+                <div class="field">
+                    <label class="label" for="descripcion">Descripción</label>
+                    <textarea id="descripcion" class="textarea" type="text" @bind="categoria.Descripcion"></textarea>
+                    <small>Opcional</small>
+                </div>
 
-        <div class="field">
-            <label for="descripcion">Descripción</label>
-            <textarea id="descripcion" class="input" type="text" @bind="categoria.Descripcion"></textarea>
-            <small>Opcional</small>
-        </div>
-
-        <div class="control is-grouped">
-            <button class="is-primary">Actualizar</button>
-            <a href="/categoria" class="button is-outlined">Cancelar</a>
-        </div>
-    </form>
-}
-
+                <div class="control">
+                    <button class="is-primary">Actualizar</button>
+                    <a href="/categoria" class="button is-outlined">Cancelar</a>
+                </div>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 @code {
     [Parameter]
     public int Id { get; set; }

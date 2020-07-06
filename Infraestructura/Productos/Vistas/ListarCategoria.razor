@@ -3,22 +3,36 @@
 @page "/categoria"
 @layout AppLayout
 
-<h3>Listar Categorias</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Listar Categorias</h3>
 
-@if (categoria == null)
-{
-    <div class="loader is-medium"></div>
-}
-else
-{
-    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Categoria categoria in categoria)
-        {
-            <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
-        }
-    </div>
-}
+            @if (categoria == null)
+            {
+                <div class="buttons">
+                    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+                </div>
+                <div class="loader is-medium"></div>
+            }
+            else
+            {
+                <div class="buttons">
+                    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+                </div>
+                <div class="columns is-multiline">
+                    @foreach (Categoria categoria in categoria)
+                    {
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
+                        </div>
+                    }
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Categoria[] categoria { get; set; }

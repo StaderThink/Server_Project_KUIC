@@ -1,25 +1,27 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div class="card">
-    <h6>@categoria.Nombre.ToCapitalize()</h6>
+    <div class="card">
+        <div class="card-content">
+            <div class="content">
+                <h6 class="title is-6">@categoria.Nombre.ToCapitalize()</h6>
+                <p>@categoria.Descripcion.ToCapitalize()</p>
+            </div>
+        </div>
+        <div class="card-footer">
+            <a class="card-footer-item" @onclick="Editar">Editar</a>
 
-    <p>@categoria.Descripcion.ToCapitalize()</p>
+            @if (cargando)
+            {
+                <a class="card-footer-item" disabled>Eliminar</a>
+            }
 
-    <div class="control is-grouped">
-        <button class="is-primary" @onclick="Editar">Editar</button>
-
-        @if (cargando)
-        {
-            <button class="is-outlined has-loader" disabled>Eliminar</button>
-        }
-
-        else
-        {
-            <button class="is-outlined" @onclick="Eliminar">Eliminar</button>
-        }
+            else
+            {
+                <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
+            }
+        </div>
     </div>
-</div>
 
 @code {
     [Parameter]
