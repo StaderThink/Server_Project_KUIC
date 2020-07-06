@@ -8,38 +8,45 @@
 @page "/notificacion/registrar"
 @layout AppLayout
 
-<h3>Registrar nueva notificacion</h3>
-<form @onsubmit="Enviar">
-    <div class="field">
-        <label for="texto">Mensaje</label>
-        <input id="texto" class="input" type="text" @bind="notificacion.Texto" required/>
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <h3 class="title is-3">Registrar nueva notificacion</h3>
+            <form @onsubmit="Enviar">
+                <div class="field">
+                    <label class="label" for="texto">Mensaje</label>
+                    <input id="texto" class="input" type="text" @bind="notificacion.Texto" required />
+                </div>
 
-    <div class="field">
-        <label for="inicio">Fecha de inicio</label>
-        <input id="inicio" class="input" type="datetime-local" @bind="notificacion.FechaInicio" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required/>
-    </div>
+                <div class="field">
+                    <label class="label" for="inicio">Fecha de inicio</label>
+                    <input id="inicio" class="input" type="datetime-local" @bind="notificacion.FechaInicio" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
+                </div>
 
-    <div class="field">
-        <label for="fin">Fecha de finalización</label>
-        <input id="fin" class="input" type="datetime-local" @bind="notificacion.FechaFin" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
-    </div>
+                <div class="field">
+                    <label class="label" for="fin">Fecha de finalización</label>
+                    <input id="fin" class="input" type="datetime-local" @bind="notificacion.FechaFin" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
+                </div>
 
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando)
-            {
-                <button class="is-primary has-loader" disabled>Registrar</button>
-            }
+                <div class="field">
+                    <div class="control">
+                        @if (cargando)
+                        {
+                            <button class="button is-primary" disabled>Registrar</button>
+                        }
 
-            else
-            {
-                <button class="is-primary">Registrar</button>
-            }
-            <a href="/notificacion" class="button is-outlined">Cancelar</a>
-        </div>
-    </div>
-</form>
+                        else
+                        {
+                            <button class="button is-primary">Registrar</button>
+                        }
+                        <a href="/notificacion" class="button is-outlined">Cancelar</a>
+                    </div>
+                </div>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <h2>No tienes permisos para acceder a esta vista</h2>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Usuario[] usuarios { get; set; } = new Usuario[0];

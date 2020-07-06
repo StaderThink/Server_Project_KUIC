@@ -34,6 +34,12 @@ namespace Infraestructura.Controladores.Inventarios
             return NotFound();
         }
 
+        [HttpGet("autor/{idAutor}")]
+        public IEnumerable<Notificacion> ObtenerAutor(int idAutor)
+        {
+            return repo.PorAutor(idAutor);
+        }
+
         [HttpPost]
         public IActionResult Insertar([FromBody] Notificacion datos)
         {

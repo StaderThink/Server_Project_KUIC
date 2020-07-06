@@ -39,5 +39,11 @@ namespace Dominio.Notificaciones
             string consulta = "select * from notificacion where id = @id";
             return conexion.Obtener<Notificacion>(consulta, new { id });
         }
+
+        public IEnumerable<Notificacion> PorAutor (int idAutor)
+        {
+            using Conexion conexion = new Conexion();
+            return conexion.Seleccionar<Notificacion>("select * from notificacion where autor = @idAutor", new { idAutor } );
+        }
     }
 }
