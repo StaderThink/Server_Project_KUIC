@@ -4,7 +4,7 @@
 @page "/usuario/registrar"
 @layout AppLayout
 
-<h2>Registrar usuario</h2>
+<h3 class="title is-3">Registrar usuario</h3>
 
 @if (mensaje is string) {
     <blockquote class="is-error">
@@ -17,7 +17,7 @@
         <form @onsubmit="Enviar">
             <div class="grid xs-1 md-2 has-gap">
                 <div class="field">
-                    <label for="tipoDocumento">Tipo de documento</label>
+                    <label class="label" for="tipoDocumento">Tipo de documento</label>
                     <select id="tipoDocumento" class="input" @bind="usuario.TipoDocumento" required>
                         @foreach (TipoDocumento tipo in tiposDeDocumento)
                         {
@@ -27,7 +27,7 @@
                 </div>
 
                 <div class="field">
-                    <label for="documento">Documento</label>
+                    <label class="label" for="documento">Documento</label>
                     <input id="documento" type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="usuario.Documento" @onfocusout="BuscarExistencia" required />
 
                     @if (yaExiste)
@@ -42,22 +42,22 @@
                 </div>
 
                 <div class="field">
-                    <label for="nombre">Nombre</label>
+                    <label class="label" for="nombre">Nombre</label>
                     <input id="nombre" type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
                 </div>
 
                 <div class="field">
-                    <label for="apellido">Apellido</label>
+                    <label class="label" for="apellido">Apellido</label>
                     <input id="apellido" type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
                 </div>
 
                 <div class="field">
-                    <label for="correo">Correo</label>
+                    <label class="label" for="correo">Correo</label>
                     <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
                 </div>
 
                 <div class="field">
-                    <label for="telefono">Teléfono</label>
+                    <label class="label" for="telefono">Teléfono</label>
                     <div class="control is-attached">
                         <span class="button is-static">+57</span>
                         <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
@@ -65,7 +65,7 @@
                 </div>
 
                 <div class="field">
-                    <label for="cargo">Cargo</label>
+                    <label class="label" for="cargo">Cargo</label>
                     <select id="cargo" class="input" @bind="usuario.Cargo" required>
                         @foreach (Cargo cargo in cargos)
                         {
@@ -79,12 +79,12 @@
                 <div class="control is-grouped">
                     @if (cargando)
                     {
-                        <button class="is-primary has-loader" disabled>Registrar</button>
+                        <button class="button is-primary is-loading" disabled>Registrar</button>
                     }
 
                     else
                     {
-                        <button class="is-primary" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
+                        <button class="button is-primary" disabled="@yaExiste" @onclick="Enviar">Registrar</button>
                     }
 
                     <a href="/usuario" class="button is-outlined">Cancelar</a>

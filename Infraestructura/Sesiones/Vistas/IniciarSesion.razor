@@ -1,7 +1,7 @@
 ﻿@inject AuthenticationStateProvider proveedor
 @inject ILocalStorageService localStorage
 
-<h1>Iniciar sesión</h1>
+<h1 class="title is-1">Iniciar sesión</h1>
 
 @if (!string.IsNullOrEmpty(mensaje))
 {
@@ -10,7 +10,7 @@
 
 <div class="form">
     <div class="field">
-        <label>Documento</label>
+        <label class="label">Documento</label>
 
         <div class="control is-attached">
             <input type="text" pattern="^[0-9]{6,10}$" minlength="7" @bind="documento" placeholder="###" class="input" />
@@ -20,7 +20,7 @@
     </div>
 
     <div class="field">
-        <label>Clave</label>
+        <label class="label">Clave</label>
         <input type="password" @bind="clave" minlength="4" placeholder="###" class="input" />
     </div>
 
@@ -28,12 +28,12 @@
         <div class="control is-grouped">
             @if (cargando)
             {
-                <button class="is-primary has-loader" disabled>Ingresar</button>
+                <button class="button is-primary is-loading" disabled>Ingresar</button>
             }
 
             else
             {
-                <button class="is-primary" @onclick="Iniciar" disabled="@(intentos == 3)">Ingresar</button>
+                <button class="button is-primary" @onclick="Iniciar" disabled="@(intentos == 3)">Ingresar</button>
             }
         </div>
     </div>

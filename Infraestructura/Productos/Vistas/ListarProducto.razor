@@ -1,6 +1,6 @@
 ﻿@inject HttpClient http
 
-@page "/producto"
+@page "/inventario"
 @layout AppLayout
 
     <AuthorizeView Roles="logistica">
@@ -10,7 +10,8 @@
             @if (productos is null)
             {
                 <div class="buttons">
-                    <a href="/producto/registrar" class="button is-primary">Agregar</a>
+                    <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
+                    <a href="/categoria" class="button is-primary">Ver Categorias</a>
                 </div>
                 <div class="loader is-medium"></div>
             }
@@ -18,7 +19,8 @@
             else
             {
                 <div class="buttons">
-                    <a href="/producto/registrar" class="button is-primary">Agregar</a>
+                    <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
+                    <a href="/categoria" class="button is-primary">Ver Categorias</a>
                 </div>
                 <div class="columns is-multiline">
                     @foreach (Producto producto in productos)

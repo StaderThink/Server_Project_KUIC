@@ -3,18 +3,25 @@
 @page "/cargo"
 @layout AppLayout
 
-@if (cargos is null) {
+@if (cargos is null)
+{
     <div class="loader is-medium"></div>
 }
 
-else {
-    <h3>Listar cargos</h3>
+else
+{
+    <h3 class="title is-3">Listar cargos</h3>
 
-    <a class="button is-primary" href="/cargo/registrar">Registrar cargo</a>
+    <div class="buttons">
+        <a class="button is-primary" href="/cargo/registrar">Registrar cargo</a>
+    </div>
 
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Cargo cargo in cargos) {
-            <TarjetaCargo cargo="@cargo" OnCargoEliminado="ObtenerListado" />
+    <div class="columns is-multiline">
+        @foreach (Cargo cargo in cargos)
+        {
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaCargo cargo="@cargo" OnCargoEliminado="ObtenerListado" />
+            </div>
         }
     </div>
 }
@@ -22,16 +29,20 @@ else {
 @code {
     Cargo[] cargos { get; set; }
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         await ObtenerListado();
     }
 
-    async Task ObtenerListado() {
-        try {
+    async Task ObtenerListado()
+    {
+        try
+        {
             cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
         }
 
-        catch {
+        catch
+        {
             cargos = new Cargo[0];
         }
     }

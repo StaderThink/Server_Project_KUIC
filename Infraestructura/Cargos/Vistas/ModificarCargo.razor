@@ -17,47 +17,51 @@ else {
 
     <form @onsubmit="Enviar" @onsubmit:preventDefault>
         <div class="field">
-            <label>Nombre del cargo</label>
+            <label class="label">Nombre del cargo</label>
             <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" required />
         </div>
 
         <div class="grid has-gap">
-            <div class="field is-inline">
+            <div class="field">
                 <input type="checkbox" class="checkbox" @bind="cargo.Pedidos" />
                 <label>¿Puedes verificar los pedidos?</label>
             </div>
 
-            <div class="field is-inline">
+            <div class="field">
                 <input type="checkbox" class="checkbox" @bind="cargo.Usuarios" />
                 <label>¿Puede cambiar los permisos de los usuarios?</label>
             </div>
 
-            <div class="field is-inline">
+            <div class="field">
                 <input type="checkbox" class="checkbox" @bind="cargo.Logistica" />
                 <label>¿Puede gestionar el inventario?</label>
             </div>
 
-            <div class="field is-inline">
+            <div class="field">
                 <input type="checkbox" class="checkbox" @bind="cargo.Clientes" />
                 <label>¿Puede gestionar datos de los clientes?</label>
             </div>
 
-            <div class="field is-inline">
+            <div class="field">
                 <input type="checkbox" class="checkbox" @bind="cargo.Solicitar" />
                 <label>¿Puede solicitar pedidos?</label>
             </div>
         </div>
 
-        <div class="control is-grouped">
-            @if (cargando) {
-                <button class="is-primary has-loader" disabled>Guardar</button>
-            }
+        <div class="field">
+            <div class="control is-grouped">
+                @if (cargando)
+                {
+                    <button class="button is-primary is-loading" disabled>Guardar</button>
+                }
 
-            else {
-                <button class="is-primary">Guardar</button>
-            }
+                else
+                {
+                    <button class="button is-primary">Guardar</button>
+                }
 
-            <a class="button is-outlined" href="/cargo">Cancelar</a>
+                <a class="button is-outlined" href="/cargo">Cancelar</a>
+            </div>
         </div>
     </form>
 }

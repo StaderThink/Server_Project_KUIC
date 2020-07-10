@@ -2,19 +2,22 @@
 @inject NavigationManager navegador
 
 <div class="card">
-    <h6>@(cargo.Nombre.ToCapitalize())</h6>
-
-    <div class="control is-grouped">
-        <button class="is-primary" @onclick="Editar">Editar</button>
-
-        @if (cargando) {
-            <button class="is-outlined has-loader" disabled>Borrar</button>
-        }
-
-        else {
-            <button class="is-outlined" @onclick="Eliminar">Borrar</button>
-        }
+    <div class="card-content">
+        <h6 class="title is-6">@(cargo.Nombre.ToCapitalize())</h6>
     </div>
+    <div class="card-footer">
+        <a class="card-footer-item" @onclick="Editar">Editar</a>
+
+        @if (cargando)
+        {
+            <a class="card-footer-item" disabled>Borrar</a>
+        }
+
+        else
+        {
+            <a class="card-footer-item" @onclick="Eliminar">Borrar</a>
+        }
+    </div>  
 </div>
 
 @code {

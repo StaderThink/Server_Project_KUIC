@@ -4,7 +4,8 @@
 @page "/cargo/registrar"
 @layout AppLayout
 
-@if (mensaje is string) {
+@if (mensaje is string)
+{
     <blockquote class="is-error">
         <p>@mensaje</p>
     </blockquote>
@@ -12,47 +13,51 @@
 
 <form @onsubmit="Enviar" @onsubmit:preventDefault>
     <div class="field">
-        <label>Nombre del cargo</label>
+        <label class="label">Nombre del cargo</label>
         <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" required />
     </div>
 
     <div class="grid has-gap">
-        <div class="field is-inline">
+        <div class="field">
             <input type="checkbox" class="checkbox" @bind="cargo.Pedidos" />
             <label>¿Puedes verificar los pedidos?</label>
         </div>
 
-        <div class="field is-inline">
+        <div class="field">
             <input type="checkbox" class="checkbox" @bind="cargo.Usuarios" />
             <label>¿Puede cambiar los permisos de los usuarios?</label>
         </div>
 
-        <div class="field is-inline">
+        <div class="field">
             <input type="checkbox" class="checkbox" @bind="cargo.Logistica" />
             <label>¿Puede gestionar el inventario?</label>
         </div>
 
-        <div class="field is-inline">
+        <div class="field">
             <input type="checkbox" class="checkbox" @bind="cargo.Clientes" />
             <label>¿Puede gestionar datos de los clientes?</label>
         </div>
 
-        <div class="field is-inline">
+        <div class="field">
             <input type="checkbox" class="checkbox" @bind="cargo.Solicitar" />
             <label>¿Puede solicitar pedidos?</label>
         </div>
     </div>
 
-    <div class="control is-grouped">
-        @if (cargando) {
-            <button class="is-primary has-loader" disabled>Registrar</button>
-        }
+    <div class="field">
+        <div class="control is-grouped">
+            @if (cargando)
+            {
+                <button class="button is-primary is-loading" disabled>Registrar</button>
+            }
 
-        else {
-            <button class="is-primary">Registrar</button>
-        }
+            else
+            {
+                <button class="button is-primary">Registrar</button>
+            }
 
-        <a class="button is-outlined" href="/cargo">Volver</a>
+            <a class="button is-outlined" href="/cargo">Volver</a>
+        </div>
     </div>
 </form>
 
@@ -62,15 +67,18 @@
     string mensaje;
     bool cargando = false;
 
-    async Task Enviar() {
+    async Task Enviar()
+    {
         cargando = true;
         HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", cargo);
 
-        if (respuesta.IsSuccessStatusCode) {
+        if (respuesta.IsSuccessStatusCode)
+        {
             navegador.NavigateTo("/cargo");
         }
 
-        else {
+        else
+        {
             mensaje = "No se logro insertar el registro";
         }
 
