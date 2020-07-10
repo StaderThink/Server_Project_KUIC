@@ -4,25 +4,32 @@
 @page "/categoria/registrar"
 @layout AppLayout
 
-<h3>Registrar nueva categoria</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Registrar nueva categoria</h3>
 
-<form @onsubmit="Enviar">
-    <div class="field">
-        <label for="nombre">Nombre</label>
-        <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
-    </div>
+            <form @onsubmit="Enviar">
+                <div class="field">
+                    <label class="label" for="nombre">Nombre</label>
+                    <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
+                </div>
 
-    <div class="field">
-        <label for="descripcion">Descripción</label>
-        <textarea id="descripcion" class="input" type="text" @bind="categoria.Descripcion"></textarea>
-        <small>Opcional</small>
-    </div>
+                <div class="field">
+                    <label class="label" for="descripcion">Descripción</label>
+                    <textarea id="descripcion" class="textarea" type="text" @bind="categoria.Descripcion"></textarea>
+                    <small>Opcional</small>
+                </div>
 
-    <div class="control is-grouped">
-        <button type="submit" class="is-primary">Registrar</button>
-        <a href="/categoria" class="button is-outlined">Cancelar</a>
-    </div>
-</form>
+                <div class="control is-grouped">
+                    <button type="submit" class="button is-primary">Registrar</button>
+                    <a href="/categoria" class="button is-outlined">Cancelar</a>
+                </div>
+            </form>
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Categoria categoria { get; set; } = new Categoria();

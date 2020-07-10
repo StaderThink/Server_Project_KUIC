@@ -5,34 +5,45 @@
 @using Aplicacion.Entradas.Formularios
 @page "/entrada/registrar"
 
-<h3>Registrar entrada</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Registrar entrada</h3>
 
-<div class="form">
-    <div class="control">
-        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
-    </div>
+            <div class="form">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                    </div>
+                </div>
 
-    <div class="field">
-        <div class="grid has-gap">
-            @foreach (var detalle in detalles)
-            {
-                <ItemDetail listadoProductos="listaProductos" detalle="@detalle" OnDeleted="EliminarElemento" />
-            }
-        </div>
-    </div>
+                <div class="field">
+                    <div class="columns is-multiline">
+                        @foreach (var detalle in detalles)
+                        {
+                            <div class="column">
+                                <ItemDetail listadoProductos="listaProductos" detalle="@detalle" OnDeleted="EliminarElemento" />
+                            </div>
+                        }
+                    </div>
+                </div>
 
-    <div class="field">
-        <label for="observacion">Observación</label>
-        <textarea id="observacion" class="input" type="text" @bind="entrada.Observacion"></textarea>
-        <small>Opcional</small>
-    </div>
+                <div class="field">
+                    <label class="label" for="observacion">Observación</label>
+                    <textarea id="observacion" class="textarea" type="text" @bind="entrada.Observacion"></textarea>
+                    <small>Opcional</small>
+                </div>
 
-    <div class="control is-grouped">
-        <button class="is-primary" @onclick="Enviar" disabled="@deshabilitar">Registrar</button>
-        <a href="/entrada" class="button is-outlined">Cancelar</a>
-    </div>
+                <div class="control is-grouped">
+                    <button class="button is-primary" @onclick="Enviar" disabled="@deshabilitar">Registrar</button>
+                    <a href="/entrada" class="button is-outlined">Cancelar</a>
+                </div>
 
-</div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Entrada entrada { get; set; } = new Entrada();

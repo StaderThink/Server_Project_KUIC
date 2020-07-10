@@ -2,31 +2,33 @@
 @inject NavigationManager navegador
 
     <div class="card">
-        <p>@notificacion.Texto.ToCapitalize()</p>
-        <p>@notificacion.FechaInicio</p>
-        <p>@notificacion.FechaFin</p>
-        <p>
-            @if (usuario is null)
-            {
-                <span>Sin nombre</span>
-            }
+        <div class="card-content">
+            <div class="content">
+                <p>@notificacion.Texto.ToCapitalize()</p>
+                <p>@notificacion.FechaInicio</p>
+                <p>@notificacion.FechaFin</p>
+                <p>
+                    @if (usuario is null)
+                    {
+                        <span>Sin nombre</span>
+                    }
 
-            else
-            {
-                <span>@usuario.Nombre</span>
-            }
-        </p>
-        <div class="control is-grouped">
-            <button class="is-primary" @onclick="Editar">Editar</button>
-
+                    else
+                    {
+                        <span>@usuario.Nombre</span>
+                    }
+                </p>
+            </div>
+        </div>
+        <div class="card-footer">
             @if (cargando)
             {
-                <button class="is-outlined has-loader" disabled>Eliminar</button>
+                <a class="card-footer-item" disabled>Eliminar</a>
             }
 
             else
             {
-                <button class="is-outlined" @onclick="Eliminar">Eliminar</button>
+                <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
             }
         </div>
     </div>
@@ -58,10 +60,5 @@
         }
 
         cargando = false;
-    }
-
-    void Editar()
-    {
-        navegador.NavigateTo($"/notificacion/modificar/{notificacion.Id}");
     }
 }

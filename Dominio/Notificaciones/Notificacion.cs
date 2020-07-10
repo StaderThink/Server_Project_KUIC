@@ -6,8 +6,8 @@ namespace Dominio.Notificaciones
     {
         public int Id { get; set; }
         public string Texto { get; set; }
-        public DateTime FechaInicio { get; set; }
-        public DateTime FechaFin { get; set; }
+        public DateTime FechaInicio { get; set; } = DateTime.Now;
+        public DateTime FechaFin { get; set; } = DateTime.Now.AddDays(10);
         public int Autor { get; set; }
     }
 }

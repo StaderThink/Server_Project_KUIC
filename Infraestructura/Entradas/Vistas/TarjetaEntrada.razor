@@ -2,21 +2,41 @@
 @inject NavigationManager navegador
 
 <div class="card">
-    @if(detalles is null)
-    {
-        <p>Espere...</p>
-    }
+    <div class="card-content">
+        <div class="content">
+            @if (detalles is null)
+            {
+                <p>Espere...</p>
+            }
 
-    else {
-        <p>@detalles.Count() Productos(s). <a>Ver detalle</a></p>
-    }
+            else
+            {
+                <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="AbrirModal">Ver detalle</button></p>
+            }
 
-    <p>@entrada.Fecha.ToShortDateString()</p>
+            @if (mostrarModal)
+            {
+                <div class="modal is-active">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <span class="modal-card-title">Detalle de entrada #@entrada.Id</span>
+                            <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                        </section>
+                    </div>
+                </div>
+            }
 
-    <p>@entrada.Observacion.ToCapitalize()</p>
+            <p>@entrada.Fecha.ToShortDateString()</p>
 
-    <div class="control is-grouped">
-        <button class="is-outlined" @onclick="Salida">Eliminar</button>
+            <p>@entrada.Observacion.ToCapitalize()</p>
+        </div>
+    </div>
+
+    <div class="card-footer">
+        <a class="card-footer-item" @onclick="Salida">Eliminar</a>
     </div>
 
 </div>
@@ -30,9 +50,14 @@
 
     DetalleEntrada[] detalles { get; set; } = new DetalleEntrada[0];
 
-    Producto[] productos { get; set; } = new Producto[0];
-
     bool cargando = false;
+
+    #region Modal
+    bool mostrarModal = false;
+
+    void AbrirModal() => mostrarModal = true;
+    void CerrarModal() => mostrarModal = false;
+    #endregion
 
     protected override async Task OnInitializedAsync()
     {

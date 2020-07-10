@@ -2,24 +2,36 @@
 @page "/salida"
 @layout AppLayout
 
-<h3>Listar salidas</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Listar salidas</h3>
 
-@if (salidas is null)
-{
-    <div class="loader is-medium">
-
-    </div>
-}
-else
-{
-    <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Salida salida in salidas)
-        {
-            <TarjetaSalida salida="salida"></TarjetaSalida>
-        }
-    </div>
-}
+            @if (salidas is null)
+            {
+                <div class="buttons">
+                    <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
+                </div>
+                <div class="loader is-medium"></div>
+            }
+            else
+            {
+                <div class="buttons">
+                    <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
+                </div>
+                <div class="columns is-multiline">
+                    @foreach (Salida salida in salidas)
+                    {
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <TarjetaSalida salida="salida"></TarjetaSalida>
+                        </div>
+                    }
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Salida[] salidas { get; set; }

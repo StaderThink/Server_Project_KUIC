@@ -1,5 +1,6 @@
 ﻿@using System.Security.Claims
 @using static System.Globalization.CultureInfo
+@using Aplicacion.Notificaciones 
 
 @inject HttpClient http
 @inject NavigationManager navegador
@@ -8,50 +9,109 @@
 @page "/notificacion/registrar"
 @layout AppLayout
 
-<h3>Registrar nueva notificacion</h3>
-<form @onsubmit="Enviar">
-    <div class="field">
-        <label for="texto">Mensaje</label>
-        <input id="texto" class="input" type="text" @bind="notificacion.Texto" required/>
-    </div>
+    <AuthorizeView>
+        <Authorized>
+            <h3 class="title is-3">Registrar nueva notificacion</h3>
+            <div class="form">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                    </div>
+                </div>
 
-    <div class="field">
-        <label for="inicio">Fecha de inicio</label>
-        <input id="inicio" class="input" type="datetime-local" @bind="notificacion.FechaInicio" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required/>
-    </div>
+                <div class="field">
+                    <div class="columns is-multiline">
+                        @foreach (var segmento in segmentos)
+                        {
+                            <div class="column is-full-mobile">
+                                <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
+                            </div>
+                        }
+                    </div>
+                </div>
 
-    <div class="field">
-        <label for="fin">Fecha de finalización</label>
-        <input id="fin" class="input" type="datetime-local" @bind="notificacion.FechaFin" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
-    </div>
+                <div class="field">
+                    <label class="label" for="texto">Mensaje</label>
+                    <input id="texto" class="input" type="text" @bind="notificacion.Texto" required />
+                </div>
 
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando)
-            {
-                <button class="is-primary has-loader" disabled>Registrar</button>
-            }
+                <div class="field">
+                    <label class="label" for="inicio">Fecha de inicio</label>
+                    <input id="inicio" class="input" type="datetime-local" @bind="notificacion.FechaInicio" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required disabled />
+                </div>
 
-            else
-            {
-                <button class="is-primary">Registrar</button>
-            }
-            <a href="/notificacion" class="button is-outlined">Cancelar</a>
-        </div>
-    </div>
-</form>
+                <div class="field">
+                    <label class="label" for="fin">Fecha de finalización</label>
+                    <input id="fin" class="input" type="datetime-local" @bind="notificacion.FechaFin" @bind:format="@CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
+                    <div>
+                        @if (notificacion.FechaFin < notificacion.FechaInicio)
+                        {
+                            <div class="notification is-danger">
+                                <button class="delete" aria-label="delete"></button>
+                                La fecha de caducidad no puede ser menor al dia actual. Intente nuevamente
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="field">
+                    <div class="control">
+                        @if (cargando)
+                        {
+                            <button class="button is-primary is-loading" disabled>Registrar</button>
+                        }
+
+                        else
+                        {
+                            <button class="button is-primary" @onsubmit="Enviar">Registrar</button>
+                        }
+                        <a href="/notificacion" class="button is-outlined">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+        </Authorized>
+        <NotAuthorized>
+            <h2>No tienes permisos para acceder a esta vista</h2>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
-    Usuario[] usuarios { get; set; } = new Usuario[0];
+
+        Notificacion notificacion { get; set; } = new Notificacion();
+
+        bool cargando = false;
+
+        Usuario[] usuarios { get; set; } = new Usuario[0];
+
+        List<Segmento> segmentos = new List<Segmento>();
+
+        Cargo[] cargos = new Cargo[0];
 
     protected override async Task OnInitializedAsync()
     {
-        usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
+        try
+        {
+            usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
+            cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        }
+
+        catch
+        {
+            usuarios = new Usuario[0];
+            cargos = new Cargo[0];
+        }
     }
 
-    Notificacion notificacion { get; set; } = new Notificacion();
+    private void AgregarElemento()
+    {
+        segmentos.Add(new Segmento());
+    }
 
-    bool cargando = false;
+    private void EliminarElemento(Segmento segmento)
+    {
+        segmentos.Remove((Segmento)segmento);
+    }
+
 
     async Task Enviar()
     {
@@ -72,7 +132,13 @@
                 int id = int.Parse(serial.Value);
                 notificacion.Autor = id;
 
-                var respuesta = await http.PostAsJsonAsync("/api/notificacion", notificacion);
+                var formulario = new FormularioRegistrarNotificacion()
+                {
+                    Notificacion = notificacion,
+                    Segmentos = segmentos
+                };
+
+                var respuesta = await http.PostAsJsonAsync("/api/notificacion", formulario);
 
                 if (respuesta.IsSuccessStatusCode)
                 {

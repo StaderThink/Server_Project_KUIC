@@ -3,23 +3,37 @@
 @page "/producto"
 @layout AppLayout
 
-<h3>Listar Productos</h3>
+    <AuthorizeView Roles="logistica">
+        <Authorized>
+            <h3 class="title is-3">Listar Productos</h3>
 
-@if (productos is null)
-{
-    <div class="loader is-medium"></div>
-}
+            @if (productos is null)
+            {
+                <div class="buttons">
+                    <a href="/producto/registrar" class="button is-primary">Agregar</a>
+                </div>
+                <div class="loader is-medium"></div>
+            }
 
-else
-{
-    <a href="/producto/registrar" class="button is-primary">Agregar</a>
-    <div class="grid xs-1 md-2 has-gap">
-        @foreach (Producto producto in productos)
-        {
-            <TarjetaProducto producto="producto" OnProductoEliminado="ObtenerListado"></TarjetaProducto>
-        }
-    </div>
-}
+            else
+            {
+                <div class="buttons">
+                    <a href="/producto/registrar" class="button is-primary">Agregar</a>
+                </div>
+                <div class="columns is-multiline">
+                    @foreach (Producto producto in productos)
+                    {
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <TarjetaProducto producto="producto" OnProductoEliminado="ObtenerListado"></TarjetaProducto>
+                        </div>
+                    }
+                </div>
+            }
+        </Authorized>
+        <NotAuthorized>
+            <p>No tienes permisos para esta vista</p>
+        </NotAuthorized>
+    </AuthorizeView>
 
 @code {
     Producto[] productos { get; set; }

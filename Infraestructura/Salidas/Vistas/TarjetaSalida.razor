@@ -2,21 +2,25 @@
 @inject NavigationManager navegador
 
     <div class="card">
-        @if (detalles is null)
-        {
-            <p>Espere...</p>
-        }
-        else
-        {
-            foreach (DetalleSalida detalle in detalles)
-            {
-                <p>@detalle.Producto</p>
-                <p>@detalle.Cantidad</p>
-            }
-        }
-        <p>@salida.Fecha.ToShortDateString()</p>
-        <p>@salida.Pedido</p>
-        <p>@salida.Observacion.ToCapitalize()</p>
+        <div class="card-content">
+            <div class="content">
+                @if (detalles is null)
+                {
+                    <p>Espere...</p>
+                }
+                else
+                {
+                    foreach (DetalleSalida detalle in detalles)
+                    {
+                        <p>@detalle.Producto</p>
+                        <p>@detalle.Cantidad</p>
+                    }
+                }
+                <p>@salida.Fecha.ToShortDateString()</p>
+                <p>@salida.Pedido</p>
+                <p>@salida.Observacion.ToCapitalize()</p>
+            </div>
+        </div>
     </div>
    
 @code {
