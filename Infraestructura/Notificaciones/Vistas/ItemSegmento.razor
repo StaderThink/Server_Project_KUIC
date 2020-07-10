@@ -1,0 +1,39 @@
+﻿@inject HttpClient http 
+
+<div class="control is-attached">
+    <div class="field">
+        <select id="cargo" class="input" @bind="segmento.Cargo" required>
+            @foreach (var cargo in cargos)
+            {
+                <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+            }
+        </select>
+    </div>
+    <div class="field">
+        <button class="button is-primary is-light is-small" @onclick="Eliminar">Quitar</button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Segmento segmento { get; set; }
+
+    [Parameter]
+    public Cargo[] cargos { get; set; } = new Cargo[0];
+
+    [Parameter]
+    public EventCallback<Segmento> OnDeleted { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+    }
+
+    public void Eliminar()
+    {
+        if (OnDeleted.HasDelegate)
+        {
+            OnDeleted.InvokeAsync(segmento);
+        }
+    }
+}

@@ -45,5 +45,14 @@ namespace Dominio.Notificaciones
             using Conexion conexion = new Conexion();
             return conexion.Seleccionar<Notificacion>("select * from notificacion where autor = @idAutor", new { idAutor } );
         }
+
+        public int PorUltimoId()
+        {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from notificacion order by id desc limit 0, 1";
+            Notificacion notificacion = conexion.Obtener<Notificacion>(consulta);
+
+            return notificacion.Id;
+        }
     }
 }

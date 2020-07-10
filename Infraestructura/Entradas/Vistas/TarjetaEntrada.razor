@@ -11,7 +11,22 @@
 
                 else
                 {
-                    <p>@detalles.Count() Productos(s). <a>Ver detalle</a></p>
+                    <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="abrirModal">Ver detalle</button></p>
+                }
+
+                @if (mostrarModal)
+                {
+                    <div class="modal">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <p class="modal-card-title">Detalle</p>
+                                <button class="delete" aria-label="close"></button>
+                            </header>
+                            <section class="modal-card-body">
+                            </section>
+                        </div>
+                    </div>
                 }
 
                 <p>@entrada.Fecha.ToShortDateString()</p>
@@ -38,6 +53,13 @@
     Producto[] productos { get; set; } = new Producto[0];
 
     bool cargando = false;
+
+    bool mostrarModal = false;
+
+    void abrirModal()
+    {
+        mostrarModal = true;
+    }
 
     protected override async Task OnInitializedAsync()
     {

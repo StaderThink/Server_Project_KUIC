@@ -1,14 +1,20 @@
 ﻿<div class="control is-attached">
-    <select id="producto" class="input" @bind="detalle.Producto" required>
-        @foreach (var producto in listadoProductos)
-        {
-            <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
-        }
-    </select>
+    <div class="field">
+        <select id="producto" class="input" @bind="detalle.Producto" required>
+            @foreach (var producto in listadoProductos)
+            {
+                <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
+            }
+        </select>
+    </div>
 
-    <input class="input" type="number" @bind="detalle.Cantidad" />
+    <div class="field">
+        <input class="input" type="number" @bind="detalle.Cantidad" />
+    </div>
 
-    <button class="is-outlined" @onclick="Eliminar">Quitar</button>
+    <div class="field">
+        <button class="button is-primary is-light is-small" @onclick="Eliminar">Quitar</button>
+    </div>
 </div>
 
 @code {

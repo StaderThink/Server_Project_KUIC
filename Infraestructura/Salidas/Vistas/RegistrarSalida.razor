@@ -17,15 +17,19 @@
             }
 
             <div class="form">
-                <div class="control">
-                    <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                    </div>
                 </div>
 
                 <div class="field">
                     <div class="columns is-multiline">
                         @foreach (var detalle in detalles)
                         {
-                            <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
+                            <div class="column">
+                                <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
+                            </div>
                         }
                     </div>
                 </div>
@@ -37,8 +41,8 @@
                 </div>
 
                 <div class="control is-grouped">
-                    <button class="is-primary" @onclick="Enviar">Registrar</button>
-                    <a href="/entrada" class="button is-outlined">Cancelar</a>
+                    <button class="button is-primary" @onclick="Enviar">Registrar</button>
+                    <a href="/salida" class="button is-outlined">Cancelar</a>
                 </div>
 
             </div>

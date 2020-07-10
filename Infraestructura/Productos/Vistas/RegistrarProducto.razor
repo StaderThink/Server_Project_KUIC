@@ -6,7 +6,7 @@
 
     <AuthorizeView Roles="logistica">
         <Authorized>
-            <h3>Registrar nuevo producto</h3>
+            <h3 class="title is-3">Registrar nuevo producto</h3>
 
             @if (categorias.Length == 0)
             {
@@ -19,7 +19,6 @@
             else
             {
                 <form @onsubmit="Enviar">
-                    <div class="columns is-multiline">
                         <div class="field">
                             <label class="label" for="texto">Nombre</label>
                             <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
@@ -31,7 +30,7 @@
                             <small>Código de 5 digitos</small>
                         </div>
 
-                        <div class="field column xs-1 md-2">
+                        <div class="field">
                             <label class="label" for="descripcion">Descripción</label>
                             <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
                         </div>
@@ -68,10 +67,8 @@
 
                         <div class="field">
                             <label class="label" for="min_peso">Peso</label>
-                            <div class="control is-attached">
-                                <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
-                                <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
-                            </div>
+                            <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
+                            <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
                             <small>Peso mínimo y máximo</small>
                         </div>
 
@@ -84,10 +81,9 @@
                                 }
                             </select>
                         </div>
-                    </div>
 
                     <div class="control is-grouped">
-                        <button class="is-primary">Registrar</button>
+                        <button class="button is-primary">Registrar</button>
                         <a href="/producto" class="button is-outlined">Cancelar</a>
                     </div>
                 </form>

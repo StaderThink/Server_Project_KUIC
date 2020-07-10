@@ -6,77 +6,73 @@
 
     <AuthorizeView Roles="logistica">
         <Authorized>
-            <h3>Registrar nuevo producto</h3>
+            <h3 class="title is-3">Actualizar producto</h3>
             <form @onsubmit="Enviar">
-                <div class="columns is-multiline">
-                    <div class="field">
-                        <label class="label" for="texto">Nombre</label>
-                        <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
-                    </div>
+                <div class="field">
+                    <label class="label" for="texto">Nombre</label>
+                    <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
+                </div>
 
-                    <div class="field">
-                        <label class="label" for="codigo">Código</label>
-                        <input id="codigo" class="input" type="number" @bind="producto.Codigo" disabled readonly />
-                        <small>Código de 5 digitos</small>
-                    </div>
+                <div class="field">
+                    <label class="label" for="codigo">Código</label>
+                    <input id="codigo" class="input" type="number" @bind="producto.Codigo" disabled readonly />
+                    <small>Código de 5 digitos</small>
+                </div>
 
-                    <div class="field column xs-1 md-2">
-                        <label class="label" for="descripcion">Descripción</label>
-                        <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
-                    </div>
+                <div class="field">
+                    <label class="label" for="descripcion">Descripción</label>
+                    <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
+                </div>
 
-                    <div class="field">
-                        <label class="label" for="precio">Precio</label>
-                        <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
-                    </div>
+                <div class="field">
+                    <label class="label" for="precio">Precio</label>
+                    <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
+                </div>
 
-                    <div class="field">
-                        <label class="label">Presentación</label>
-                        <select class="input" @bind="producto.Presentacion" required>
-                            @foreach (Presentacion presentacion in presentaciones)
-                            {
-                                <option value="@presentacion">@presentacion</option>
-                            }
-                        </select>
-                    </div>
+                <div class="field">
+                    <label class="label">Presentación</label>
+                    <select class="input" @bind="producto.Presentacion" required>
+                        @foreach (Presentacion presentacion in presentaciones)
+                        {
+                            <option value="@presentacion">@presentacion</option>
+                        }
+                    </select>
+                </div>
 
-                    <div class="field">
-                        <label class="label" for="min_cantidad">Cantidad</label>
-                        <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
-                    </div>
+                <div class="field">
+                    <label class="label" for="min_cantidad">Cantidad</label>
+                    <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
+                </div>
 
-                    <div class="field">
-                        <label class="label">Magnitud</label>
-                        <select class="input" @bind="producto.Magnitud" required>
-                            @foreach (Magnitud magnitud in magnitudes)
-                            {
-                                <option value="@magnitud">@magnitud</option>
-                            }
-                        </select>
-                    </div>
+                <div class="field">
+                    <label class="label">Magnitud</label>
+                    <select class="input" @bind="producto.Magnitud" required>
+                        @foreach (Magnitud magnitud in magnitudes)
+                        {
+                            <option value="@magnitud">@magnitud</option>
+                        }
+                    </select>
+                </div>
 
-                    <div class="field">
-                        <label class="label" for="min_peso">Peso</label>
-                        <div class="control is-attached">
-                            <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
-                            <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
-                        </div>
-                        <small>Peso mínimo y máximo</small>
-                    </div>
+                <div class="field">
+                    <label class="label" for="min_peso">Peso</label>
+                        <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
+                        <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
+                    <small>Peso mínimo y máximo</small>
+                </div>
 
-                    <div class="field">
-                        <label class="label">Categoria</label>
-                        <select class="input" @bind="producto.Categoria">
-                            @foreach (Categoria categoria in categorias)
-                            {
-                                <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
-                            }
-                        </select>
-                    </div>
+                <div class="field">
+                    <label class="label">Categoria</label>
+                    <select class="input" @bind="producto.Categoria">
+                        @foreach (Categoria categoria in categorias)
+                        {
+                            <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
+                        }
+                    </select>
                 </div>
 
                 <div class="control">
-                    <button class="is-primary">Guardar</button>
+                    <button class="button is-primary">Guardar</button>
                     <a href="/producto" class="button is-outlined">Cancelar</a>
                 </div>
             </form>
