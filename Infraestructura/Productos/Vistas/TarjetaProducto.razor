@@ -4,11 +4,20 @@
     <div class="card">
         <div class="card-content">
             <div class="content">
+                <div class="field">
+                    <p><b>@producto.Nombre.ToCapitalize()</b></p>
+                    <p>$@producto.Precio</p>
 
-                <p><b>@producto.Nombre.ToCapitalize()</b></p>
-                <p>$@producto.Precio</p>
+                    <span class="button is-static is-small">#@producto.Codigo</span>
+                </div>
 
-                <span class="button is-static is-small">#@producto.Codigo</span>
+                <div class="field">
+                    <p>
+                        <a href="/entrada/registrar" class="button is-small">+</a>
+                        <button class="button is-small is-static is-white">@producto.Existencias</button>
+                        <a href="/salida/registrar" class="button is-small">-</a>
+                    </p>
+                </div>
 
             </div>
         </div>

@@ -15,19 +15,15 @@
             <div class="form">
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                        <button class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
                     </div>
                 </div>
 
                 <div class="field">
-                    <div class="columns is-multiline">
-                        @foreach (var segmento in segmentos)
-                        {
-                            <div class="column is-full-mobile">
-                                <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
-                            </div>
-                        }
-                    </div>
+                    @foreach (var segmento in segmentos)
+                    {
+                        <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
+                    }
                 </div>
 
                 <div class="field">
@@ -58,7 +54,7 @@
                     <div class="control">
                         @if (cargando)
                         {
-                            <button class="button is-primary is-loading" disabled>Registrar</button>
+                            <button class="button is-primary is-loading">Registrar</button>
                         }
 
                         else
@@ -77,15 +73,15 @@
 
 @code {
 
-        Notificacion notificacion { get; set; } = new Notificacion();
+    Notificacion notificacion { get; set; } = new Notificacion();
 
-        bool cargando = false;
+    bool cargando = false;
 
-        Usuario[] usuarios { get; set; } = new Usuario[0];
+    Usuario[] usuarios { get; set; } = new Usuario[0];
 
-        List<Segmento> segmentos = new List<Segmento>();
+    List<Segmento> segmentos = new List<Segmento>();
 
-        Cargo[] cargos = new Cargo[0];
+    Cargo[] cargos = new Cargo[0];
 
     protected override async Task OnInitializedAsync()
     {
@@ -115,10 +111,10 @@
 
     async Task Enviar()
     {
-        cargando = true;
-
         try
         {
+            cargando = true;
+
             var estado = await autentificacion.GetAuthenticationStateAsync();
             var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
 

@@ -1,0 +1,40 @@
+﻿@inject HttpClient http
+
+<div class="detalle">
+    @if (cargando)
+    {
+        <button class="button is-small is-light">Espere...</button>
+    }
+
+    else
+    {
+        <button class="button is-small is-light">@cargo.Nombre.ToCapitalize()</button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public Segmento segmento { get; set; }
+
+    Cargo cargo { get; set; }
+
+    bool cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{segmento.Cargo}");
+        }
+
+        catch
+        {
+            cargo = null;
+        }
+
+        finally
+        {
+            cargando = false;
+        }
+    }
+} 

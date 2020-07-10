@@ -24,6 +24,10 @@
                             <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
+                            @foreach(var detalle in detalles)
+                            {
+                                <ProductDetail detalle="@detalle"/>
+                            }
                         </section>
                     </div>
                 </div>

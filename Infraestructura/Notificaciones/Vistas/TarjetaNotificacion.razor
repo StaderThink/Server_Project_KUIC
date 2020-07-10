@@ -4,6 +4,12 @@
     <div class="card">
         <div class="card-content">
             <div class="content">
+                <div class="field">
+                    @foreach (var segmento in segmentos)
+                    {
+                        <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
+                    }
+                </div>
                 <p>@notificacion.Texto.ToCapitalize()</p>
                 <p>@notificacion.FechaInicio</p>
                 <p>@notificacion.FechaFin</p>
@@ -34,6 +40,8 @@
     </div>
 
 @code {
+    Segmento[] segmentos { get; set; } = new Segmento[0];
+
     [Parameter]
     public Notificacion notificacion { get; set; }
 
@@ -46,6 +54,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{notificacion.Id}");
         usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{notificacion.Autor}");
     }
 

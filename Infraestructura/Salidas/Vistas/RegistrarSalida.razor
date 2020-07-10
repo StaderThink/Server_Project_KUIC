@@ -24,14 +24,10 @@
                 </div>
 
                 <div class="field">
-                    <div class="columns is-multiline">
-                        @foreach (var detalle in detalles)
-                        {
-                            <div class="column">
-                                <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
-                            </div>
-                        }
-                    </div>
+                    @foreach (var detalle in detalles)
+                    {
+                        <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
+                    }
                 </div>
 
                 <div class="field">
@@ -41,7 +37,15 @@
                 </div>
 
                 <div class="control is-grouped">
-                    <button class="button is-primary" @onclick="Enviar">Registrar</button>
+                    @if (cargando)
+                    {
+                        <button class="button is-primary is-loading">Registrar</button>
+                    }
+                    else
+                    {
+                        <button class="button is-primary" @onclick="Enviar">Registrar</button>
+
+                    }
                     <a href="/salida" class="button is-outlined">Cancelar</a>
                 </div>
 
@@ -53,6 +57,8 @@
     </AuthorizeView>
 
 @code {
+    bool cargando = false;
+
     string mensaje;
 
     Salida salida { get; set; } = new Salida();
@@ -87,6 +93,7 @@
     {
         try
         {
+            cargando = true;
             var formulario = new FormularioRegistrarSalida()
             {
                 Salida = salida,
@@ -99,6 +106,7 @@
             {
                 navegador.NavigateTo("/salida");
             }
+            cargando = false;
         }
         catch
         {

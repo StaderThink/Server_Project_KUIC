@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Dominio.Notificaciones;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,17 @@ namespace Infraestructura.Controladores.Inventarios
                 return segmento;
             }
             return NotFound();
+        }
+
+        [HttpGet("notificacion/{notificacionId}")]
+        public IEnumerable<Segmento> ListarPorNotificacion(int notificacionId)
+        {
+            IEnumerable<Segmento> lista = repositorio.Listar();
+
+            return
+                from segmento in lista
+                where segmento.Notificacion == notificacionId
+                select segmento;
         }
 
         [HttpPost]

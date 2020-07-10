@@ -10,20 +10,52 @@
                 }
                 else
                 {
-                    foreach (DetalleSalida detalle in detalles)
-                    {
-                        <p>@detalle.Producto</p>
-                        <p>@detalle.Cantidad</p>
-                    }
+                    <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="AbrirModal">Ver detalle</button></p>
                 }
+
+                @if (mostrarModal)
+                {
+                    <div class="modal is-active">
+                        <div class="modal-background"></div>
+                        <div class="modal-card">
+                            <header class="modal-card-head">
+                                <span class="modal-card-title">Detalle de entrada #@salida.Id</span>
+                                <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
+                            </header>
+                            <section class="modal-card-body">
+                                @foreach (var detalle in detalles)
+                                {
+                                    <ProductDetail detalle="@detalle" />
+                                }
+                            </section>
+                        </div>
+                    </div>
+                }
+
                 <p>@salida.Fecha.ToShortDateString()</p>
-                <p>@salida.Pedido</p>
+
+                @if (salida.Pedido == 0)
+                {
+                    <p>Sin pedido</p>
+                }
+                else
+                {
+                    <p>@salida.Pedido</p>
+                }
+
                 <p>@salida.Observacion.ToCapitalize()</p>
             </div>
         </div>
     </div>
    
 @code {
+    #region Modal
+    bool mostrarModal = false;
+
+    void AbrirModal() => mostrarModal = true;
+    void CerrarModal() => mostrarModal = false;
+    #endregion
+
     [Parameter]
     public Salida salida { get; set; }
 

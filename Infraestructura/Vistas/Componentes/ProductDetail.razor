@@ -1,0 +1,47 @@
+﻿@inject HttpClient http  
+
+<div class="detalle">
+    @if (cargando)
+    {
+        <span>Espere...</span>
+    }
+
+    else if (producto is null)
+    {
+        <span>Producto desconocido</span>
+    }
+
+    else
+    {
+        <span>@producto.Nombre</span>
+    }
+
+    <span>@detalle.Cantidad</span>
+</div>
+
+@code {
+    [Parameter]
+    public IDetalle detalle { get; set; }
+
+    Producto producto { get; set; }
+
+    bool cargando = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            producto = await http.GetFromJsonAsync<Producto>($"/api/producto/{detalle.Producto}");
+        }
+
+        catch
+        {
+            producto = null;
+        }
+
+        finally
+        {
+            cargando = false;
+        }
+    }
+} 

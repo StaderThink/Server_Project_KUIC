@@ -22,11 +22,16 @@ namespace Dominio.Productos
         public bool Editar(Producto entidad)
         {
             using Conexion conexion = new Conexion();
-            string consulta = @"
-				update producto set nombre = @Nombre, descripcion = @Descripcion, codigo = @Codigo,
+
+            string consulta = @$"
+				update producto set
+                nombre = @Nombre, descripcion = @Descripcion, codigo = @Codigo,
 				precio = @Precio, min_cantidad = @MinCantidad, min_peso = @MinPeso, max_peso = @MaxPeso, 
-				magnitud = @Magnitud, presentacion = @Presentacion, categoria = @Categoria
-				where id = @Id";
+				existencias = @Existencias, magnitud = '{entidad.Magnitud}', presentacion = '{entidad.Presentacion}',
+                categoria = @Categoria
+				where id = @Id
+            ";
+
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }

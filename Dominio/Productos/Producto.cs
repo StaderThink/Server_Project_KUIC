@@ -11,8 +11,8 @@
         public string MinCantidad { get; set; }
         public double MinPeso { get; set; }
         public double MaxPeso { get; set; }
-        public Magnitud Magnitud { get; set; }
-        public Presentacion Presentacion { get; set; }
+        public Magnitud Magnitud { get; set; } = Magnitud.Kg;
+        public Presentacion Presentacion { get; set; } = Presentacion.Bandeja;
         public int Categoria { get; set; }
     }
 }
