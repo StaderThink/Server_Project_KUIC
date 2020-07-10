@@ -1,5 +1,6 @@
-﻿@import "./searchbox.css";
-
+﻿@import "searchbox.css";
+@import "layout.css";
+ 
 ion-icon {
     font-size: 18px;
     --ionicon-stroke-width: 32px;

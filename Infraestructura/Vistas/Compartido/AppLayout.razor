@@ -1,38 +1,9 @@
 ﻿@inherits LayoutComponentBase
 
-@inject AuthenticationStateProvider authProvider
-@inject NavigationManager navegador
+<div class="wrapper">
+    <SideBar/>
 
-<header class="main-header">
-    <div class="logo">
-        <ion-icon name="file-tray-outline"></ion-icon>
-        <strong>Aurelia</strong>
-    </div>
-        
-    <SearchBox />
-
-    <div class="options">
-        <AuthorizeView>
-            <Authorized>
-                <button class="button is-light" @onclick="CerrarSession">Cerrar Sesión</button>
-            </Authorized>
-
-            <NotAuthorized>
-                <a href="/" class="button is-primary">Iniciar Sesión</a>
-            </NotAuthorized>
-        </AuthorizeView>
-    </div>
-</header>
-
-<main class="section">
-    @Body
-</main>
-
-@code {
-    async Task CerrarSession() {
-        var proveedor = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
-
-        await proveedor.CerrarSesion();
-        navegador.NavigateTo("/");
-    }
-}
+    <main class="main">
+        @Body
+    </main>
+</div>

@@ -1,0 +1,72 @@
+﻿@inject AuthenticationStateProvider authProvider
+@inject NavigationManager navegador
+
+@using Infraestructura.Sesiones
+
+<aside class="aside">
+    <SearchBox />
+
+    <nav class="menu">
+        <AuthorizeView Roles="usuarios">
+            <Authorized>
+                <p class="menu-label">USUARIOS</p>
+
+                <ul class="menu-list">
+                    <li><a href="/usuario">Usuarios</a></li>
+                    <li><a href="/cargo">Cargos</a></li>
+                </ul>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="solicitar, clientes">
+            <Authorized>
+                <p class="menu-label">CLIENTES</p>
+
+                <ul class="menu-list">
+                    <li><a href="/cliente">Clientes</a></li>
+                    <AuthorizeView Roles="solicitar" Context="auth">
+                        <Authorized>
+                            <li><a href="/solicitar">Solicitar</a></li>
+                        </Authorized>
+                    </AuthorizeView>
+                </ul>
+            </Authorized>
+        </AuthorizeView>
+
+        <AuthorizeView Roles="logistica">
+            <Authorized>
+                <p class="menu-label">LOGISTICA</p>
+
+                <ul class="menu-list">
+                    <li><a href="/inventario">Inventario</a></li>
+                    <li><a href="/entrada">Entrada</a></li>
+                    <li><a href="/salida">Salida</a></li>
+                </ul>
+            </Authorized>
+        </AuthorizeView>
+    </nav>
+
+    <div class="options">
+        <div class="option">
+            <ion-icon name="body-outline"></ion-icon>
+        </div>
+
+        <div class="option">
+            <ion-icon name="notifications-outline"></ion-icon>
+        </div>
+
+        <div class="option" @onclick="CerrarSesion">
+            <ion-icon name="exit-outline"></ion-icon>
+        </div>
+    </div>
+</aside>
+
+@code {
+    async Task CerrarSesion()
+    {
+        var proveedor = (ProveedorAutenticacion) authProvider;
+
+        await proveedor.CerrarSesion();
+        navegador.NavigateTo("/");
+    }
+}
