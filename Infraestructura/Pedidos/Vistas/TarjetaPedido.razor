@@ -1,47 +1,75 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-    <div class="card">
-        @if (detalles is null)
-        {
-            <div class="is-loader"></div>
-        }
-
-        else
-        {
-            <p>@detalles.Count() Productos(s). <a>Ver detalle</a></p>
-        }
-
-        <p>@pedido.Fecha.ToShortDateString()</p>
-        <p>@pedido.Observacion.ToCapitalize()</p>
-        <p>
-            @if (usuario is null)
+<div class="card">
+    <div class="card-content">
+        <div class="content">
+            @if (detalles is null)
             {
-                <span>Sin nombre</span>
+                <p>Espere...</p>
             }
 
             else
             {
-                <span>@usuario.Nombre</span>
+                <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="AbrirModal">Ver detalle</button></p>
             }
-        </p>
-
-        <div class="control is-grouped">
-
-            @if (cargando)
+            @if (mostrarModal)
             {
-                <button class="is-outlined has-loader" disabled>Eliminar</button>
+                <div class="modal is-active">
+                    <div class="modal-background"></div>
+                    <div class="modal-card">
+                        <header class="modal-card-head">
+                            <span class="modal-card-title">Detalle de pedido #@pedido.Id</span>
+                            <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
+                        </header>
+                        <section class="modal-card-body">
+                            @foreach (var detalle in detalles)
+                            {
+                                <ProductDetail detalle="@detalle" />
+                            }
+                        </section>
+                    </div>
+                </div>
             }
 
-            else
-            {
-                <button class="is-outlined" @onclick="Eliminar">Eliminar</button>
-            }
+            <p>@pedido.Fecha.ToShortDateString()</p>
+            <p>@pedido.Observacion.ToCapitalize()</p>
+            <p>
+                @if (usuario is null)
+                {
+                    <span>Sin nombre</span>
+                }
+
+                else
+                {
+                    <span>@usuario.Nombre</span>
+                }
+            </p>
+
+            <div class="card-footer">
+
+                @if (cargando)
+                {
+                    <button class="card-footer-item" disabled>Eliminar</button>
+                }
+
+                else
+                {
+                    <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
+                }
+            </div>
         </div>
-
     </div>
+</div>
 
 @code {
+    #region Modal
+    bool mostrarModal = false;
+
+    void AbrirModal() => mostrarModal = true;
+    void CerrarModal() => mostrarModal = false;
+    #endregion
+
     [Parameter]
     public Pedido pedido { get; set; }
 

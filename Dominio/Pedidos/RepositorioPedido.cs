@@ -14,7 +14,6 @@ namespace Dominio.Pedidos
                     cliente = @Cliente,
                     asesor = @Asesor,
                     estado = @Estado,
-                    cancelado = @Cancelado,
                     descuento = @Descuento,
                     observacion = @Observacion
                     where id = @Id
@@ -33,8 +32,7 @@ namespace Dominio.Pedidos
         public bool Insertar(Pedido entidad)
         {
             using Conexion conexion = new Conexion();
-            string consulta = $@"insert into pedido (fecha, cliente, asesor, estado, cancelado, descuento, observacion) 
-                            values (@Fecha, @Cliente, @Asesor, @Estado, @Cancelado, @Descuento, @Observacion)";
+            string consulta =$@"insert into pedido (fecha, cliente, asesor, estado, descuento, observacion) values (@Fecha, @Cliente, @Asesor, '{entidad.Estado}', @Descuento, @Observacion)";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
@@ -61,6 +59,14 @@ namespace Dominio.Pedidos
             using Conexion conexion = new Conexion();
             string consulta = "select * from pedido where cliente = @cliente";
             return conexion.Obtener<Pedido>(consulta, new { cliente });
+        }
+        public int UltimoPorId()
+        {
+            using Conexion conexion = new Conexion();
+            string consulta = "select * from pedido order by id desc limit 0, 1";
+
+            Pedido pedido = conexion.Obtener<Pedido>(consulta);
+            return pedido.Id;
         }
     }
 }

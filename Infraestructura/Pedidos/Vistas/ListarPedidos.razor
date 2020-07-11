@@ -7,20 +7,26 @@
 
 <AuthorizeView Roles="pedidos">
     <Authorized>
+
         @if (cargando)
         {
-            <div class="loader is-medium"></div>
-        }
+            <div class="buttons">
+                <a href="/pedido/registrar" class="button is-primary">Agregar Pedido</a>
+            </div>
+            <div class="loader is-medium"></div> }
         else
         {
-            <h2>Listar pedidos</h2>
-
-            <a class="button is-primary" href="/pedido/registrar">Registrar pedido</a>
-
-            <div class="grid has-gap xs-1 md-2">
+            <h2 class="title is-2">Pedidos</h2>
+            <div class="buttons">
+            <a href="/pedido/registrar" class="button is-primary">Agregar Pedido</a>
+            </div>
+            <div class="columns is-multiline">
                 @foreach (var pedido in lista)
                 {
-                    <TarjetaPedido pedido="pedido" OnPedidoEliminado="ObtenerListado" />
+                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                        <TarjetaPedido pedido="pedido" OnPedidoEliminado="ObtenerListado" />
+                    </div>
+
                 }
             </div>
         }

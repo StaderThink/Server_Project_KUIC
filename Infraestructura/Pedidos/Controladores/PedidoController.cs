@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using Aplicacion.Pedidos;
+using Aplicacion.Pedidos.Formularios;
 using Dominio.Pedidos;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -25,57 +27,54 @@ namespace Infraestructura.Controladores.Pedidos
         [HttpGet("{id}")]
         public ActionResult<Pedido> Obtener(int id)
         {
-            if (repositorio.PorId(id) is Pedido pedido)
+            Pedido pedido = repositorio.PorId(id);
+
+            if (pedido is Pedido)
             {
                 return pedido;
             }
-
             return NotFound();
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Pedido pedido)
+        public IActionResult Insertar([FromBody] FormularioRegistrarPedido formulario)
         {
-            if (repositorio.Insertar(pedido))
+            ServicioRegistradorPedido servicio = new ServicioRegistradorPedido();
+
+            if (servicio.Registrar(formulario))
             {
                 return Accepted();
             }
+
             return BadRequest();
         }
 
         [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Pedido pedido)
+        public IActionResult Editar(int id, [FromBody] Pedido datos)
         {
             if (repositorio.PorId(id) is Pedido)
             {
-                pedido.Id = id;
-
-                if (repositorio.Editar(pedido))
+                datos.Id = id;
+                if (repositorio.Editar(datos))
                 {
-                    return Ok();
+                    return Accepted();
                 }
-
-                return BadRequest();
             }
-
-            return NotFound();
+            return BadRequest();
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id)
+        public IActionResult Delete(int id)
         {
-            if (repositorio.PorId(id) is Pedido pedido)
+            Pedido pedido = repositorio.PorId(id);
+            if (pedido is Pedido)
             {
                 if (repositorio.Eliminar(pedido))
                 {
-                    return Ok();
+                    return Accepted();
                 }
-
-                else
-                    return BadRequest();
             }
-
-            return NotFound();
+            return BadRequest();
         }
     }
 }
