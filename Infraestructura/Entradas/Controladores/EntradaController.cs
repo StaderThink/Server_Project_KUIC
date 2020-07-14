@@ -49,24 +49,6 @@ namespace Infraestructura.Entradas.Controladores
             return BadRequest();
         }
 
-        [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id)
-        {
-            Entrada entrada = repositorio.PorId(id);
-
-            if (entrada is Entrada)
-            {
-                ServicioEliminadorEntrada servicioEliminador = new ServicioEliminadorEntrada();
-
-                if (servicioEliminador.Eliminar(entrada))
-                {
-                    return Accepted();
-                }
-            }
-
-            return BadRequest();
-        }
-
         [HttpPut("{id}")]
         public IActionResult Editar(int id, [FromBody] Entrada informacion)
         {

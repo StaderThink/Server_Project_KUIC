@@ -39,10 +39,6 @@
         </div>
     </div>
 
-    <div class="card-footer">
-        <a class="card-footer-item" @onclick="Salida">Eliminar</a>
-    </div>
-
 </div>
 
 @code {
@@ -66,19 +62,6 @@
     protected override async Task OnInitializedAsync()
     {
         detalles = await http.GetFromJsonAsync<DetalleEntrada[]>($"/api/detalleEntrada/entrada/{entrada.Id}");
-    }
-
-    async Task Eliminar()
-    {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/entrada/{entrada.Id}");
-
-        if (respuesta.IsSuccessStatusCode && OnEntradaEliminada.HasDelegate)
-        {
-            await OnEntradaEliminada.InvokeAsync(entrada);
-        }
-
-        cargando = false;
     }
 
     void Salida()
