@@ -1,19 +1,23 @@
-﻿<div class="field">
-    <div class="field">
-        <select id="producto" class="input" @bind="detalle.Producto" required>
-            @foreach (var producto in listadoProductos)
-            {
-                <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
-            }
-        </select>
-    </div>
-
-    <div class="field">
+﻿<div class="field is-grouped">
+    <div class="control">
         <input class="input" type="number" @bind="detalle.Cantidad" />
     </div>
 
-    <div class="field">
-        <button class="button is-primary is-light is-small" @onclick="Eliminar">Quitar</button>
+    <div class="control is-expanded">
+        <div class="select is-fullwidth">
+            <select id="producto" class="input" @bind="detalle.Producto" required>
+                @foreach (var producto in listadoProductos)
+                {
+                    <option value="@producto.Id">@(producto.Nombre.ToCapitalize())</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="control">
+        <button class="button is-link is-light" @onclick="Eliminar">
+            <ion-icon name="trash-outline"></ion-icon>
+        </button>
     </div>
 </div>
 

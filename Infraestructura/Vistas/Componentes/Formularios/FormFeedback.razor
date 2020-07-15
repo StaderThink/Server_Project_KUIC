@@ -1,0 +1,48 @@
+﻿@using System.Linq.Expressions
+
+@implements IDisposable
+@typeparam TValue
+
+@if (ValidationMessages.Any())
+{
+    @foreach (var message in ValidationMessages)
+    {
+        <span class="help is-danger">@message</span>
+    }
+}
+
+else if (Help is string)
+{
+    <span class="help">@Help</span>
+}
+
+@code {
+    [CascadingParameter]
+    EditContext EditContext { get; set; }
+
+    [Parameter]
+    public string Help { get; set; }
+
+    [Parameter]
+    public Expression<Func<TValue>> For { get; set; }
+
+    private FieldIdentifier Identifier { get; set; }
+    private IEnumerable<string> ValidationMessages { get; set; } = new List<string>();
+
+    protected override void OnInitialized()
+    {
+        Identifier = FieldIdentifier.Create(For);
+        EditContext.OnValidationStateChanged += HandleValidationStateChanged;
+    }
+
+    private void HandleValidationStateChanged(object o, ValidationStateChangedEventArgs args)
+    {
+        ValidationMessages = EditContext.GetValidationMessages(Identifier);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        EditContext.OnValidationStateChanged -= HandleValidationStateChanged;
+    }
+}

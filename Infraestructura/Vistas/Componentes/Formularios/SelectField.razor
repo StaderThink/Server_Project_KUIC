@@ -1,0 +1,25 @@
+﻿@inherits FieldBase<TValue>
+
+@typeparam TItem
+@typeparam TValue
+
+<div class="control">
+    <div class="select is-fullwidth">
+        <select @attributes="AdditionalAttributes" class="input @ControlCssClass()" @bind="CurrentValue">
+            <option value="" disabled>Seleccione uno...</option>
+
+            @foreach (var item in Data)
+            {
+                @ChildContent(item)
+            }
+        </select>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<TItem> Data { get; set; }
+
+    [Parameter]
+    public RenderFragment<TItem> ChildContent { get; set; }
+}
