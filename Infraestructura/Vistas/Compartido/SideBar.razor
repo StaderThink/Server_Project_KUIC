@@ -57,12 +57,12 @@
     </nav>
 
     <div class="options">
-        <div class="option">
-            <ion-icon name="body-outline"></ion-icon>
+        <div class="option" @onclick="IrPerfil">
+            <ion-icon name="person-outline"></ion-icon>
         </div>
 
         <div class="option">
-            <ion-icon name="notifications-outline"></ion-icon>
+            <ion-icon name="file-tray-outline"></ion-icon>
         </div>
 
         <div class="option" @onclick="CerrarSesion">
@@ -78,5 +78,10 @@
 
         await proveedor.CerrarSesion();
         navegador.NavigateTo("/");
+    }
+
+    void IrPerfil()
+    {
+        navegador.NavigateTo("/perfil");
     }
 }

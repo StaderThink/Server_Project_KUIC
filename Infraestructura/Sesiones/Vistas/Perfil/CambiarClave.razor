@@ -1,0 +1,68 @@
+﻿@inject HttpClient http
+@inject AuthenticationStateProvider autentificacion
+
+@using Aplicacion.Sesiones.Formularios
+
+<EditForm Model="Formulario" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
+
+    <FormField Label="Contraseña actual">
+        <PasswordField id="claveActual" @bind-Value="Formulario.ClaveAnterior" />
+        <FormFeedback For="() => Formulario.ClaveAnterior" />
+    </FormField>
+
+    <FormField Label="Nueva contraseña">
+        <PasswordField id="nuevaClave" @bind-Value="Formulario.NuevaClave" />
+        <FormFeedback For="() => Formulario.NuevaClave" Help="Debe tener minimo 6 caracteres" />
+    </FormField>
+
+    <FormField Label="Confirme su nueva contraseña">
+        <PasswordField id="confirmarClave" @bind-Value="Formulario.ConfirmacionClave" />
+        <FormFeedback For="() => Formulario.ConfirmacionClave" />
+    </FormField>
+
+    <div class="field">
+        <div class="control">
+            @if (Guardando)
+            {
+                <button class="button is-link is-loading" disabled>Actualizar contraseña</button>
+            }
+
+            else
+            {
+                <button type="submit" class="button is-link">Actualizar contraseña</button>
+            }
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private FormularioCambiarClave Formulario { get; set; } = new FormularioCambiarClave();
+    private bool Guardando { get; set; } = false;
+
+    private async Task Enviar()
+    {
+        Guardando = true;
+
+        try
+        {
+            var respuesta = await http.PutAsJsonAsync("/api/sesion/cambiar_clave", Formulario);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                var proveedor = (ProveedorAutenticacion) autentificacion;
+                await proveedor.CerrarSesion();
+            }
+        }
+
+        catch
+        {
+            throw;
+        }
+
+        finally
+        {
+            Guardando = false;
+        }
+    }
+}
