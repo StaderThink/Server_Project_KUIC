@@ -1,0 +1,79 @@
+﻿@inject HttpClient http
+@inject AuthenticationStateProvider autentificacion
+
+@using System.Security.Claims
+
+<EditForm Model="@Usuario" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <FormField Label="Nombre">
+        <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+        <FormFeedback For="() => Usuario.Nombre" />
+    </FormField>
+
+    <FormField Label="Apellido">
+        <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+        <FormFeedback For="() => Usuario.Apellido" />
+    </FormField>
+
+    <FormField Label="Correo">
+        <EmailField id="correo" @bind-Value="Usuario.Correo" />
+        <FormFeedback For="() => Usuario.Correo" />
+    </FormField>
+
+    <div class="field">
+        <div class="control">
+            @if (Guardando)
+            {
+                <button class="button is-link is-loading" disabled>Actualizar perfil</button>
+            }
+
+            else
+            {
+                <button type="submit" class="button is-link">Actualizar perfil</button>
+            }
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Usuario Usuario { get; set; } = new Usuario();
+    private bool Guardando { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var estado = await autentificacion.GetAuthenticationStateAsync();
+            var id = estado.User.FindFirst(ClaimTypes.SerialNumber);
+
+            Usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{id.Value}");
+        }
+
+        catch
+        {
+            throw;
+        }
+    }
+
+    private async Task Enviar()
+    {
+        Guardando = true;
+
+        try
+        {
+            await http.PutAsJsonAsync<Usuario>($"/api/usuario/{Usuario.Id}", Usuario);
+        }
+
+        catch
+        {
+            throw;
+        }
+
+        finally
+        {
+            Guardando = false;
+        }
+    }
+}

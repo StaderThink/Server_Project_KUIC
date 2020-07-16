@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Security.Claims;
 using Aplicacion.Sesion;
 using Aplicacion.Sesiones;
@@ -54,7 +55,41 @@ namespace Infraestructura.Sesiones.Controladores
         }
 
         [Authorize]
-        [HttpPut]
+        [HttpPut("cambiar_clave")]
+        public IActionResult CambiarClave([FromBody] FormularioCambiarClave formulario)
+        {
+            try
+            {
+                ServicioCambiarClave servicioCambiarClave = new ServicioCambiarClave();
+
+                var id = HttpContext.User.FindFirst(ClaimTypes.SerialNumber);
+
+                if (id is null)
+                {
+                    throw new NullReferenceException(nameof(id));
+                }
+
+                else
+                {
+                    formulario.Usuario = int.Parse(id.Value);
+
+                    if (servicioCambiarClave.CambiarClave(formulario))
+                    {
+                        return Ok();
+                    }
+                }
+
+                return BadRequest();
+            }
+
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
+        [Authorize]
+        [HttpPut("reestablecer_clave")]
         public IActionResult ReestablecerClave([FromBody] FormularioReestablecerClave formulario)
         {
             try

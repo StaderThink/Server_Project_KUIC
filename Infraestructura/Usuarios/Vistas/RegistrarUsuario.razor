@@ -14,56 +14,66 @@
 
 <AuthorizeView Roles="usuarios" Context="auth">
     <Authorized>
-        <EditForm Model="usuario" OnValidSubmit="Prueba">
+        <EditForm Model="Usuario" OnValidSubmit="Prueba">
             <DataAnnotationsValidator />
 
             <FormField Label="Tipo de documento">
-                <SelectField @bind-Value="usuario.Cargo" Context="value" Data="cargos">
-                    <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
+                <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
+                    <option value="@value">@value</option>
                 </SelectField>
-                <FormFeedback For="() => usuario.TipoDocumento" />
+                <FormFeedback For="() => Usuario.TipoDocumento" />
             </FormField>
 
             <FormField Label="Documento">
-                <TextField id="documento" @bind-Value="usuario.Documento" />
-                <FormFeedback For="() => usuario.Documento" />
+                <TextField id="documento" @bind-Value="Usuario.Documento" />
+                <FormFeedback For="() => Usuario.Documento" />
             </FormField>
 
             <FormField Label="Nombre">
-                <TextField id="nombre" @bind-Value="usuario.Nombre" />
-                <FormFeedback For="() => usuario.Nombre" />
+                <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+                <FormFeedback For="() => Usuario.Nombre" />
             </FormField>
 
             <FormField Label="Apellido">
-                <TextField id="apellido" @bind-Value="usuario.Apellido" />
-                <FormFeedback For="() => usuario.Apellido" />
+                <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+                <FormFeedback For="() => Usuario.Apellido" />
             </FormField>
 
             <FormField Label="Correo">
-                <EmailField id="correo" @bind-Value="usuario.Correo" />
-                <FormFeedback For="() => usuario.Correo" />
+                <EmailField id="correo" @bind-Value="Usuario.Correo" />
+                <FormFeedback For="() => Usuario.Correo" />
             </FormField>
 
             <FormField Label="Cargo">
-                <SelectField id="cargo" @bind-Value="usuario.Cargo" Context="value" Data="cargos">
+                <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="Listado">
                     <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
                 </SelectField>
-                <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => usuario.Cargo" />
+                <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
             </FormField>
 
             <FormField Label="Fecha de nacimiento">
-                <DateField id="fechaNacimiento" @bind-Value="usuario.Nacimiento" />
-                <FormFeedback For="() => usuario.Nacimiento" />
+                <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
+                <FormFeedback For="() => Usuario.Nacimiento" />
             </FormField>
 
             <FormField Label="Fecha de expedición">
-                <DateField id="fechaExpedicion" @bind-Value="usuario.Expedicion" />
-                <FormFeedback For="() => usuario.Expedicion" Help="Fecha de expedición del documento" />
+                <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
+                <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
             </FormField>
 
             <div class="field">
-                <div class="control">
-                    <button type="submit" class="button is-link">Enviar</button>
+                <div class="buttons">
+                    @if (cargando)
+                    {
+                        <button type="button" class="button is-link is-loading" disabled>Registrar</button>
+                        <a class="button" disabled>Cancelar</a>
+                    }
+
+                    else
+                    {
+                        <button type="submit" class="button is-link">Registrar</button>
+                        <a href="/usuario" class="button">Cancelar</a>
+                    }
                 </div>
             </div>
         </EditForm>
@@ -75,10 +85,10 @@
 </AuthorizeView>
 
 @code {
-    Cargo[] cargos { get; set; } = new Cargo[0];
-    Usuario usuario { get; set; } = new Usuario();
+    Cargo[] Listado = new Cargo[0];
+    string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
-    IEnumerable<string> tiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
+    Usuario Usuario { get; set; } = new Usuario();
 
     bool yaExiste = false;
     string mensaje;
@@ -88,18 +98,18 @@
     {
         try
         {
-            cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+            Listado = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
         }
 
         catch
         {
-            cargos = new Cargo[0];
+            Listado = new Cargo[0];
         }
     }
 
     void Prueba()
     {
-        Console.WriteLine(usuario);
+        Console.WriteLine(Usuario);
     }
 
     async Task Enviar()
@@ -109,7 +119,7 @@
         try
         {
 
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", usuario);
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", Usuario);
 
             if (respuesta.IsSuccessStatusCode) {
                 navegador.NavigateTo("/usuario");
@@ -137,13 +147,13 @@
 
     async Task BuscarExistencia() {
         try {
-            if (string.IsNullOrWhiteSpace(usuario.Documento))
+            if (string.IsNullOrWhiteSpace(Usuario.Documento))
             {
                 yaExiste = false;
                 return;
             }
 
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={usuario.Documento}");
+            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={Usuario.Documento}");
 
             if (respuesta.IsSuccessStatusCode) {
                 var existencias = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();

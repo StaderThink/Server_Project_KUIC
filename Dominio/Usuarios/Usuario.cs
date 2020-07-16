@@ -26,7 +26,7 @@ namespace Dominio.Usuarios
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Correo { get; set; }
 
-        [Required(ErrorMessage = "Este campo es obligatorio")]
+        [StringLength(int.MaxValue, MinimumLength = 6, ErrorMessage = "Este campo debe tener minimo {2} caracteres")]
         [JsonIgnore] public string Clave { get; set; }
 
         [Required(ErrorMessage = "Este campo es obligatorio")]
