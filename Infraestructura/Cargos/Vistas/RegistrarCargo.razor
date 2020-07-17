@@ -11,66 +11,66 @@
     </blockquote>
 }
 
-<form @onsubmit="Enviar" @onsubmit:preventDefault>
-    <div class="field">
-        <label class="label">Nombre del cargo</label>
-        <input type="text" class="input" @bind="cargo.Nombre" placeholder="Ej. Administrador" required />
+<EditForm Model="Cargo" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
+
+    <FormField Label="Nombre">
+        <TextField @bind-Value="Cargo.Nombre" />
+        <FormFeedback For="() => Cargo.Nombre" Help="Nombre que identifica el cargo (debe ser único)" />
+    </FormField>
+
+    <FormField>
+        <CheckboxField @bind-Value="Cargo.Pedidos">
+            <span>Tendrá permiso para supervisar los pedidos.</span>
+        </CheckboxField>
+    </FormField>
+
+    <FormField>
+        <CheckboxField @bind-Value="Cargo.Usuarios">
+            <span>Puede crear usuarios y asignar cargos</span>
+        </CheckboxField>
+        <FormFeedback For="() => Cargo.Usuarios" Help="También creará notificaciones para el personal" />
+    </FormField>
+
+    <FormField>
+        <CheckboxField @bind-Value="Cargo.Logistica">
+            <span>Tendrá acceso al inventario, con lo que podrá realizar entradas y salidas del mismo.</span>
+        </CheckboxField>
+    </FormField>
+
+    <FormField>
+        <CheckboxField @bind-Value="Cargo.Clientes">
+            <span>Manejará la información de los clientes en el sistema.</span>
+        </CheckboxField>
+    </FormField>
+
+    <FormField>
+        <CheckboxField @bind-Value="Cargo.Solicitar">
+            <span>Podrá solicitar pedidos a nombre de los clientes (usar para asesores comerciales).</span>
+        </CheckboxField>
+    </FormField>
+
+    <div class="field is-grouped">
+        <div class="control">
+            <button type="submit" class="button is-primary">Registrar</button>
+        </div>
+
+        <div class="control">
+            <a href="/cargo" class="button">Cancelar</a>
+        </div>
     </div>
-
-    <div class="grid has-gap">
-        <div class="field">
-            <input type="checkbox" class="checkbox" @bind="cargo.Pedidos" />
-            <label>¿Puedes verificar los pedidos?</label>
-        </div>
-
-        <div class="field">
-            <input type="checkbox" class="checkbox" @bind="cargo.Usuarios" />
-            <label>¿Puede cambiar los permisos de los usuarios?</label>
-        </div>
-
-        <div class="field">
-            <input type="checkbox" class="checkbox" @bind="cargo.Logistica" />
-            <label>¿Puede gestionar el inventario?</label>
-        </div>
-
-        <div class="field">
-            <input type="checkbox" class="checkbox" @bind="cargo.Clientes" />
-            <label>¿Puede gestionar datos de los clientes?</label>
-        </div>
-
-        <div class="field">
-            <input type="checkbox" class="checkbox" @bind="cargo.Solicitar" />
-            <label>¿Puede solicitar pedidos?</label>
-        </div>
-    </div>
-
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando)
-            {
-                <button class="button is-primary is-loading" disabled>Registrar</button>
-            }
-
-            else
-            {
-                <button class="button is-primary">Registrar</button>
-            }
-
-            <a class="button is-outlined" href="/cargo">Volver</a>
-        </div>
-    </div>
-</form>
+</EditForm>
 
 @code {
-    Cargo cargo { get; set; } = new Cargo();
+    private Cargo Cargo { get; set; } = new Cargo();
 
     string mensaje;
     bool cargando = false;
 
-    async Task Enviar()
+    private async Task Enviar()
     {
         cargando = true;
-        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", cargo);
+        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", Cargo);
 
         if (respuesta.IsSuccessStatusCode)
         {

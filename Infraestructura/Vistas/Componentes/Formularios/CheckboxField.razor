@@ -1,0 +1,11 @@
+﻿@inherits FieldBase<bool>
+
+<label class="checkbox">
+    <input type="checkbox" @attributes="AdditionalAttributes" @bind="CurrentValue" />
+    @ChildContent
+</label>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

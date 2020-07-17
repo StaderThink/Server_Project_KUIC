@@ -1,5 +1,8 @@
 ﻿<div class="field">
-    <label class="label">@Label</label>
+    @if (Label is string)
+    {
+        <label class="label">@Label</label>
+    }
 
     @ChildContent
 </div>

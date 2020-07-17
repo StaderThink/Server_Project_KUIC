@@ -1,13 +1,28 @@
-﻿namespace Dominio.Cargos
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Dominio.Cargos
 {
     public sealed class Cargo
     {
+        [Key]
         public int Id { get; set; }
+
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Nombre { get; set; }
-        public bool Pedidos { get; set; }
-        public bool Usuarios { get; set; }
-        public bool Logistica { get; set; }
-        public bool Clientes { get; set; }
-        public bool Solicitar { get; set; }
+
+        [Required]
+        public bool Pedidos { get; set; } = false;
+
+        [Required]
+        public bool Usuarios { get; set; } = false;
+
+        [Required]
+        public bool Logistica { get; set; } = false;
+
+        [Required]
+        public bool Clientes { get; set; } = false;
+
+        [Required]
+        public bool Solicitar { get; set; } = false;
     }
 }
