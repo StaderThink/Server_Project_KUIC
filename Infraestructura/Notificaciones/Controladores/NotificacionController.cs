@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Aplicacion.Notificaciones;
 using Dominio.Notificaciones;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -41,12 +42,15 @@ namespace Infraestructura.Controladores.Inventarios
         }
 
         [HttpPost]
-        public IActionResult Insertar([FromBody] Notificacion datos)
+        public IActionResult Insertar([FromBody] FormularioRegistrarNotificacion formulario)
         {
-            if (repo.Insertar(datos))
+            ServicioRegistradorNotificacion servicio = new ServicioRegistradorNotificacion();
+
+            if (servicio.Registrar(formulario))
             {
-                return Accepted();
+                return Ok();
             }
+
             return BadRequest();
         }
 
@@ -70,9 +74,10 @@ namespace Infraestructura.Controladores.Inventarios
             Notificacion notificacion = repo.PorId(id);
             if (notificacion is Notificacion)
             {
-                if (repo.Eliminar(notificacion))
+                ServicioEliminadorNotificacion servicio = new ServicioEliminadorNotificacion();
+                if (servicio.Eliminar(notificacion))
                 {
-                    return Accepted();
+                    return Ok();
                 }
             }
             return BadRequest();
