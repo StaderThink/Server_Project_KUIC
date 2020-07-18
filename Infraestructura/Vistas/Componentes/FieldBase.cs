@@ -21,6 +21,11 @@ namespace Infraestructura.Vistas.Componentes.Formularios
                     result = (TValue) (object) int.Parse(value);
                 }
 
+                else if (typeof(TValue) == typeof(double))
+                {
+                    result = (TValue) (object) double.Parse(value);
+                }
+
                 else if (typeof(TValue) == typeof(DateTime))
                 {
                     result = (TValue) (object) DateTime.Parse(value);
