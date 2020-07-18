@@ -2,6 +2,12 @@
 using Aplicacion.Pedidos.Formularios;
 using Dominio.Productos;
 using Dominio.Pedidos;
+using Aplicacion.Salidas;
+using System.Collections.Generic;
+using Dominio;
+using Dominio.Salidas;
+using Aplicacion.Salidas.Formularios;
+using System.Linq;
 
 namespace Aplicacion.Pedidos
 {
@@ -14,33 +20,23 @@ namespace Aplicacion.Pedidos
             try
             {
                 Pedido pedido = formulario.Pedido;
-                System.Collections.Generic.IEnumerable<DetallePedido> detalles = formulario.Detalles;
+                IEnumerable<DetallePedido> detalles = formulario.Detalles;
 
                 if (repoPedido.Insertar(pedido))
                 {
-                    RepositorioDetallePedido repoDetalle = new RepositorioDetallePedido();
-                    RepositorioProducto repoProducto = new RepositorioProducto();
+                    var repoDetalle = new RepositorioDetallePedido();
+                    var listaSalida = new List<IDetalle>();
 
-                    int id = repoPedido.UltimoPorId();
+                    pedido.Id = repoPedido.UltimoPorId();
 
                     foreach (DetallePedido detalle in detalles)
                     {
-                        detalle.Pedido = id;
+                        detalle.Pedido = pedido.Id;
 
-                        if (repoProducto.PorId(detalle.Producto) is Producto producto)
-                        {
-                            if (producto.Existencias > 0 && producto.Existencias >= detalle.Cantidad)
-                            {
-                                producto.Existencias -= detalle.Cantidad;
-
-                                repoProducto.Editar(producto);
-                                repoDetalle.Insertar(detalle);
-                            }
-                        }
-
+                        repoDetalle.Insertar(detalle);
                     }
 
-                    return true;
+                    return RegistrarSalida(pedido, detalles);
                 }
 
                 return false;
@@ -51,6 +47,33 @@ namespace Aplicacion.Pedidos
                 Console.WriteLine(ex.ToString());
                 return false;
             }
+        }
+
+        private bool RegistrarSalida(Pedido pedido, IEnumerable<IDetalle> detalles)
+        {
+            List<DetalleSalida> salidas = new List<DetalleSalida>();
+
+            foreach (var detalle in detalles)
+            {
+                salidas.Add(new DetalleSalida { Cantidad = detalle.Cantidad, Producto = detalle.Producto });
+            }
+
+            // registrar la salida
+
+            var registradorSalida = new ServicioRegistradorSalida();
+            var formularioSalida = new FormularioRegistrarSalida
+            {
+                Salida = new Salida
+                {
+                    Fecha = pedido.Fecha,
+                    Observacion = $"Salida para pedido #{pedido.Id}",
+                    Pedido = pedido.Id
+                },
+
+                Detalles = salidas
+            };
+
+            return registradorSalida.Registrar(formularioSalida);
         }
     }
 }
