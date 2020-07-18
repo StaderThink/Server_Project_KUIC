@@ -4,7 +4,7 @@
 @page "/producto/registrar"
 @layout AppLayout
 
-    <AuthorizeView Roles="logistica">
+    <AuthorizeView Roles="logistica" Context="auth">
         <Authorized>
             <h3 class="title is-3">Registrar nuevo producto</h3>
 
@@ -18,75 +18,77 @@
 
             else
             {
-                <form @onsubmit="Enviar">
-                    <div class="field">
-                        <label class="label" for="texto">Nombre</label>
-                        <input id="texto" class="input" type="text" placeholder="Ej. Pollo" @bind="producto.Nombre" required />
-                    </div>
+                <EditForm Model="producto" OnValidSubmit="Enviar">
+                    <DataAnnotationsValidator></DataAnnotationsValidator>
 
-                    <div class="field">
-                        <label class="label" for="codigo">Código</label>
-                        <input id="codigo" class="input" type="number" pattern="[0-9]{5}" placeholder="#####" @bind="producto.Codigo" required />
-                        <small>Código de 5 digitos</small>
-                    </div>
+                    <FormField Label="Nombre">
+                        <TextField id="texto" placeholder="Ej. Pollo" @bind-Value="producto.Nombre"/>
+                        <FormFeedback For="() => producto.Nombre"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label" for="descripcion">Descripción</label>
-                        <textarea id="descripcion" class="input" type="text" placeholder="Ej. Presas de pollo" @bind="producto.Descripcion"></textarea>
-                    </div>
+                    <FormField Label="Código">
+                        <TextField id="codigo" pattern="[0-9]{5}" placeholder="#####" @bind-Value="producto.Codigo" />
+                        <FormFeedback For="() => producto.Codigo" Help="Código de 5 caracteres"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label" for="precio">Precio</label>
-                        <input id="precio" class="input" type="number" placeholder="$ ##.#" min="50" @bind="producto.Precio" required />
-                    </div>
+                    <FormField Label="Descripción">
+                        <TextField id="descripcion" placeholder="Ej. Presas de pollo" @bind-Value="producto.Descripcion"></TextField>
+                        <FormFeedback For="() => producto.Descripcion"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label">Presentación</label>
-                        <select class="input" @bind="producto.Presentacion" required>
-                            @foreach (Presentacion presentacion in presentaciones)
-                            {
-                                <option value="@presentacion">@presentacion</option>
-                            }
-                        </select>
-                    </div>
+                    <FormField Label="Precio">
+                        <NumberField id="precio" placeholder="$ ##.#" @bind-Value="producto.Precio" />
+                        <FormFeedback For="() => producto.Precio"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label" for="min_cantidad">Cantidad</label>
-                        <input id="min_cantidad" class="input" type="number" placeholder="###" @bind="producto.MinCantidad" required />
-                    </div>
+                    <FormField Label="Presentación">
+                        <SelectField @bind-Value="producto.Presentacion" Context="presentacion" Data="presentaciones">
+                            <option value="@presentacion">@presentacion</option>
+                        </SelectField>
+                        <FormFeedback For="() => producto.Presentacion"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label">Magnitud</label>
-                        <select class="input" @bind="producto.Magnitud" required>
-                            @foreach (Magnitud magnitud in magnitudes)
-                            {
-                                <option value="@magnitud">@magnitud</option>
-                            }
-                        </select>
-                    </div>
+                    <FormField Label="Cantidad">
+                        <TextField id="min_cantidad" placeholder="###" @bind-Value="producto.MinCantidad" />
+                        <FormFeedback For="() => producto.MinCantidad"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label" for="min_peso">Peso</label>
-                        <input id="min_peso" class="input" type="number" placeholder="Min" min="1" @bind="producto.MinPeso" required />
-                        <input id="max_peso" class="input" type="number" placeholder="Max" @bind="producto.MaxPeso" required />
-                        <small>Peso mínimo y máximo</small>
-                    </div>
+                    <FormField Label="Magnitud">
+                        <SelectField Context="magnitud" Data="magnitudes" @bind-Value="producto.Magnitud">
+                            <option value="@magnitud">@magnitud</option>
+                        </SelectField>
+                        <FormFeedback For="() => producto.Magnitud"></FormFeedback>
+                    </FormField>
 
-                    <div class="field">
-                        <label class="label">Categoria</label>
-                        <select class="input" @bind="producto.Categoria">
-                            @foreach (Categoria categoria in categorias)
-                            {
-                                <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
-                            }
-                        </select>
-                    </div>
+                    <FormField Label="Peso">
+                        <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
+                        <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
+                    </FormField>
+
+                    <FormField>
+                        <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
+                        <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
+                    </FormField>
+
+                    <FormField Label="Categoria">
+                        <SelectField @bind-Value="producto.Categoria" Context="categoria" Data="categorias">
+                            <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
+                        </SelectField>
+                        <FormFeedback For="() => producto.Categoria"></FormFeedback>
+                    </FormField>
 
                     <div class="control is-grouped">
-                        <button class="button is-primary">Registrar</button>
-                        <a href="/inventario" class="button is-outlined">Cancelar</a>
+                        @if (cargando)
+                        {
+                            <button class="button is-primary is-loading">Registrar</button>
+                            <a href="/inventario" class="button is-outlined" disabled>Cancelar</a>
+                        }
+                        else {
+                            <button class="button is-primary" type="submit">Registrar</button>
+                            <a href="/inventario" class="button is-outlined">Cancelar</a>
+                        }
                     </div>
-                </form>
+                </EditForm>
             }
         </Authorized>
         <NotAuthorized>
@@ -95,10 +97,12 @@
     </AuthorizeView>
 
 @code {
-    Array magnitudes = Enum.GetValues(typeof(Magnitud));
-    Array presentaciones = Enum.GetValues(typeof(Presentacion));
+    string[] magnitudes = Enum.GetNames(typeof(Magnitud));
+    string[] presentaciones = Enum.GetNames(typeof(Presentacion));
 
     string noExistenCategorias = "No existen categorias, ¿por qué no agregas una?";
+
+    bool cargando = false;
 
     Categoria[] categorias { get; set; } = new Categoria[0];
 
@@ -111,6 +115,8 @@
 
     async Task Enviar()
     {
+        cargando = true;
+
         HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
 
         if (respuesta.IsSuccessStatusCode)
