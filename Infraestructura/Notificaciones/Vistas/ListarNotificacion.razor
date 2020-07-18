@@ -4,7 +4,7 @@
 @layout AppLayout
 @inject AuthenticationStateProvider autentificacion
 
-    <AuthorizeView>
+    <AuthorizeView Roles="usuarios" Context="auth">
         <Authorized>
             <h3 class="title is-3">Listar Notificaciones</h3>
 
