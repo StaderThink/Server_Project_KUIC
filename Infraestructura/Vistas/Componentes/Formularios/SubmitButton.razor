@@ -1,0 +1,21 @@
+﻿<button type="submit" class="button is-primary" disabled="@Disabled">@ChildContent</button>
+
+@code {
+    [CascadingParameter]
+    private EditContext EditContext { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    private bool Disabled { get; set; } = false;
+
+    protected override void OnInitialized()
+    {
+        EditContext.OnValidationStateChanged += ValidationStateChange;
+    }
+
+    private void ValidationStateChange(object sender, ValidationStateChangedEventArgs args)
+    {
+        Disabled = EditContext.GetValidationMessages().Any();
+    }
+}

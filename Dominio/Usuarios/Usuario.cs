@@ -15,7 +15,7 @@ namespace Dominio.Usuarios
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Apellido { get; set; }
 
-        [StringLength(10, ErrorMessage = "El documento debe tener entre {2} y {1} carateres", MinimumLength = 6)]
+        [StringLength(10, MinimumLength = 6, ErrorMessage = "El documento debe tener entre {2} y {1} carateres")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Documento { get; set; }
 
@@ -27,7 +27,8 @@ namespace Dominio.Usuarios
         public string Correo { get; set; }
 
         [StringLength(int.MaxValue, MinimumLength = 6, ErrorMessage = "Este campo debe tener minimo {2} caracteres")]
-        [JsonIgnore] public string Clave { get; set; }
+        [JsonIgnore]
+        public string Clave { get; set; }
 
         [Required(ErrorMessage = "Este campo es obligatorio")]
         public DateTime Nacimiento { get; set; } = DateTime.Now;

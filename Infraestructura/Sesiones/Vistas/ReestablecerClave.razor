@@ -1,0 +1,44 @@
+﻿@layout BaseLayout
+@page "/reestablecer"
+
+@using Aplicacion.Sesiones.Formularios 
+
+<h3 class="title is-3">Reestablecer contraseña</h3>
+
+<hr />
+
+<AuthorizeView Context="auth">
+    <Authorized>
+        <p>No puedes cambiar tu contraseña por reestablecimiento, por favor, ve a <a href="perfil">tu perfil</a> y realiza el cambio de contraseña en la sección correspondiente.</p>
+    </Authorized>
+
+    <NotAuthorized>
+        <EditForm Model="Formulario">
+            <DataAnnotationsValidator />
+
+            <FormField Label="Número de documento">
+                <TextField @bind-Value="Formulario.Documento" />
+                <FormFeedback For="() => Formulario.Documento" Help="Número de documento de identidad (CC o NIT)" />
+            </FormField>
+
+            <FormField Label="Fecha de expedición">
+                <DateField @bind-Value="Formulario.FechaExpedicion" />
+                <FormFeedback For="() => Formulario.FechaExpedicion" Help="Fecha en la que fue expedido su documento" />
+            </FormField>
+
+            <FormField Label="Nueva contraseña">
+                <PasswordField @bind-Value="Formulario.NuevaClave" />
+                <FormFeedback For="() => Formulario.NuevaClave" Help="Minimo 6 caracteres" />
+            </FormField>
+        </EditForm>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    private FormularioReestablecerClave Formulario { get; set; }
+
+    private async Task Enviar()
+    {
+
+    }
+}

@@ -8,40 +8,41 @@
     <blockquote class="is-error">@mensaje</blockquote>
 }
 
-<div class="form">
-    <div class="field">
-        <label class="label">Documento</label>
+<EditForm Model="Modelo" OnValidSubmit="Iniciar">
+    <DataAnnotationsValidator />
 
-        <div class="control is-attached">
-            <input type="text" pattern="^[0-9]{6,10}$" minlength="7" @bind="documento" placeholder="###" class="input" />
-        </div>
+    <FormField Label="Documento">
+        <NumberField @bind-Value="Modelo.Documento" />
+        <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad (CC o NIT)" />
+    </FormField>
 
-        <small>Número de documento de identidad (CC o NIT)</small>
+    <FormField Label="Contraseña">
+        <PasswordField @bind-Value="Modelo.Clave" />
+        <FormFeedback For="() => Modelo.Clave" />
+    </FormField>
+
+    <FormField>
+        <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
+    </FormField>
+
+    <div class="buttons">
+        <SubmitButton>Ingresar</SubmitButton>
     </div>
-
-    <div class="field">
-        <label class="label">Clave</label>
-        <input type="password" @bind="clave" minlength="4" placeholder="###" class="input" />
-    </div>
-
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando)
-            {
-                <button class="button is-primary is-loading" disabled>Ingresar</button>
-            }
-
-            else
-            {
-                <button class="button is-primary" @onclick="Iniciar" disabled="@(intentos == 3)">Ingresar</button>
-            }
-        </div>
-    </div>
-</div>
+</EditForm>
 
 @code {
-    string documento;
-    string clave;
+    private class Formulario
+    {
+        [StringLength(10, MinimumLength = 4, ErrorMessage = "El documento debe tener entre {2} y {1} carateres")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
+        public string Documento { get; set; }
+
+        [StringLength(int.MaxValue, MinimumLength = 6, ErrorMessage = "La contraseña debe tener minimo {2} caracteres")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
+        public string Clave { get; set; }
+    }
+
+    private Formulario Modelo { get; set; } = new Formulario();
 
     string mensaje;
 
@@ -96,7 +97,7 @@
             cargando = true;
 
             var nuevoProveedor = (ProveedorAutenticacion) proveedor;
-            await nuevoProveedor.IniciarSesion(documento, clave);
+            await nuevoProveedor.IniciarSesion(Modelo.Documento, Modelo.Clave);
         }
 
         catch

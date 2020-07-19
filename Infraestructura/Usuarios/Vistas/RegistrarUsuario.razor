@@ -14,7 +14,7 @@
 
 <AuthorizeView Roles="usuarios" Context="auth">
     <Authorized>
-        <EditForm Model="Usuario" OnValidSubmit="Prueba">
+        <EditForm Model="Usuario" OnValidSubmit="Enviar">
             <DataAnnotationsValidator />
 
             <FormField Label="Tipo de documento">
@@ -25,7 +25,7 @@
             </FormField>
 
             <FormField Label="Documento">
-                <TextField id="documento" @bind-Value="Usuario.Documento" />
+                <NumberField id="documento" @bind-Value="Usuario.Documento" />
                 <FormFeedback For="() => Usuario.Documento" />
             </FormField>
 
@@ -61,21 +61,9 @@
                 <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
             </FormField>
 
-            <div class="field">
-                <div class="buttons">
-                    @if (cargando)
-                    {
-                        <button type="button" class="button is-link is-loading" disabled>Registrar</button>
-                        <a class="button" disabled>Cancelar</a>
-                    }
-
-                    else
-                    {
-                        <button type="submit" class="button is-link">Registrar</button>
-                        <a href="/usuario" class="button">Cancelar</a>
-                    }
-                </div>
-            </div>
+            <FormField>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
         </EditForm>
     </Authorized>
 
@@ -107,19 +95,13 @@
         }
     }
 
-    void Prueba()
-    {
-        Console.WriteLine(Usuario);
-    }
-
-    async Task Enviar()
+    private async Task Enviar()
     {
         cargando = true;
 
         try
         {
-
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/usuario", Usuario);
+            var respuesta = await http.PostAsJsonAsync("/api/usuario", Usuario);
 
             if (respuesta.IsSuccessStatusCode) {
                 navegador.NavigateTo("/usuario");

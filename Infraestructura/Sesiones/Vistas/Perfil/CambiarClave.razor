@@ -7,7 +7,7 @@
     <DataAnnotationsValidator />
 
     <FormField Label="Contraseña actual">
-        <PasswordField id="claveActual" @bind-Value="Formulario.ClaveAnterior" />
+        <PasswordField id="claveActual" @bind-Value="Formulario.ClaveAnterior" HiddenOnly />
         <FormFeedback For="() => Formulario.ClaveAnterior" />
     </FormField>
 
@@ -25,12 +25,12 @@
         <div class="control">
             @if (Guardando)
             {
-                <button class="button is-link is-loading" disabled>Actualizar contraseña</button>
+                <button class="button is-primary is-loading" disabled>Actualizar contraseña</button>
             }
 
             else
             {
-                <button type="submit" class="button is-link">Actualizar contraseña</button>
+                <button type="submit" class="button is-primary">Actualizar contraseña</button>
             }
         </div>
     </div>
