@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aplicacion.Entradas.Formularios;
 using Dominio.Entradas;
 using Dominio.Productos;
@@ -19,7 +20,7 @@ namespace Aplicacion.Entradas
             try
             {
                 Entrada entrada = formulario.Entrada;
-                System.Collections.Generic.IEnumerable<DetalleEntrada> detalles = formulario.Detalles;
+                IEnumerable<DetalleEntrada> detalles = formulario.Detalles;
 
                 entrada.Fecha = DateTime.Now;
 

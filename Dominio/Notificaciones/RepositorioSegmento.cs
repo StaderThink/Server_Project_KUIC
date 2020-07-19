@@ -39,11 +39,11 @@ namespace Dominio.Notificaciones
             return conexion.Obtener<Segmento>(consulta, new { id });
         }
 
-        public bool EliminarPorNotificacion (int idNotificacion)
+        public bool EliminarPorNotificacion (Notificacion notificacion)
         {
             using Conexion conexion = new Conexion();
-            string consulta = "delete from segmento where notificacion = @idNotificacion";
-            int filasAfectadas = conexion.Ejecutar(consulta, idNotificacion);
+            string consulta = "delete from segmento where notificacion = @id";
+            int filasAfectadas = conexion.Ejecutar(consulta, notificacion);
             return filasAfectadas > 0;
         }
     }

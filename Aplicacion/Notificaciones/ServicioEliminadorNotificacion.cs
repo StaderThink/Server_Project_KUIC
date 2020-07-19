@@ -23,7 +23,7 @@ namespace Aplicacion.Notificaciones
 
                 int id = notificacion.Id;
 
-                if (repoSegmento.EliminarPorNotificacion(id))
+                if (repoSegmento.EliminarPorNotificacion(notificacion))
                 {
                     repoNotificacion.Eliminar(notificacion);
 

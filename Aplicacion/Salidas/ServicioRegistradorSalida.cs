@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Aplicacion.Salidas.Formularios;
 using Dominio.Productos;
 using Dominio.Salidas;
@@ -14,7 +15,7 @@ namespace Aplicacion.Salidas
             try
             {
                 Salida salida = formulario.Salida;
-                System.Collections.Generic.IEnumerable<DetalleSalida> detalles = formulario.Detalles;
+                IEnumerable<DetalleSalida> detalles = formulario.Detalles;
 
                 salida.Fecha = DateTime.Now;
 

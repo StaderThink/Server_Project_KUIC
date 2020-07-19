@@ -49,7 +49,7 @@
                     </FormField>
 
                     <FormField Label="Cantidad">
-                        <TextField id="min_cantidad" placeholder="###" @bind-Value="producto.MinCantidad" />
+                        <NumberField id="min_cantidad" placeholder="###" @bind-Value="producto.MinCantidad" />
                         <FormFeedback For="() => producto.MinCantidad"></FormFeedback>
                     </FormField>
 
@@ -77,7 +77,7 @@
                         <FormFeedback For="() => producto.Categoria"></FormFeedback>
                     </FormField>
 
-                    <div class="control is-grouped">
+                    <FormField>
                         @if (cargando)
                         {
                             <button class="button is-primary is-loading">Registrar</button>
@@ -87,7 +87,7 @@
                             <button class="button is-primary" type="submit">Registrar</button>
                             <a href="/inventario" class="button is-outlined">Cancelar</a>
                         }
-                    </div>
+                    </FormField>
                 </EditForm>
             }
         </Authorized>
