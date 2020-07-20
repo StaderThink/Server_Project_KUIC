@@ -4,8 +4,6 @@
 @using Infraestructura.Sesiones
 
 <aside class="aside">
-    <SearchBox />
-
     <nav class="menu">
         <AuthorizeView Roles="usuarios">
             <Authorized>
@@ -14,6 +12,7 @@
                 <ul class="menu-list">
                     <li><a href="/usuario">Usuarios</a></li>
                     <li><a href="/cargo">Cargos</a></li>
+                    <li><a href="/notificacion">Notificaciones</a></li>
                 </ul>
             </Authorized>
         </AuthorizeView>
@@ -61,7 +60,7 @@
             <ion-icon name="person-outline"></ion-icon>
         </div>
 
-        <div class="option">
+        <div class="option" @onclick="IrBandeja">
             <ion-icon name="file-tray-outline"></ion-icon>
         </div>
 
@@ -78,6 +77,11 @@
 
         await proveedor.CerrarSesion();
         navegador.NavigateTo("/");
+    }
+
+    void IrBandeja()
+    {
+        navegador.NavigateTo("/bandeja");
     }
 
     void IrPerfil()
