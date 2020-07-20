@@ -44,7 +44,7 @@ namespace Dominio.Notificaciones
             using Conexion conexion = new Conexion();
             string consulta = "delete from segmento where notificacion = @id";
             int filasAfectadas = conexion.Ejecutar(consulta, notificacion);
-            return filasAfectadas > 0;
+            return filasAfectadas >= 0;
         }
     }
 }

@@ -1,0 +1,45 @@
+﻿@inject HttpClient http
+@inject NavigationManager navegador
+@using Infraestructura.Notificaciones.Vistas; 
+
+<div class="card">
+    <div class="card-content">
+        <div class="content">
+            <div class="field">
+                @foreach (var segmento in segmentos)
+                {
+                    <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
+                }
+            </div>
+            <p>@notificacion.Texto.ToCapitalize()</p>
+            <p>@notificacion.FechaInicio</p>
+            <p>@notificacion.FechaFin</p>
+            <p>
+                @if (usuario is null)
+                {
+                    <span>Sin nombre</span>
+                }
+
+                else
+                {
+                    <span>@usuario.Nombre</span>
+                }
+            </p>
+        </div>
+    </div>
+</div>
+
+@code {
+    Segmento[] segmentos { get; set; } = new Segmento[0];
+
+    [Parameter]
+    public Notificacion notificacion { get; set; }
+
+    Usuario usuario { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{notificacion.Id}");
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{notificacion.Autor}");
+    }
+}

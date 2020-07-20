@@ -1,8 +1,6 @@
-﻿@using System.Security.Claims
-@inject HttpClient http
+﻿@inject HttpClient http
 @page "/notificacion"
 @layout AppLayout
-@inject AuthenticationStateProvider autentificacion
 
     <AuthorizeView Roles="usuarios" Context="auth">
         <Authorized>
@@ -29,7 +27,7 @@
                     }
                 </div>
             }
-</Authorized>
+        </Authorized>
         <NotAuthorized>
             <h2>No tienes permisos para acceder a esta vista</h2>
         </NotAuthorized>
@@ -48,11 +46,7 @@
     {
         try
         {
-            var estado = await autentificacion.GetAuthenticationStateAsync();
-            var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
-            int idAutor = int.Parse(serial.Value);
-
-            notificaciones = await http.GetFromJsonAsync<Notificacion[]>($"/api/notificacion/autor/{idAutor}");
+            notificaciones = await http.GetFromJsonAsync<Notificacion[]>($"/api/notificacion/autor");
         }
 
         catch

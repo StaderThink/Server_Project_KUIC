@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+using System.Security.Claims;
 using Aplicacion.Notificaciones;
 using Dominio.Notificaciones;
+using Dominio.Usuarios;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Controladores.Inventarios
 {
     [Route("api/[controller]")]
-    [Authorize]
     public class NotificacionController : Controller
     {
         private readonly RepositorioNotificacion repo;
@@ -16,11 +17,63 @@ namespace Infraestructura.Controladores.Inventarios
         {
             repo = new RepositorioNotificacion();
         }
-
+        
+        [Authorize]
         [HttpGet]
-        public IEnumerable<Notificacion> Listar()
+        public IActionResult Listar()
         {
-            return repo.Listar();
+            try
+            {
+                var sesion = HttpContext.User.FindFirst(c => c.Type == ClaimTypes.SerialNumber);
+                var idUsuario = int.Parse(sesion.Value);
+
+                var repositorioUsuario = new RepositorioUsuario();
+
+                if (repositorioUsuario.PorId(idUsuario) is Usuario usuario)
+                {
+                    var listado = repo.PorCargo(usuario.Cargo);
+                    return Ok(listado);
+                }
+
+                else
+                {
+                    return NotFound();
+                }
+            }
+
+            catch
+            {
+                return Unauthorized();
+            }
+        }
+
+        [Authorize]
+        [HttpGet("autor")]
+        public IActionResult ListarPorAutor()
+        {
+            try
+            {
+                var sesion = HttpContext.User.FindFirst(c => c.Type == ClaimTypes.SerialNumber);
+                var idUsuario = int.Parse(sesion.Value);
+
+                var repositorioUsuario = new RepositorioUsuario();
+
+                if (repositorioUsuario.PorId(idUsuario) is Usuario usuario)
+                {
+                    var listado = repo.PorAutor(usuario.Id);
+                    return Ok(listado);
+                }
+
+                else
+                {
+                    return NotFound();
+                }
+            }
+
+            catch
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpGet("{id}")]
@@ -41,6 +94,7 @@ namespace Infraestructura.Controladores.Inventarios
             return repo.PorAutor(idAutor);
         }
 
+        [Authorize(Roles = "usuarios")]
         [HttpPost]
         public IActionResult Insertar([FromBody] FormularioRegistrarNotificacion formulario)
         {
@@ -54,20 +108,7 @@ namespace Infraestructura.Controladores.Inventarios
             return BadRequest();
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Editar(int id, [FromBody] Notificacion datos)
-        {
-            if (repo.PorId(id) is Notificacion)
-            {
-                datos.Id = id;
-                if (repo.Editar(datos))
-                {
-                    return Accepted();
-                }
-            }
-            return BadRequest();
-        }
-
+        [Authorize(Roles = "usuarios")]
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {

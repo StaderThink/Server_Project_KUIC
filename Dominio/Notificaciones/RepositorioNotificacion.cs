@@ -54,5 +54,15 @@ namespace Dominio.Notificaciones
 
             return notificacion.Id;
         }
+
+        public IEnumerable<Notificacion> PorCargo (int idCargo)
+        {
+            using Conexion conexion = new Conexion();
+            string consulta =
+                "select notificacion.* from notificacion" +
+                "inner join segmento on segmento.notificacion = notificacion.id" +
+                "where segmento.cargo = @idCargo";
+            return conexion.Seleccionar<Notificacion>(consulta, new { idCargo });
+        }
     }
 }

@@ -13,18 +13,27 @@
         <Authorized>
             <h3 class="title is-3">Registrar nueva notificacion</h3>
             <EditForm Model="notificacion" OnValidSubmit="Enviar">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
                 <div class="field">
                     <div class="control">
-                        <button class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
+                        <button type="button" class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
                     </div>
                 </div>
 
-                <div class="field">
+                <FormField>
                     @foreach (var segmento in segmentos)
                     {
                         <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
                     }
-                </div>
+
+                    @if (mostrarModal)
+                    {
+                        <div class="notification is-danger">
+                            <button class="delete" @onclick="CerrarModal"></button>
+                            No se puede agregar una notificación sin segmento
+                        </div>
+                    }
+                </FormField>
 
                 <FormField Label="Mensaje">
                     <TextField id="texto" @bind-Value="notificacion.Texto" />
@@ -32,7 +41,7 @@
                 </FormField>
 
                 <FormField Label="Fecha de inicio">
-                    <DateField id="inicio" @bind-Value="notificacion.FechaInicio"  />
+                    <DateField id="inicio" @bind-Value="notificacion.FechaInicio" disabled />
                     <FormFeedback For="() => notificacion.FechaInicio"></FormFeedback>
                 </FormField>
 
@@ -40,10 +49,10 @@
                     <DateField id="fin" @bind-Value="notificacion.FechaFin" />
                     <FormFeedback For="() => notificacion.FechaFin"></FormFeedback>
                     <div>
-                        @if (notificacion.FechaFin < notificacion.FechaInicio)
+                        @if (notificacionMal)
                         {
                             <div class="notification is-danger">
-                                <button class="delete" aria-label="delete"></button>
+                                <button class="delete" @onclick="Ocultar" aria-label="delete"></button>
                                 La fecha de caducidad no puede ser menor al dia actual. Intente nuevamente
                             </div>
                         }
@@ -108,39 +117,72 @@
         segmentos.Remove((Segmento)segmento);
     }
 
+    #region Modal
+    bool mostrarModal = false;
+
+    void AbrirModal() => mostrarModal = true;
+
+    void CerrarModal() => mostrarModal = false;
+    #endregion
+
+    #region Fecha
+    bool notificacionMal = false;
+
+    void Mostrar() => notificacionMal = true;
+    void Ocultar() => notificacionMal = false;
+    #endregion
 
     async Task Enviar()
     {
         try
         {
-            cargando = true;
-
-            var estado = await autentificacion.GetAuthenticationStateAsync();
-            var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
-
-            if (serial is null)
+            foreach (var segmento in segmentos)
             {
-                // TODO
-            }
 
-            else
-            {
-                int id = int.Parse(serial.Value);
-                notificacion.Autor = id;
-
-                var formulario = new FormularioRegistrarNotificacion()
+                if (notificacion.FechaFin < notificacion.FechaInicio)
                 {
-                    Notificacion = notificacion,
-                    Segmentos = segmentos
-                };
+                    Mostrar();
+                }
 
-                var respuesta = await http.PostAsJsonAsync("/api/notificacion", formulario);
-
-                if (respuesta.IsSuccessStatusCode)
+                else if(segmento.Cargo == 0)
                 {
-                    navegador.NavigateTo("/notificacion");
+                    AbrirModal();
+                }
+
+                else
+                {
+                    cargando = true;
+
+                    var estado = await autentificacion.GetAuthenticationStateAsync();
+                    var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
+
+                    if (serial is null)
+                    {
+                        // TODO
+                    }
+
+                    else
+                    {
+                        int id = int.Parse(serial.Value);
+                        notificacion.Autor = id;
+
+                        var formulario = new FormularioRegistrarNotificacion()
+                        {
+                            Notificacion = notificacion,
+                            Segmentos = segmentos
+                        };
+
+                        var respuesta = await http.PostAsJsonAsync("/api/notificacion", formulario);
+
+                        if (respuesta.IsSuccessStatusCode)
+                        {
+                            navegador.NavigateTo("/notificacion");
+                        }
+                    }
                 }
             }
+
+
         }
 
         catch
