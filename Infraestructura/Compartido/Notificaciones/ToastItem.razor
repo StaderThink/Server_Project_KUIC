@@ -1,0 +1,36 @@
+﻿<div class="notification @CssClass">
+    @if (OnDelete.HasDelegate)
+    {
+        <button type="button" class="delete" @onclick="Delete"></button>
+    }
+
+    <span>@Toast.Body</span>
+</div>
+
+@code {
+    [Parameter]
+    public Toast Toast { get; set; }
+
+    [Parameter]
+    public EventCallback<Toast> OnDelete { get; set; }
+
+    private string CssClass { get; set; } = "is-primary";
+
+    protected override void OnParametersSet()
+    {
+        CssClass = Toast.Type switch
+        {
+            ToastType.Danger => "is-danger",
+            ToastType.Warning => "is-warning",
+            _ => "is-primary"
+        };
+    }
+
+    private void Delete()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            OnDelete.InvokeAsync(Toast);
+        }
+    }
+}

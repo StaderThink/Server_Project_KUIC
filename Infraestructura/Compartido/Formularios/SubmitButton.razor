@@ -1,4 +1,13 @@
-﻿<button type="submit" class="button is-primary" disabled="@Disabled">@ChildContent</button>
+﻿<button type="submit" class="button is-primary @(IsLoading ? "is-loading" : "")" disabled="@(Disabled || IsLoading)">
+    @if (Icon is string)
+    {
+        <span class="icon is-small">
+            <ion-icon name="@Icon"></ion-icon>
+        </span>
+    }
+
+    <span>@ChildContent</span>
+</button>
 
 @code {
     [CascadingParameter]
@@ -6,6 +15,12 @@
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Icon { get; set; } = string.Empty;
+
+    [CascadingParameter]
+    public bool IsLoading { get; set; } = false;
 
     private bool Disabled { get; set; } = false;
 

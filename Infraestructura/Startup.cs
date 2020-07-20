@@ -2,6 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using Blazored.LocalStorage;
+using Infraestructura.Compartido.Notificaciones;
 using Infraestructura.Sesiones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -50,6 +51,8 @@ namespace Infraestructura
             services
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(ConfigurarAutenticacion);
+
+            services.AddScoped<IToastService, ToastService>();
 
             services.AddSingleton(service => // agregar cliente http
                 new HttpClient

@@ -2,7 +2,7 @@
 using System.Linq;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace Infraestructura.Vistas.Componentes.Formularios
+namespace Infraestructura.Compartido.Formularios
 {
     public class FieldBase<TValue>: InputBase<TValue>
     {

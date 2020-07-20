@@ -1,0 +1,29 @@
+﻿@inject IToastService service
+
+<div class="notifications">
+    @foreach (Toast toast in Toasts)
+    {
+        <ToastItem Toast="toast" OnDelete="Delete"></ToastItem>
+    }
+</div>
+
+@code {
+    private List<Toast> Toasts = new List<Toast>();
+
+    protected override void OnInitialized()
+    {
+        service.OnShow += AddNotification;
+    }
+
+    private void AddNotification(Toast toast)
+    {
+        Toasts.Add(toast);
+        StateHasChanged();
+    }
+
+    private void Delete(Toast toast)
+    {
+        Toasts.Remove(toast);
+        StateHasChanged();
+    }
+}

@@ -1,21 +1,17 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
 
 @page "/usuario/registrar"
 @layout AppLayout
 
 <h3 class="title is-3">Registrar usuario</h3>
 
-@if (mensaje is string) {
-    <div class="notification is-danger">
-        <p>@mensaje</p>
-    </div>
-}
-
 <AuthorizeView Roles="usuarios" Context="auth">
     <Authorized>
         <EditForm Model="Usuario" OnValidSubmit="Enviar">
             <DataAnnotationsValidator />
+            <ValidationSummary />
 
             <FormField Label="Tipo de documento">
                 <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
@@ -44,8 +40,13 @@
                 <FormFeedback For="() => Usuario.Correo" />
             </FormField>
 
+            <FormField Label="Telefono">
+                <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
+                <FormFeedback For="() => Usuario.Telefono" />
+            </FormField>
+
             <FormField Label="Cargo">
-                <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="Listado">
+                <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
                     <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
                 </SelectField>
                 <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
@@ -61,8 +62,9 @@
                 <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
             </FormField>
 
-            <FormField>
-                <SubmitButton>Registrar</SubmitButton>
+            <FormField IsLoading="Cargando">
+                <SubmitButton Icon="save-outline">Registrar</SubmitButton>
+                <CancelButton GoTo="/usuario">Cancelar</CancelButton>
             </FormField>
         </EditForm>
     </Authorized>
@@ -73,31 +75,28 @@
 </AuthorizeView>
 
 @code {
-    Cargo[] Listado = new Cargo[0];
+    Cargo[] ListadoCargos = new Cargo[0];
     string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
     Usuario Usuario { get; set; } = new Usuario();
-
-    bool yaExiste = false;
-    string mensaje;
-    bool cargando = false;
+    private bool Cargando { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            Listado = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+            ListadoCargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
         }
 
         catch
         {
-            Listado = new Cargo[0];
+            ListadoCargos = new Cargo[0];
         }
     }
 
     private async Task Enviar()
     {
-        cargando = true;
+        Cargando = true;
 
         try
         {
@@ -108,47 +107,17 @@
             }
 
             else {
-                if (respuesta.StatusCode == HttpStatusCode.Unauthorized) {
-                    mensaje = "No tienes autorización para realizar esta acción";
-                }
-
-                else {
-                    mensaje = "Hubo un error al insertar";
-                }
+                toaster.ShowError("Por favor verifica los datos, no se logró enviar el formulario");
             }
         }
 
         catch {
-            mensaje = "Hubo un error al insertar";
+            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+            throw;
         }
 
         finally {
-            cargando = false;
-        }
-    }
-
-    async Task BuscarExistencia() {
-        try {
-            if (string.IsNullOrWhiteSpace(Usuario.Documento))
-            {
-                yaExiste = false;
-                return;
-            }
-
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/usuario?buscar={Usuario.Documento}");
-
-            if (respuesta.IsSuccessStatusCode) {
-                var existencias = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
-                yaExiste = existencias.Length > 0;
-            }
-
-            else {
-                yaExiste = true;
-            }
-        }
-
-        catch {
-            yaExiste = true;
+            Cargando = false;
         }
     }
 }
