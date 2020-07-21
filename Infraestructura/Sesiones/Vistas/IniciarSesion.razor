@@ -1,124 +1,126 @@
-﻿@inject AuthenticationStateProvider proveedor
+﻿@inject AuthenticationStateProvider autentificacion
 @inject ILocalStorageService localStorage
+@inject IToastService toaster
 
-<h1 class="title is-1">Iniciar sesión</h1>
+@using Aplicacion.Sesiones.Formularios
 
-@if (!string.IsNullOrEmpty(mensaje))
+<h1 class="title is-1">Inicio de sesión</h1>
+
+<hr />
+
+@if (TiempoRestante.Minutes == 0 && Intentos <= 3)
 {
-    <blockquote class="is-error">@mensaje</blockquote>
+    <EditForm Model="Modelo" OnValidSubmit="Enviar">
+        <DataAnnotationsValidator />
+
+        <FormField Label="Documento">
+            <NumberField @bind-Value="Modelo.Documento" />
+            <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad (CC o NIT)" />
+        </FormField>
+
+        <FormField Label="Contraseña">
+            <PasswordField @bind-Value="Modelo.Clave" />
+            <FormFeedback For="() => Modelo.Clave" />
+        </FormField>
+
+        <FormField>
+            <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
+        </FormField>
+
+        <FormField IsLoading="Cargando">
+            <SubmitButton>Ingresar</SubmitButton>
+        </FormField>
+    </EditForm>
 }
 
-<EditForm Model="Modelo" OnValidSubmit="Iniciar">
-    <DataAnnotationsValidator />
-
-    <FormField Label="Documento">
-        <NumberField @bind-Value="Modelo.Documento" />
-        <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad (CC o NIT)" />
-    </FormField>
-
-    <FormField Label="Contraseña">
-        <PasswordField @bind-Value="Modelo.Clave" />
-        <FormFeedback For="() => Modelo.Clave" />
-    </FormField>
-
-    <FormField>
-        <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
-    </FormField>
-
-    <div class="buttons">
-        <SubmitButton>Ingresar</SubmitButton>
-    </div>
-</EditForm>
+else
+{
+    <h4 class="title is-4">Lamentamos ponerte a esperar.</h4>
+    <p>Tu sesión ha sido cancelada por seguridad, por favor espera @(TiempoRestante.Minutes) minuto(s) para volver a ingresar tus credenciales.</p>
+}
 
 @code {
-    private class Formulario
-    {
-        [StringLength(10, MinimumLength = 4, ErrorMessage = "El documento debe tener entre {2} y {1} carateres")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
-        public string Documento { get; set; }
+    private FormularioIniciarSesion Modelo { get; set; } = new FormularioIniciarSesion();
 
-        [StringLength(int.MaxValue, MinimumLength = 6, ErrorMessage = "La contraseña debe tener minimo {2} caracteres")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
-        public string Clave { get; set; }
-    }
-
-    private Formulario Modelo { get; set; } = new Formulario();
-
-    string mensaje;
-
-    bool cargando = true;
-
-    int intentos = 0;
+    private bool Cargando { get; set; } = false;
+    private int Intentos { get; set; } = 0;
+    private TimeSpan TiempoRestante { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        bool hayTiempoEspera = await localStorage.ContainKeyAsync("tiempo_espera_login");
+        await ValidarIntentos();
+    }
+
+    private async Task ValidarIntentos()
+    {
+        Cargando = true;
+
+        bool hayTiempoEspera = await localStorage.ContainKeyAsync("login_wait");
 
         if (hayTiempoEspera)
         {
-            DateTime tiempoEspera = DateTime.Now;
-
             try
             {
-                tiempoEspera = await localStorage.GetItemAsync<DateTime>("tiempo_espera_login");
+                var tiempoEspera = await localStorage.GetItemAsync<DateTime>("login_wait");
+                var tiempoRestante = tiempoEspera - DateTime.Now;
+
+                if (tiempoRestante.Minutes <= 0)
+                {
+                    await localStorage.ClearAsync();
+                }
+
+                else
+                {
+                    TiempoRestante = tiempoRestante;
+                    Intentos = await localStorage.GetItemAsync<int>("login_tries");
+                }
             }
 
             catch
             {
-                mensaje = "Hubo un fallo recuperando tu sesión, por favor recarga la página";
-                await localStorage.SetItemAsync("tiempo_espera_login", DateTime.Now.AddMinutes(5));
-            }
+                toaster.ShowWarning("Hubo un fallo recuperando tu sesión, por favor recarga la página");
 
-            if (DateTime.Now > tiempoEspera)
-            {
-                intentos = 0;
-                await localStorage.RemoveItemAsync("tiempo_espera_login");
-            }
-
-            else
-            {
-                var tiempoRestante = tiempoEspera - DateTime.Now;
-                string textoMinutos = tiempoRestante.Minutes == 1 ? "minuto" : "minutos";
-
-                intentos = 3;
-                mensaje = $"Faltan {tiempoRestante.Minutes} {textoMinutos}, por favor espera para volver a intentar iniciar sesión";
+                await localStorage.SetItemAsync("login_tries", 4);
+                await localStorage.SetItemAsync("login_wait", DateTime.Now.AddMinutes(2));
             }
         }
 
-        cargando = false;
+        Cargando = false;
     }
 
-    async Task Iniciar()
+    private async Task Enviar()
     {
-        mensaje = string.Empty;
+        Cargando = true;
 
         try
         {
-            cargando = true;
-
-            var nuevoProveedor = (ProveedorAutenticacion) proveedor;
+            var nuevoProveedor = (ProveedorAutenticacion) autentificacion;
             await nuevoProveedor.IniciarSesion(Modelo.Documento, Modelo.Clave);
         }
 
         catch
         {
-            if (intentos == 2)
+            Intentos++;
+
+            if (Intentos > 3)
             {
-                mensaje = "Has superado el número de intentos permitidos, espera 5 minutos para volver a intentar.";
-                await localStorage.SetItemAsync("tiempo_espera_login", DateTime.Now.AddMinutes(5));
+                toaster.ShowError("Has superado el número de intentos permitidos, espera 5 minutos para volver a intentar.");
+
+                await localStorage.SetItemAsync("login_wait", DateTime.Now.AddMinutes(5));
+                await ValidarIntentos();
             }
 
             else
             {
-                mensaje = "Por favor revisa tus credenciales. También puedes contactar al administrador del sistema";
-            }
 
-            intentos++;
+                await localStorage.SetItemAsync("login_tries", Intentos);
+                toaster.ShowWarning("Por favor revisa tus credenciales.");
+            }
         }
 
         finally
         {
-            cargando = false;
+            Cargando = false;
         }
     }
 }

@@ -64,7 +64,7 @@ namespace Infraestructura.Sesiones
 
         public async Task IniciarSesion(string documento, string clave)
         {
-            FormularioCredencial credencial = new FormularioCredencial(documento, clave);
+            FormularioIniciarSesion credencial = new FormularioIniciarSesion(documento, clave);
             HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/sesion", credencial);
 
             if (respuesta.IsSuccessStatusCode)

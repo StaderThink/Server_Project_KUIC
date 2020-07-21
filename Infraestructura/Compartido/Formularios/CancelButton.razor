@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navegador
 
-<button type="submit" class="button @(IsLoading ? "is-loading" : "")" disabled="@IsLoading" @onclick="ButtonClicked">
+<button type="submit" class="button" disabled="@IsLoading" @onclick="ButtonClicked">
     @if (Icon is string)
     {
         <span class="icon is-small">
@@ -13,13 +13,13 @@
 
 @code {
     [Parameter]
-    public string GoTo { get; set; } = null!;
+    public string GoTo { get; set; } = "/";
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
     [Parameter]
-    public string Icon { get; set; } = string.Empty;
+    public string Icon { get; set; }
 
     [CascadingParameter]
     public bool IsLoading { get; set; } = false;

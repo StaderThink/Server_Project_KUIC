@@ -1,7 +1,7 @@
 ﻿using Aplicacion.Sesiones.Formularios;
 using Dominio.Usuarios;
 
-namespace Aplicacion.Sesion
+namespace Aplicacion.Sesiones
 {
     public class ServicioReestablecerClave
     {

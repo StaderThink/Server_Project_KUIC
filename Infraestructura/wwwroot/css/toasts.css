@@ -1,0 +1,13 @@
+﻿.toaster {
+    width: 100%;
+    max-width: 22rem;
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.toast:not(:last-child) {
+    margin-bottom: 1rem;
+}

@@ -1,6 +1,6 @@
 ﻿@inject IToastService service
 
-<div class="notifications">
+<div class="toaster">
     @foreach (Toast toast in Toasts)
     {
         <ToastItem Toast="toast" OnDelete="Delete"></ToastItem>
@@ -17,6 +17,8 @@
 
     private void AddNotification(Toast toast)
     {
+        toast.Id = Guid.NewGuid();
+
         Toasts.Add(toast);
         StateHasChanged();
     }

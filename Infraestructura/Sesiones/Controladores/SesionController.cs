@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
-using Aplicacion.Sesion;
 using Aplicacion.Sesiones;
 using Aplicacion.Sesiones.Formularios;
 using Dominio.Usuarios;
@@ -14,7 +13,7 @@ namespace Infraestructura.Sesiones.Controladores
     public class SesionController : ControllerBase
     {
         [HttpPost]
-        public IActionResult IniciarSesion([FromBody] FormularioCredencial credencial)
+        public IActionResult IniciarSesion([FromBody] FormularioIniciarSesion credencial)
         {
             ServicioSesion servicio = new ServicioSesion();
 

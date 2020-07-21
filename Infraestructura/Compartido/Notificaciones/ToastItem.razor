@@ -1,4 +1,6 @@
-﻿<div class="notification @CssClass">
+﻿@using System.Threading
+
+<div class="toast notification @CssClass">
     @if (OnDelete.HasDelegate)
     {
         <button type="button" class="delete" @onclick="Delete"></button>
@@ -14,7 +16,7 @@
     [Parameter]
     public EventCallback<Toast> OnDelete { get; set; }
 
-    private string CssClass { get; set; } = "is-primary";
+    private string CssClass { get; set; } = string.Empty;
 
     protected override void OnParametersSet()
     {
@@ -22,8 +24,31 @@
         {
             ToastType.Danger => "is-danger",
             ToastType.Warning => "is-warning",
-            _ => "is-primary"
+            _ => string.Empty
         };
+    }
+
+    protected override void OnInitialized()
+    {
+        InvokeAsync(TimeOut);
+    }
+
+    private async Task TimeOut()
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(6));
+        }
+
+        catch
+        {
+            Delete();
+        }
+
+        finally
+        {
+            Delete();
+        }
     }
 
     private void Delete()

@@ -15,7 +15,7 @@ namespace Aplicacion.Sesiones
             repositorio = new RepositorioUsuario();
         }
 
-        public Usuario ValidarCredencial(FormularioCredencial credencial)
+        public Usuario ValidarCredencial(FormularioIniciarSesion credencial)
         {
             Usuario usuario = repositorio.PorDocumento(credencial.Documento);
 
