@@ -1,4 +1,5 @@
-﻿@import "layout.css";
+﻿@import "counter.css";
+@import "layout.css";
 @import "toasts.css";
  
 ion-icon {

@@ -18,6 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="Compartido\Componentes\ItemDetail.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
     <Content Update="Usuarios\Vistas\ListaUsuario.razor">
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
     </Content>

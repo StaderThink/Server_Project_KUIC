@@ -1,0 +1,12 @@
+﻿.counter {
+
+}
+
+.counter input[type="number"] {
+    text-align: center;
+}
+
+.counter ion-icon {
+    --ionicon-stroke-width: 32px;
+    font-size: 20px;
+}

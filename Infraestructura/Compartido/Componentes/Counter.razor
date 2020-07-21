@@ -1,0 +1,95 @@
+﻿<div class="counter">
+    <div class="field has-addons">
+        <div class="control">
+            <button class="button" @onclick="Increment">
+                <ion-icon name="add-outline"></ion-icon>
+            </button>
+        </div>
+
+        <div class="control">
+            <input type="number" value="@Value" @oninput="OnChange" @onfocusout="OnFocusLost" min="@Min" max="@Max" class="input" readonly="@ReadOnly" />
+        </div>
+
+        <div class="control">
+            <button class="button" @onclick="Decrement">
+                <ion-icon name="remove-outline"></ion-icon>
+            </button>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public bool ReadOnly { get; set; } = false;
+
+    #region Range
+    [Parameter]
+    public int Min { get; set; } = int.MinValue;
+
+    [Parameter]
+    public int Max { get; set; } = int.MaxValue;
+    #endregion
+
+    #region Value
+    [Parameter]
+    public int Value { get; set; }
+
+    [Parameter]
+    public EventCallback<int> ValueChanged { get; set; }
+    #endregion
+
+    #region Events
+    private void ChangeValue(int value)
+    {
+        Value = value;
+        ValueChanged.InvokeAsync(value);
+    }
+
+    private void OnChange(ChangeEventArgs eventArgs)
+    {
+        try
+        {
+            Value = int.Parse(eventArgs.Value.ToString());
+        }
+
+        catch
+        {
+            Value = 0;
+        }
+
+        finally
+        {
+            ChangeValue(Value);
+        }
+    }
+
+    private void OnFocusLost()
+    {
+        if (Value >= Max)
+        {
+            ChangeValue(Max);
+        }
+
+        else if (Value <= Min)
+        {
+            ChangeValue(Min);
+        }
+    }
+    #endregion
+
+    private void Increment()
+    {
+        if (Value < Max)
+        {
+            ChangeValue(++Value);
+        }
+    }
+
+    private void Decrement()
+    {
+        if (Value > Min)
+        {
+            ChangeValue(--Value);
+        }
+    }
+}
