@@ -12,7 +12,15 @@
 
         <div class="control">
             <button class="button" @onclick="Decrement">
-                <ion-icon name="remove-outline"></ion-icon>
+                @if (OnDelete.HasDelegate)
+                {
+                    <ion-icon name="@(Value == Min ? "trash-outline" : "remove-outline")"></ion-icon>
+                }
+
+                else
+                {
+                    <ion-icon name="remove-outline"></ion-icon>
+                }
             </button>
         </div>
     </div>
@@ -38,11 +46,22 @@
     public EventCallback<int> ValueChanged { get; set; }
     #endregion
 
+    [Parameter]
+    public EventCallback OnDelete { get; set; }
+
     #region Events
     private void ChangeValue(int value)
     {
         Value = value;
         ValueChanged.InvokeAsync(value);
+    }
+
+    private void InvokeDelete()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            OnDelete.InvokeAsync(null);
+        }
     }
 
     private void OnChange(ChangeEventArgs eventArgs)
@@ -90,6 +109,11 @@
         if (Value > Min)
         {
             ChangeValue(--Value);
+        }
+
+        else
+        {
+            InvokeDelete();
         }
     }
 }

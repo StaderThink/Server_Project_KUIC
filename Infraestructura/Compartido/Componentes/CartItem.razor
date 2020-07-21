@@ -1,0 +1,64 @@
+﻿<div class="field">
+    <div class="field is-grouped">
+        <div class="control is-expanded">
+            <div class="select is-fullwidth">
+                <select class="input" value="@Detail.Producto" @onchange="ProductChange">
+                    <option value="0" disabled>Seleccione un producto...</option>
+
+                    @foreach (var product in Products)
+                    {
+                        <option value="@product.Id">@product.Nombre</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <Counter @bind-Value="Detail.Cantidad" Min="0" Max="@CurrentStock" OnDelete="Delete" />
+    </div>
+
+    @if (UseStockOnly && CurrentStock > 0)
+    {
+        <small class="help">Número de existencias: @CurrentStock</small>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public IDetalle Detail { get; set; }
+
+    [Parameter]
+    public bool UseStockOnly { get; set; } = false;
+
+    [Parameter]
+    public EventCallback<IDetalle> OnDelete { get; set; }
+
+    [Parameter]
+    public IEnumerable<Producto> Products { get; set; }
+
+    private int CurrentStock { get; set; } = 0;
+
+    private void ProductChange(ChangeEventArgs eventArgs)
+    {
+        try
+        {
+            Detail.Producto = int.Parse(eventArgs.Value.ToString());
+
+            var selected = Products.First(p => p.Id == Detail.Producto);
+            CurrentStock = UseStockOnly ? selected.Existencias : int.MaxValue;
+        }
+
+        catch
+        {
+            Detail.Producto = 0;
+            CurrentStock = 0;
+        }
+    }
+
+    private void Delete()
+    {
+        if (OnDelete.HasDelegate)
+        {
+            OnDelete.InvokeAsync(Detail);
+        }
+    }
+}

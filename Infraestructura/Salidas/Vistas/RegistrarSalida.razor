@@ -5,56 +5,56 @@
 @using Aplicacion.Salidas.Formularios
 @page "/salida/registrar"
 
-    <AuthorizeView Roles="logistica">
-        <Authorized>
-            <h3 class="title is-3">Registrar Salida</h3>
+<AuthorizeView Roles="logistica">
+    <Authorized>
+        <h3 class="title is-3">Registrar Salida</h3>
 
-            @if (mensaje is string)
-            {
-                <blockquote class="is-warn">
-                    <p>@mensaje</p>
-                </blockquote>
-            }
+        @if (mensaje is string)
+        {
+            <blockquote class="is-warn">
+                <p>@mensaje</p>
+            </blockquote>
+        }
 
-            <div class="form">
-                <div class="field">
-                    <div class="control">
-                        <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
-                    </div>
+        <div class="form">
+            <div class="field">
+                <div class="control">
+                    <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
                 </div>
-
-                <div class="field">
-                    @foreach (var detalle in detalles)
-                    {
-                        <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
-                    }
-                </div>
-
-                <div class="field">
-                    <label class="label" for="observacion">Observación</label>
-                    <textarea id="observacion" class="textarea" type="text" @bind="salida.Observacion"></textarea>
-                    <small>Opcional</small>
-                </div>
-
-                <div class="control is-grouped">
-                    @if (cargando)
-                    {
-                        <button class="button is-primary is-loading">Registrar</button>
-                    }
-                    else
-                    {
-                        <button class="button is-primary" @onclick="Enviar">Registrar</button>
-
-                    }
-                    <a href="/salida" class="button is-outlined">Cancelar</a>
-                </div>
-
             </div>
-        </Authorized>
-        <NotAuthorized>
-            <p>No tienes permisos para esta vista</p>
-        </NotAuthorized>
-    </AuthorizeView>
+
+            <div class="field">
+                @foreach (var detalle in detalles)
+                {
+                    <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
+                }
+            </div>
+
+            <div class="field">
+                <label class="label" for="observacion">Observación</label>
+                <textarea id="observacion" class="textarea" type="text" @bind="salida.Observacion"></textarea>
+                <small>Opcional</small>
+            </div>
+
+            <div class="control is-grouped">
+                @if (cargando)
+                {
+                    <button class="button is-primary is-loading">Registrar</button>
+                }
+                else
+                {
+                    <button class="button is-primary" @onclick="Enviar">Registrar</button>
+
+                }
+                <a href="/salida" class="button is-outlined">Cancelar</a>
+            </div>
+
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <p>No tienes permisos para esta vista</p>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     bool cargando = false;
