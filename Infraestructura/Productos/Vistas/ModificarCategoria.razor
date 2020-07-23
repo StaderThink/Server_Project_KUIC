@@ -4,27 +4,27 @@
 @page "/categoria/modificar/{Id:int}"
 @layout AppLayout
 
-    <AuthorizeView Roles="logistica">
+    <AuthorizeView Roles="logistica" Context="auth">
         <Authorized>
             <h3 class="title is-3">Editar categoria</h3>
 
-            <form @onsubmit="Enviar">
-                <div class="field">
-                    <label class="label" for="nombre">Nombre</label>
-                    <input id="nombre" class="input" type="text" @bind="categoria.Nombre" required />
-                </div>
+            <EditForm Model="categoria" OnValidSubmit="Enviar">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <FormField Label="Nombre">
+                    <TextField id="nombre" @bind-Value="categoria.Nombre" />
+                    <FormFeedback For="() => categoria.Nombre" />
+                </FormField>
 
-                <div class="field">
-                    <label class="label" for="descripcion">Descripción</label>
-                    <textarea id="descripcion" class="textarea" type="text" @bind="categoria.Descripcion"></textarea>
-                    <small>Opcional</small>
-                </div>
+                <FormField Label="Descripción">
+                    <TextField id="descripcion" @bind-Value="categoria.Descripcion"></TextField>
+                    <FormFeedback For="() => categoria.Descripcion" Help="Opcional"></FormFeedback>
+                </FormField>
 
-                <div class="control">
-                    <button class="button is-primary">Actualizar</button>
-                    <a href="/categoria" class="button is-outlined">Cancelar</a>
-                </div>
-            </form>
+                <FormField IsLoading="cargando">
+                    <SubmitButton>Registrar</SubmitButton>
+                    <CancelButton GoTo="/categoria">Cancelar</CancelButton>
+                </FormField>
+            </EditForm>
         </Authorized>
         <NotAuthorized>
             <p>No tienes permisos para esta vista</p>
@@ -36,6 +36,8 @@
 
     Categoria categoria { get; set; }
 
+    bool cargando = false;
+
     protected override async Task OnInitializedAsync()
     {
         categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{Id}");
@@ -43,6 +45,8 @@
 
     async Task Enviar()
     {
+        cargando = true;
+
         HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/categoria/{Id}", categoria);
 
         if (respuesta.IsSuccessStatusCode)

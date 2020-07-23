@@ -1,11 +1,12 @@
 ﻿@layout AppLayout
 @inject NavigationManager navegador
-@inject HttpClient http  
+@inject HttpClient http
+@inject IToastService toaster
 
 @using Aplicacion.Entradas.Formularios
 @page "/entrada/registrar"
 
-<AuthorizeView Roles="logistica">
+<AuthorizeView Roles="logistica" Context="auth">
     <Authorized>
         <h3 class="title is-3">Registrar entrada</h3>
 
@@ -13,7 +14,7 @@
             <DataAnnotationsValidator></DataAnnotationsValidator>
             <FormField>
                 <div class="control">
-                    <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
                 </div>
             </FormField>
 
@@ -85,20 +86,30 @@
     {
         try
         {
-            cargando = true;
-            var formulario = new FormularioRegistrarEntrada()
+            foreach (var detalle in detalles)
             {
-                Entrada = entrada,
-                Detalles = detalles
-            };
+                if (detalle.Producto == 0 || detalle.Cantidad == 0)
+                {
+                    toaster.ShowWarning("Falta algún valor del detalle");
+                }
+                else
+                {
+                    cargando = true;
+                    var formulario = new FormularioRegistrarEntrada()
+                    {
+                        Entrada = entrada,
+                        Detalles = detalles
+                    };
 
-            var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
+                    var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
 
-            if (respuesta.IsSuccessStatusCode)
-            {
-                navegador.NavigateTo("/entrada");
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        navegador.NavigateTo("/entrada");
+                    }
+                    cargando = false;
+                }
             }
-            cargando = false;
         }
 
         catch
