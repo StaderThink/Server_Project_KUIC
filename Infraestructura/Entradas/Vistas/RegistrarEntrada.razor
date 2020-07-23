@@ -9,39 +9,32 @@
     <Authorized>
         <h3 class="title is-3">Registrar entrada</h3>
 
-        <div class="form">
-            <div class="field">
+        <EditForm Model="entrada" OnValidSubmit="Enviar">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <FormField>
                 <div class="control">
                     <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
                 </div>
-            </div>
+            </FormField>
 
-            <div class="field">
+            <FormField>
                 @foreach (var detalle in detalles)
                 {
                     <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" />
                 }
-            </div>
+            </FormField>
 
-            <div class="field">
-                <label class="label" for="observacion">Observación</label>
-                <textarea id="observacion" class="textarea" type="text" @bind="entrada.Observacion"></textarea>
-                <small>Opcional</small>
-            </div>
+            <FormField Label="Observación">
+                <TextField id="observacion" @bind-Value="entrada.Observacion"></TextField>
+                <FormFeedback For="() => entrada.Observacion" Help="Opcional"></FormFeedback>
+            </FormField>
 
-            <div class="control is-grouped">
-                @if (cargando)
-                {
-                    <button class="button is-primary is-loading">Registrar</button>
-                }
-                else
-                {
-                    <button class="button is-primary" @onclick="Enviar" disabled="@deshabilitar">Registrar</button>
-                }
-                <a href="/entrada" class="button is-outlined">Cancelar</a>
-            </div>
+            <FormField IsLoading="cargando">
+                <SubmitButton>Registrar</SubmitButton>
+                <CancelButton GoTo="/entrada">Cancelar</CancelButton>
+            </FormField>
 
-        </div>
+        </EditForm>
     </Authorized>
     <NotAuthorized>
         <p>No tienes permisos para esta vista</p>
