@@ -1,9 +1,9 @@
 ﻿<div class="counter">
     <div class="field has-addons">
         <div class="control">
-            <button class="button" @onclick="Increment">
+            <span class="button" @onclick="Increment">
                 <ion-icon name="add-outline"></ion-icon>
-            </button>
+            </span>
         </div>
 
         <div class="control">
@@ -11,7 +11,7 @@
         </div>
 
         <div class="control">
-            <button class="button" @onclick="Decrement">
+            <span class="button" @onclick="Decrement">
                 @if (OnDelete.HasDelegate)
                 {
                     <ion-icon name="@(Value == Min ? "trash-outline" : "remove-outline")"></ion-icon>
@@ -21,7 +21,7 @@
                 {
                     <ion-icon name="remove-outline"></ion-icon>
                 }
-            </button>
+            </span>
         </div>
     </div>
 </div>

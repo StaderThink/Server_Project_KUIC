@@ -11,7 +11,7 @@ namespace Dominio.Productos
         public string Nombre { get; set; }
         public string Descripcion { get; set; }
 
-        [StringLength(5, ErrorMessage = "El codigo debe tener {1} carateres")]
+        [StringLength(5, MinimumLength = 5, ErrorMessage = "El codigo debe tener {1} carateres")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Codigo { get; set; }
 
@@ -22,7 +22,7 @@ namespace Dominio.Productos
         public int Existencias { get; set; } = 0;
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
-        public string MinCantidad { get; set; }
+        public int MinCantidad { get; set; }
 
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public double MinPeso { get; set; } = 1;

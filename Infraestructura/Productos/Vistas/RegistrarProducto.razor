@@ -1,5 +1,6 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
 
 @page "/producto/registrar"
 @layout AppLayout
@@ -18,7 +19,7 @@
 
             else
             {
-                <EditForm Model="producto" OnValidSubmit="Enviar">
+                <EditForm Model="producto" OnValidSubmit="Enviar" OnInvalidSubmit="Invalido">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
 
                     <FormField Label="Nombre">
@@ -77,16 +78,9 @@
                         <FormFeedback For="() => producto.Categoria"></FormFeedback>
                     </FormField>
 
-                    <FormField>
-                        @if (cargando)
-                        {
-                            <button class="button is-primary is-loading">Registrar</button>
-                            <a href="/inventario" class="button is-outlined" disabled>Cancelar</a>
-                        }
-                        else {
-                            <button class="button is-primary" type="submit">Registrar</button>
-                            <a href="/inventario" class="button is-outlined">Cancelar</a>
-                        }
+                    <FormField IsLoading="cargando">
+                        <SubmitButton>Registrar</SubmitButton>
+                        <CancelButton GoTo="/inventario">Cancelar</CancelButton>
                     </FormField>
                 </EditForm>
             }
@@ -122,6 +116,18 @@
         if (respuesta.IsSuccessStatusCode)
         {
             navegador.NavigateTo("/inventario");
+        }
+    }
+
+    void Invalido()
+    {
+        if(producto.Categoria == 0)
+        {
+            toaster.ShowWarning("Te falta especificar la categoria");
+        }
+        else
+        {
+            toaster.ShowWarning("Olvidaste algún valor importante");
         }
     }
 }
