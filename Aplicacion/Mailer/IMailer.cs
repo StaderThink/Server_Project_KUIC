@@ -4,6 +4,7 @@ namespace Aplicacion.Mailer
 {
     public interface IMailer
     {
-        Task Send(string receiver, string subjet, string content);
+        Task SendMessage(string receiver, string subjet, string content);
+        Task SendHtml(string receiver, string subject, string html);
     }
 }

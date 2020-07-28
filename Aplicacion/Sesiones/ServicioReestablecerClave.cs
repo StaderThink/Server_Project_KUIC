@@ -1,4 +1,5 @@
-﻿using Aplicacion.Sesiones.Formularios;
+﻿using Aplicacion.Mailer;
+using Aplicacion.Sesiones.Formularios;
 using Dominio.Usuarios;
 
 namespace Aplicacion.Sesiones
@@ -16,9 +17,14 @@ namespace Aplicacion.Sesiones
                     if (usuario.Expedicion == formulario.FechaExpedicion)
                     {
                         usuario.Clave = formulario.NuevaClave;
-                        repoUsuario.Editar(usuario);
 
-                        return true;
+                        if (repoUsuario.Editar(usuario))
+                        {
+                            var correspondencia = new Correspondence();
+                            correspondencia.SendPasswordChange(usuario);
+                            
+                            return true;
+                        }
                     }
                 }
 

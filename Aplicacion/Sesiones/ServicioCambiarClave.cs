@@ -8,24 +8,22 @@ namespace Aplicacion.Sesiones
     {
         public bool CambiarClave(FormularioCambiarClave formulario)
         {
-            RepositorioUsuario repository = new RepositorioUsuario();
+            RepositorioUsuario repositorio = new RepositorioUsuario();
 
-            if (repository.PorId(formulario.Usuario) is Usuario entity)
+            if (repositorio.PorId(formulario.Usuario) is Usuario entidad)
             {
-                if (entity.Clave == formulario.ClaveAnterior)
+                if (entidad.Clave == formulario.ClaveAnterior)
                 {
-                    entity.Clave = formulario.NuevaClave;
+                    entidad.Clave = formulario.NuevaClave;
 
-                    bool response = repository.Editar(entity);
-
-                    if (response)
+                    if (repositorio.Editar(entidad))
                     {
-                        var correspondence = new Correspondence();
-                        correspondence.SendPasswordChange(entity);
+                        var correspondencia = new Correspondence();
+                        correspondencia.SendPasswordChange(entidad);
+                        
+                        return true;
                     }
-
-                    return response;
-                } 
+                }
             }
 
             return false;
