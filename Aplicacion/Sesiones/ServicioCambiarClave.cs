@@ -1,4 +1,5 @@
-﻿using Aplicacion.Sesiones.Formularios;
+﻿using Aplicacion.Mailer;
+using Aplicacion.Sesiones.Formularios;
 using Dominio.Usuarios;
 
 namespace Aplicacion.Sesiones
@@ -7,14 +8,23 @@ namespace Aplicacion.Sesiones
     {
         public bool CambiarClave(FormularioCambiarClave formulario)
         {
-            RepositorioUsuario repositorio = new RepositorioUsuario();
+            RepositorioUsuario repository = new RepositorioUsuario();
 
-            if (repositorio.PorId(formulario.Usuario) is Usuario entidad)
+            if (repository.PorId(formulario.Usuario) is Usuario entity)
             {
-                if (entidad.Clave == formulario.ClaveAnterior)
+                if (entity.Clave == formulario.ClaveAnterior)
                 {
-                    entidad.Clave = formulario.NuevaClave;
-                    return repositorio.Editar(entidad);
+                    entity.Clave = formulario.NuevaClave;
+
+                    bool response = repository.Editar(entity);
+
+                    if (response)
+                    {
+                        var correspondence = new Correspondence();
+                        correspondence.SendPasswordChange(entity);
+                    }
+
+                    return response;
                 } 
             }
 
