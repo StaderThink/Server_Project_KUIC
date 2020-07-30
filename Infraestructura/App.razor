@@ -1,23 +1,15 @@
-﻿@using Infraestructura.Sesiones.Vistas
-
-<CascadingAuthenticationState>
+﻿<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly">
         <Found Context="routeData">
-            <AuthorizeView>
-                <Authorized>
-                    <AuthorizeRouteView RouteData="@routeData"/>
-                </Authorized>
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(BaseLayout)">
+                <NotAuthorized>
+                    <NoAutorizado />
+                </NotAuthorized>
 
                 <Authorizing>
-                    <p>Validando sesión, por favor espere</p>
+                    <p>Estamos validando tu sesión, por favor espera un momento.</p>
                 </Authorizing>
-
-                <NotAuthorized>
-                    <LayoutView Layout="@typeof(BaseLayout)">
-                        <IniciarSesion />
-                    </LayoutView>
-                </NotAuthorized>
-            </AuthorizeView>
+            </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(BaseLayout)">

@@ -1,15 +1,11 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
+
+@attribute [Authorize(Roles = "usuarios")]
 
 @page "/cargo/registrar"
 @layout AppLayout
-
-@if (mensaje is string)
-{
-    <blockquote class="is-error">
-        <p>@mensaje</p>
-    </blockquote>
-}
 
 <EditForm Model="Cargo" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
@@ -50,38 +46,44 @@
         </CheckboxField>
     </FormField>
 
-    <div class="field is-grouped">
-        <div class="control">
-            <button type="submit" class="button is-primary">Registrar</button>
-        </div>
-
-        <div class="control">
-            <a href="/cargo" class="button">Cancelar</a>
-        </div>
-    </div>
+    <FormField IsLoading="Cargando">
+        <SubmitButton>Registrar</SubmitButton>
+        <CancelButton GoTo="/cargo">Cancelar</CancelButton>
+    </FormField>
 </EditForm>
 
 @code {
     private Cargo Cargo { get; set; } = new Cargo();
 
-    string mensaje;
-    bool cargando = false;
+    private bool Cargando = false;
 
     private async Task Enviar()
     {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", Cargo);
+        Cargando = true;
 
-        if (respuesta.IsSuccessStatusCode)
+        try
         {
-            navegador.NavigateTo("/cargo");
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cargo", Cargo);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/cargo");
+            }
+
+            else
+            {
+                toaster.ShowWarning("No se logro realizar el registro, verifica los datos e intenta nuevamente.");
+            }
+        }
+        catch
+        {
+            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde.");
+            throw;
         }
 
-        else
+        finally
         {
-            mensaje = "No se logro insertar el registro";
+            Cargando = false;
         }
-
-        cargando = false;
     }
 }

@@ -54,59 +54,67 @@ namespace Infraestructura.Sesiones.Controladores
         }
 
         [Authorize]
-        [HttpPut("cambiar_clave")]
-        public IActionResult CambiarClave([FromBody] FormularioCambiarClave formulario)
+        [HttpPut]
+        public IActionResult ActualizarDatos([FromBody] Usuario formulario)
         {
-            try
+            var repositorio = new RepositorioUsuario();
+            var sesion = HttpContext.User.FindFirst(ClaimTypes.SerialNumber);
+
+            if (sesion is Claim)
             {
-                ServicioCambiarClave servicioCambiarClave = new ServicioCambiarClave();
+                bool resultadoConversion = int.TryParse(sesion.Value, out int id);
 
-                var id = HttpContext.User.FindFirst(ClaimTypes.SerialNumber);
-
-                if (id is null)
+                if (resultadoConversion)
                 {
-                    throw new NullReferenceException(nameof(id));
-                }
-
-                else
-                {
-                    formulario.Usuario = int.Parse(id.Value);
-
-                    if (servicioCambiarClave.CambiarClave(formulario))
+                    if (repositorio.PorId(id) is Usuario entidad)
                     {
-                        return Ok();
+                        entidad.Nombre = formulario.Nombre;
+                        entidad.Apellido = formulario.Apellido;
+                        entidad.Correo = formulario.Correo;
+                        entidad.Telefono = formulario.Telefono;
+
+                        if (repositorio.Editar(entidad))
+                        {
+                            return Ok();
+                        }
                     }
                 }
-
-                return BadRequest();
             }
-
-            catch
-            {
-                return BadRequest();
-            }
+            return BadRequest();
         }
 
         [Authorize]
-        [HttpPut("reestablecer_clave")]
-        public IActionResult ReestablecerClave([FromBody] FormularioReestablecerClave formulario)
+        [HttpPut("cambiar_clave")]
+        public IActionResult CambiarClave([FromBody] FormularioCambiarClave formulario)
         {
-            try
-            {
-                ServicioReestablecerClave servicioReestablecerClave = new ServicioReestablecerClave();
+            ServicioCambiarClave servicioCambiarClave = new ServicioCambiarClave();
 
-                if (servicioReestablecerClave.ReestablecerClave(formulario))
+            var id = HttpContext.User.FindFirst(ClaimTypes.SerialNumber);
+
+            if (id is Claim)
+            {
+                formulario.Usuario = int.Parse(id.Value);
+
+                if (servicioCambiarClave.CambiarClave(formulario))
                 {
                     return Ok();
                 }
-
-                return BadRequest();
             }
 
-            catch
+            return BadRequest();
+        }
+
+        [HttpPut("reestablecer_clave")]
+        public IActionResult ReestablecerClave([FromBody] FormularioReestablecerClave formulario)
+        {
+            ServicioReestablecerClave servicioReestablecerClave = new ServicioReestablecerClave();
+
+            if (servicioReestablecerClave.ReestablecerClave(formulario))
             {
-                return BadRequest();
+                return Ok();
             }
+
+            return BadRequest();
         }
     }
 }

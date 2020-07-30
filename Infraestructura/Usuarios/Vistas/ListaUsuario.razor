@@ -1,49 +1,45 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
+@attribute [Authorize(Roles = "usuarios")]
+
 @page "/usuario"
 @page "/usuario/{busqueda}"
 @layout AppLayout
 
 <AuthorizeView Roles="usuarios">
-    <Authorized>
-        @if (cargando)
-        {
-            <div class="loader is-medium"></div>
-        }
+    @if (cargando)
+    {
+        <div class="loader is-medium"></div>
+    }
 
-        else
-        {
-            <div class="container">
-                <h2 class="title is-2">Usuarios</h2>
+    else
+    {
+        <div class="container">
+            <h2 class="title is-2">Usuarios</h2>
 
-                <div class="buttons">
-                    <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
-                </div>
-
-                @if (lista is null)
-                {
-                    <p>Algo salio muy mal...</p>
-                }
-
-                else
-                {
-                    <div class="columns is-multiline">
-                        @foreach (var usuario in lista)
-                        {
-                            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                                <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
-                            </div>
-                        }
-                    </div>
-                }
+            <div class="buttons">
+                <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
             </div>
-        }
-    </Authorized>
 
-    <NotAuthorized>
-        <h2>No tienes permisos para acceder a esta vista</h2>
-    </NotAuthorized>
+            @if (lista is null)
+            {
+                <p>Algo salio muy mal...</p>
+            }
+
+            else
+            {
+                <div class="columns is-multiline">
+                    @foreach (var usuario in lista)
+                    {
+                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                            <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
 </AuthorizeView>
 
 @code {
@@ -54,30 +50,37 @@
     [Parameter]
     public string busqueda { get; set; } = "";
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         await ObtenerListado();
     }
 
-    private async Task ObtenerListado() {
+    private async Task ObtenerListado()
+    {
         cargando = true;
         var respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
 
-        try {
-            if (respuesta.StatusCode == HttpStatusCode.OK) {
+        try
+        {
+            if (respuesta.StatusCode == HttpStatusCode.OK)
+            {
                 lista = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
             }
 
-            else {
+            else
+            {
                 lista = null;
             }
         }
 
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             lista = new Usuario[0];
             Console.WriteLine(ex);
         }
 
-        finally {
+        finally
+        {
             cargando = false;
         }
     }

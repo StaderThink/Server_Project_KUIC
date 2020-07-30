@@ -1,124 +1,118 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
+
+@attribute [Authorize(Roles = "usuarios")]
 
 @page "/usuario/modificar/{Id:int}"
 @layout AppLayout
 
-@if (mensaje is string) {
-    <blockquote class="is-warn">
-        <p>@mensaje</p>
-    </blockquote>
-}
+<h3 class="title is-3">Registrar usuario</h3>
 
-<form @onsubmit="Enviar">
-    <div class="grid xs-1 md-2 has-gap">
-        <div class="field">
-            <label class="label" for="tipoDocumento">Tipo de documento</label>
-            <input id="tipoDocumento" type="text" class="input" @bind="usuario.TipoDocumento" disabled readonly />
-        </div>
+<EditForm Model="Usuario" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
 
-        <div class="field">
-            <label class="label">Documento</label>
-            <input type="number" pattern="^[0-9]{6,10}$" placeholder="###" class="input" @bind="usuario.Documento" disabled readonly />
-        </div>
+    <FormField Label="Tipo de documento">
+        <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
+            <option value="@value">@value</option>
+        </SelectField>
+        <FormFeedback For="() => Usuario.TipoDocumento" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="nombre">Nombre</label>
-            <input id="nombre" type="text" placeholder="Ej. Andres" class="input" @bind="usuario.Nombre" required />
-        </div>
+    <FormField Label="Nombre">
+        <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+        <FormFeedback For="() => Usuario.Nombre" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="apellido">Apellido</label>
-            <input id="apellido" type="text" placeholder="Ej. Celis" class="input" @bind="usuario.Apellido" required />
-        </div>
+    <FormField Label="Apellido">
+        <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+        <FormFeedback For="() => Usuario.Apellido" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="correo">Correo</label>
-            <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="usuario.Correo" required />
-        </div>
+    <FormField Label="Correo">
+        <EmailField id="correo" @bind-Value="Usuario.Correo" />
+        <FormFeedback For="() => Usuario.Correo" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="telefono">Teléfono</label>
-            <div class="control is-attached">
-                <span class="button is-static">+57</span>
-                <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="usuario.Telefono" required />
-            </div>
-        </div>
+    <FormField Label="Telefono">
+        <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
+        <FormFeedback For="() => Usuario.Telefono" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="cargo">Cargo</label>
-            <select id="cargo" class="input" @bind="usuario.Cargo" required>
-                @foreach (Cargo cargo in cargos) {
-                    <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
-                }
-            </select>
-        </div>
+    <FormField Label="Cargo">
+        <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
+            <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
+        </SelectField>
+        <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
+    </FormField>
 
-        <div class="field">
-            <label class="label" for="activo">Activo</label>
-            <input id="activo" type="checkbox" class="checkbox" @bind="usuario.Activo" />
-        </div>
-    </div>
+    <FormField Label="Fecha de nacimiento">
+        <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
+        <FormFeedback For="() => Usuario.Nacimiento" />
+    </FormField>
 
-    <div class="field">
-        <div class="control is-grouped">
-            @if (cargando) {
-                <button class="button is-primary is-loading" disabled>Guardar</button>
-            }
+    <FormField Label="Fecha de expedición">
+        <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
+        <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
+    </FormField>
 
-            else {
-                <button class="button is-primary" disabled="@invalido">Guardar</button>
-            }
+    <FormField>
+        <CheckboxField @bind-Value="Usuario.Activo">
+            <span>El usuario esta activo en el sistema.</span>
+        </CheckboxField>
+    </FormField>
 
-            <a href="/usuario" class="button is-outlined">Cancelar</a>
-        </div>
-    </div>
-</form>
+    <FormField IsLoading="Cargando">
+        <SubmitButton>Modificar</SubmitButton>
+        <CancelButton GoTo="/usuario">Cancelar</CancelButton>
+    </FormField>
+</EditForm>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    Cargo[] cargos { get; set; } = new Cargo[0];
-    Usuario usuario { get; set; } = new Usuario();
+    private Cargo[] ListadoCargos { get; set; } = new Cargo[0];
+    private string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
-    Array tiposDeDocumento = Enum.GetValues(typeof(TipoDocumento));
+    private Usuario Usuario { get; set; } = new Usuario();
 
-    bool cargando = false;
-    string mensaje;
+    private bool Cargando = false;
 
-    bool invalido {
-        get {
-            return usuario.Cargo == 0;
-        }
+    protected override async Task OnInitializedAsync()
+    {
+        ListadoCargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+        Usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Id}");
     }
 
-    protected override async Task OnInitializedAsync() {
-        cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
-        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Id}");
-    }
+    private async Task Enviar()
+    {
+        Cargando = true;
 
-    async Task Enviar() {
-        cargando = true;
+        try
+        {
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/usuario/{Id}", Usuario);
 
-        try {
-            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/usuario/{Id}", usuario);
-
-            if (respuesta.IsSuccessStatusCode) {
+            if (respuesta.IsSuccessStatusCode)
+            {
                 navegador.NavigateTo("/usuario");
             }
 
-            else {
-                mensaje = "No se logro realizar el registro";
+            else
+            {
+                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
             }
         }
 
-        catch {
-            mensaje = "Hubo un error insertando el registro";
+        catch
+        {
+            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+            throw;
         }
 
-        finally {
-            cargando = false;
+        finally
+        {
+            Cargando = false;
         }
     }
 }

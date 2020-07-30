@@ -13,7 +13,7 @@ namespace Aplicacion.Sesiones.Formularios
         public DateTime FechaExpedicion { get; set; }
 
         [StringLength(int.MaxValue, MinimumLength = 6, ErrorMessage = "Este campo debe tener minimo {2} caracteres")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string NuevaClave { get; set; }
     }
 }

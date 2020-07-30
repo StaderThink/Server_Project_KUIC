@@ -1,35 +1,13 @@
 ﻿@import "counter.css";
 @import "layout.css";
 @import "toasts.css";
- 
+
+html {
+    font-size: 11pt;
+}
+
 ion-icon {
     font-size: 18px;
     --ionicon-stroke-width: 32px;
-}
-
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    border-bottom: solid 1px whitesmoke;
-    user-select: none;
-}
-
-.main-header ion-icon {
-    font-size: 18px;
-    cursor: pointer;
-}
-
-.main-header .searchbox {
-    max-width: 30rem;
-}
-
-.main-header .logo {
-    display: flex;
-    align-items: center;
-}
-
-.main-header .logo strong {
-    margin-left: 1rem;
+    color: rgba(0,0,0,0.8);
 }

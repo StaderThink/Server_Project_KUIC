@@ -6,52 +6,42 @@
 <aside class="aside">
     <nav class="menu">
         <AuthorizeView Roles="usuarios">
-            <Authorized>
-                <p class="menu-label">USUARIOS</p>
+            <p class="menu-label">USUARIOS</p>
 
-                <ul class="menu-list">
-                    <li><a href="/usuario">Usuarios</a></li>
-                    <li><a href="/cargo">Cargos</a></li>
-                    <li><a href="/notificacion">Notificaciones</a></li>
-                </ul>
-            </Authorized>
+            <ul class="menu-list">
+                <li><a href="/usuario">Usuarios</a></li>
+                <li><a href="/cargo">Cargos</a></li>
+                <li><a href="/notificacion">Notificaciones</a></li>
+            </ul>
         </AuthorizeView>
 
         <AuthorizeView Roles="solicitar, clientes">
-            <Authorized>
-                <p class="menu-label">CLIENTES</p>
+            <p class="menu-label">CLIENTES</p>
 
-                <ul class="menu-list">
-                    <li><a href="/cliente">Clientes</a></li>
-                    <AuthorizeView Roles="solicitar" Context="auth">
-                        <Authorized>
-                            <li><a href="/solicitar">Solicitar</a></li>
-                        </Authorized>
-                    </AuthorizeView>
-                </ul>
-            </Authorized>
+            <ul class="menu-list">
+                <li><a href="/cliente">Clientes</a></li>
+                <AuthorizeView Roles="solicitar" Context="auth">
+                    <li><a href="/solicitar">Solicitar</a></li>
+                </AuthorizeView>
+            </ul>
         </AuthorizeView>
 
         <AuthorizeView Roles="logistica">
-            <Authorized>
-                <p class="menu-label">LOGISTICA</p>
+            <p class="menu-label">LOGISTICA</p>
 
-                <ul class="menu-list">
-                    <li><a href="/inventario">Inventario</a></li>
-                    <li><a href="/entrada">Entrada</a></li>
-                    <li><a href="/salida">Salida</a></li>
-                </ul>
-            </Authorized>
+            <ul class="menu-list">
+                <li><a href="/inventario">Inventario</a></li>
+                <li><a href="/entrada">Entrada</a></li>
+                <li><a href="/salida">Salida</a></li>
+            </ul>
         </AuthorizeView>
 
         <AuthorizeView Roles="pedidos">
-            <Authorized>
-                <p class="menu-label">Pedidos</p>
+            <p class="menu-label">Pedidos</p>
 
-                <ul class="menu-list">
-                    <li><a href="/pedido">Pedido</a></li>
-                </ul>
-            </Authorized>
+            <ul class="menu-list">
+                <li><a href="/pedido">Pedido</a></li>
+            </ul>
         </AuthorizeView>
     </nav>
 
@@ -74,9 +64,7 @@
     async Task CerrarSesion()
     {
         var proveedor = (ProveedorAutenticacion) authProvider;
-
         await proveedor.CerrarSesion();
-        navegador.NavigateTo("/");
     }
 
     void IrBandeja()

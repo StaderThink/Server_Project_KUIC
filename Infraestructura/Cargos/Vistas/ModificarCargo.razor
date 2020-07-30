@@ -1,5 +1,8 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
+
+@attribute [Authorize(Roles = "usuarios")]
 
 @page "/cargo/modificar/{Id:int}"
 @layout AppLayout
@@ -43,42 +46,52 @@
         </CheckboxField>
     </FormField>
 
-    <div class="field is-grouped">
-        <div class="control">
-            <button type="submit" class="button is-primary">Registrar</button>
-        </div>
-
-        <div class="control">
-            <a href="/cargo" class="button">Cancelar</a>
-        </div>
-    </div>
+    <FormField IsLoading="Cargando">
+        <SubmitButton>Modificar</SubmitButton>
+        <CancelButton GoTo="/cargo">Cancelar</CancelButton>
+    </FormField>
 </EditForm>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    Cargo Cargo { get; set; }
+    private Cargo Cargo { get; set; }
 
-    private string mensaje;
-    private bool cargando = false;
+    private bool Cargando = false;
 
-    protected override async Task OnInitializedAsync() {
+    protected override async Task OnInitializedAsync()
+    {
         Cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{Id}");
     }
 
-    private async Task Enviar() {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/cargo/{Id}", Cargo);
+    private async Task Enviar()
+    {
+        Cargando = true;
 
-        if (respuesta.IsSuccessStatusCode) {
-            navegador.NavigateTo("/cargo");
+        try
+        {
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/cargo/{Id}", Cargo);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/cargo");
+            }
+
+            else
+            {
+                toaster.ShowWarning("No se logro editar el registro");
+            }
+        }
+        catch
+        {
+            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+            throw;
         }
 
-        else {
-            mensaje = "No se logro editar el registro";
+        finally
+        {
+            Cargando = false;
         }
-
-        cargando = false;
     }
 }

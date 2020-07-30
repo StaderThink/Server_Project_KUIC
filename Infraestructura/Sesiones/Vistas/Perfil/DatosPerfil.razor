@@ -1,8 +1,6 @@
 ﻿@inject HttpClient http
 @inject AuthenticationStateProvider autentificacion
 
-@using System.Security.Claims
-
 <EditForm Model="@Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
     <ValidationSummary />
@@ -20,6 +18,11 @@
     <FormField Label="Correo">
         <EmailField id="correo" @bind-Value="Usuario.Correo" />
         <FormFeedback For="() => Usuario.Correo" />
+    </FormField>
+
+    <FormField Label="Correo">
+        <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
+        <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
     <div class="field">
@@ -45,10 +48,7 @@
     {
         try
         {
-            var estado = await autentificacion.GetAuthenticationStateAsync();
-            var id = estado.User.FindFirst(ClaimTypes.SerialNumber);
-
-            Usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{id.Value}");
+            Usuario = await http.GetFromJsonAsync<Usuario>($"/api/sesion");
         }
 
         catch
@@ -63,7 +63,7 @@
 
         try
         {
-            await http.PutAsJsonAsync<Usuario>($"/api/usuario/{Usuario.Id}", Usuario);
+            await http.PutAsJsonAsync<Usuario>($"/api/sesion", Usuario);
         }
 
         catch

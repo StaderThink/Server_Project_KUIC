@@ -1,5 +1,7 @@
 ﻿@inject HttpClient http
 
+@attribute [Authorize(Roles = "usuarios")]
+
 @page "/cargo"
 @layout AppLayout
 

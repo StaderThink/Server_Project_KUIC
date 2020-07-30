@@ -1,6 +1,10 @@
 ﻿@inject AuthenticationStateProvider autentificacion
+@inject NavigationManager navegador
 @inject ILocalStorageService localStorage
 @inject IToastService toaster
+
+@page "/"
+@layout BaseLayout
 
 @using Aplicacion.Sesiones.Formularios
 
@@ -96,6 +100,8 @@ else
         {
             var nuevoProveedor = (ProveedorAutenticacion) autentificacion;
             await nuevoProveedor.IniciarSesion(Modelo.Documento, Modelo.Clave);
+
+            navegador.NavigateTo("/inicio");
         }
 
         catch

@@ -1,28 +1,8 @@
-﻿@layout AppLayout
+﻿@inject IToastService toaster
 
-@inject IToastService toaster
+@attribute [Authorize]
 
-@page "/"
+@layout AppLayout
+@page "/inicio"
 
 <h1>Hola, 👋</h1>
-
-<button class="button" @onclick="Mensaje">Mensaje</button>
-<button class="button" @onclick="Error">Error</button>
-<button class="button" @onclick="Alerta">Alerta</button>
-
-@code {
-    private void Mensaje()
-    {
-        toaster.ShowMessage("Mensaje...");
-    }
-
-    private void Error()
-    {
-        toaster.ShowError("Error");
-    }
-
-    private void Alerta()
-    {
-        toaster.ShowWarning("Alerta...");
-    }
-}

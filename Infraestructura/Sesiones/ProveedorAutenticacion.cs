@@ -8,6 +8,7 @@ using Aplicacion.Sesiones;
 using Aplicacion.Sesiones.Formularios;
 using Blazored.LocalStorage;
 using Dominio.Usuarios;
+using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Infraestructura.Sesiones
@@ -15,19 +16,21 @@ namespace Infraestructura.Sesiones
     public sealed class ProveedorAutenticacion : AuthenticationStateProvider
     {
         private readonly HttpClient http;
-        private readonly ILocalStorageService _localStorage;
+        private readonly ILocalStorageService localStorage;
+        private readonly NavigationManager navigation;
 
-        public ProveedorAutenticacion(HttpClient http, ILocalStorageService localStorage)
+        public ProveedorAutenticacion(HttpClient http, ILocalStorageService localStorage, NavigationManager navigation)
         {
             this.http = http;
-            _localStorage = localStorage;
+            this.localStorage = localStorage;
+            this.navigation = navigation;
         }
 
         private async Task<AuthenticationState> ObtenerIdentidad()
         {
             AuthenticationState estado = new AuthenticationState(new ClaimsPrincipal());
 
-            string token = await _localStorage.GetItemAsync<string>("token");
+            string token = await localStorage.GetItemAsync<string>("token");
 
             if (token is string)
             {
@@ -70,9 +73,10 @@ namespace Infraestructura.Sesiones
             if (respuesta.IsSuccessStatusCode)
             {
                 string token = await respuesta.Content.ReadAsStringAsync();
-                await _localStorage.SetItemAsync("token", token);
+                await localStorage.SetItemAsync("token", token);
 
                 NotifyAuthenticationStateChanged(ObtenerIdentidad());
+                navigation.NavigateTo("/inicio");
             }
 
             else
@@ -83,8 +87,9 @@ namespace Infraestructura.Sesiones
 
         public async Task CerrarSesion()
         {
-            await _localStorage.ClearAsync();
+            await localStorage.ClearAsync();
             NotifyAuthenticationStateChanged(ObtenerIdentidad());
+            navigation.NavigateTo("/");
         }
     }
 }

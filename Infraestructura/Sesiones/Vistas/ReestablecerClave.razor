@@ -13,7 +13,7 @@
     </Authorized>
 
     <NotAuthorized>
-        <EditForm Model="Formulario">
+        <EditForm Model="Formulario" OnValidSubmit="Enviar">
             <DataAnnotationsValidator />
 
             <FormField Label="Número de documento">
@@ -30,12 +30,17 @@
                 <PasswordField @bind-Value="Formulario.NuevaClave" />
                 <FormFeedback For="() => Formulario.NuevaClave" Help="Minimo 6 caracteres" />
             </FormField>
+
+            <FormField>
+                <SubmitButton>Reestablecer clave</SubmitButton>
+                <CancelButton GoTo="/">Cancelar</CancelButton>
+            </FormField>
         </EditForm>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    private FormularioReestablecerClave Formulario { get; set; }
+    private FormularioReestablecerClave Formulario { get; set; } = new FormularioReestablecerClave();
 
     private async Task Enviar()
     {

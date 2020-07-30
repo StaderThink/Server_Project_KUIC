@@ -2,77 +2,76 @@
 @inject NavigationManager navegador
 @inject IToastService toaster
 
+@attribute [Authorize(Roles = "usuarios")]
+
 @page "/usuario/registrar"
 @layout AppLayout
 
 <h3 class="title is-3">Registrar usuario</h3>
 
-<AuthorizeView Roles="usuarios" Context="auth">
-    <Authorized>
-        <EditForm Model="Usuario" OnValidSubmit="Enviar">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+<EditForm Model="Usuario" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
 
-            <FormField Label="Tipo de documento">
-                <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
-                    <option value="@value">@value</option>
-                </SelectField>
-                <FormFeedback For="() => Usuario.TipoDocumento" />
-            </FormField>
+    <FormField Label="Tipo de documento">
+        <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
+            <option value="@value">@value</option>
+        </SelectField>
+        <FormFeedback For="() => Usuario.TipoDocumento" />
+    </FormField>
 
-            <FormField Label="Documento">
-                <NumberField id="documento" @bind-Value="Usuario.Documento" />
-                <FormFeedback For="() => Usuario.Documento" />
-            </FormField>
+    <FormField Label="Documento">
+        <NumberField id="documento" @bind-Value="Usuario.Documento" />
+        <FormFeedback For="() => Usuario.Documento" />
+    </FormField>
 
-            <FormField Label="Nombre">
-                <TextField id="nombre" @bind-Value="Usuario.Nombre" />
-                <FormFeedback For="() => Usuario.Nombre" />
-            </FormField>
+    <FormField Label="Nombre">
+        <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+        <FormFeedback For="() => Usuario.Nombre" />
+    </FormField>
 
-            <FormField Label="Apellido">
-                <TextField id="apellido" @bind-Value="Usuario.Apellido" />
-                <FormFeedback For="() => Usuario.Apellido" />
-            </FormField>
+    <FormField Label="Apellido">
+        <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+        <FormFeedback For="() => Usuario.Apellido" />
+    </FormField>
 
-            <FormField Label="Correo">
-                <EmailField id="correo" @bind-Value="Usuario.Correo" />
-                <FormFeedback For="() => Usuario.Correo" />
-            </FormField>
+    <FormField Label="Correo">
+        <EmailField id="correo" @bind-Value="Usuario.Correo" />
+        <FormFeedback For="() => Usuario.Correo" />
+    </FormField>
 
-            <FormField Label="Telefono">
-                <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
-                <FormFeedback For="() => Usuario.Telefono" />
-            </FormField>
+    <FormField Label="Telefono">
+        <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
+        <FormFeedback For="() => Usuario.Telefono" />
+    </FormField>
 
-            <FormField Label="Cargo">
-                <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
-                    <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
-                </SelectField>
-                <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
-            </FormField>
+    <FormField Label="Cargo">
+        <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
+            <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
+        </SelectField>
+        <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
+    </FormField>
 
-            <FormField Label="Fecha de nacimiento">
-                <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
-                <FormFeedback For="() => Usuario.Nacimiento" />
-            </FormField>
+    <FormField Label="Fecha de nacimiento">
+        <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
+        <FormFeedback For="() => Usuario.Nacimiento" />
+    </FormField>
 
-            <FormField Label="Fecha de expedición">
-                <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
-                <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
-            </FormField>
+    <FormField Label="Fecha de expedición">
+        <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
+        <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
+    </FormField>
 
-            <FormField IsLoading="Cargando">
-                <SubmitButton>Registrar</SubmitButton>
-                <CancelButton GoTo="/usuario">Cancelar</CancelButton>
-            </FormField>
-        </EditForm>
-    </Authorized>
+    <FormField Label="Fecha de expedición">
+        <CheckboxField @bind-Value="Usuario.Activo">
+            <span>@(Usuario.Activo ? "Activo" : "Inactivo")</span>
+        </CheckboxField>
+    </FormField>
 
-    <NotAuthorized>
-        <h1>No tienes permisos para estar aquí</h1>
-    </NotAuthorized>
-</AuthorizeView>
+    <FormField IsLoading="Cargando">
+        <SubmitButton>Registrar</SubmitButton>
+        <CancelButton GoTo="/usuario">Cancelar</CancelButton>
+    </FormField>
+</EditForm>
 
 @code {
     Cargo[] ListadoCargos = new Cargo[0];
@@ -102,21 +101,25 @@
         {
             var respuesta = await http.PostAsJsonAsync("/api/usuario", Usuario);
 
-            if (respuesta.IsSuccessStatusCode) {
+            if (respuesta.IsSuccessStatusCode)
+            {
                 navegador.NavigateTo("/usuario");
             }
 
-            else {
-                toaster.ShowError("Por favor verifica los datos, no se logró enviar el formulario");
+            else
+            {
+                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
             }
         }
 
-        catch {
+        catch
+        {
             toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
             throw;
         }
 
-        finally {
+        finally
+        {
             Cargando = false;
         }
     }

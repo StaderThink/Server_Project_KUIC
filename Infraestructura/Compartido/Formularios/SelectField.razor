@@ -6,7 +6,7 @@
 <div class="control">
     <div class="select is-fullwidth">
         <select @attributes="AdditionalAttributes" class="input @ControlCssClass()" @bind="CurrentValue">
-            <option value="" disabled>Seleccione uno...</option>
+            <option value="0" disabled>Seleccione uno...</option>
 
             @foreach (var item in Data)
             {
