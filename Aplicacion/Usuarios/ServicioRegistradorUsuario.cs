@@ -1,4 +1,5 @@
 ﻿using System;
+using Aplicacion.Mailer;
 using Dominio.Usuarios;
 
 namespace Aplicacion.Usuarios
@@ -7,7 +8,7 @@ namespace Aplicacion.Usuarios
     {
         public bool Registrar(Usuario usuario)
         {
-            RepositorioUsuario repoUsuario = new RepositorioUsuario();
+            RepositorioUsuario repositorio = new RepositorioUsuario();
 
             // valores por defecto
 
@@ -17,7 +18,15 @@ namespace Aplicacion.Usuarios
             usuario.Actualizado = DateTime.Now;
             usuario.Creado = DateTime.Now;
 
-            return repoUsuario.Insertar(usuario);
+            if (repositorio.Insertar(usuario))
+            {
+                var correspondencia = new Correspondence();
+                correspondencia.SendDefaultPassword(usuario);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

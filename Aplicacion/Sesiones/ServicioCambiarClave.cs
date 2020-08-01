@@ -1,4 +1,5 @@
-﻿using Aplicacion.Sesiones.Formularios;
+﻿using Aplicacion.Mailer;
+using Aplicacion.Sesiones.Formularios;
 using Dominio.Usuarios;
 
 namespace Aplicacion.Sesiones
@@ -14,8 +15,15 @@ namespace Aplicacion.Sesiones
                 if (entidad.Clave == formulario.ClaveAnterior)
                 {
                     entidad.Clave = formulario.NuevaClave;
-                    return repositorio.Editar(entidad);
-                } 
+
+                    if (repositorio.Editar(entidad))
+                    {
+                        var correspondencia = new Correspondence();
+                        correspondencia.SendPasswordChange(entidad);
+                        
+                        return true;
+                    }
+                }
             }
 
             return false;
