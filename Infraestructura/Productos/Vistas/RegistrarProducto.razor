@@ -19,7 +19,7 @@
 
             else
             {
-                <EditForm Model="producto" OnValidSubmit="Enviar" OnInvalidSubmit="Invalido">
+                <EditForm Model="producto" OnValidSubmit="Enviar">
                     <DataAnnotationsValidator></DataAnnotationsValidator>
 
                     <FormField Label="Nombre">
@@ -109,25 +109,20 @@
 
     async Task Enviar()
     {
-        cargando = true;
-
-        HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
-
-        if (respuesta.IsSuccessStatusCode)
-        {
-            navegador.NavigateTo("/inventario");
-        }
-    }
-
-    void Invalido()
-    {
-        if(producto.Categoria == 0)
+        if (producto.Categoria == 0)
         {
             toaster.ShowWarning("Te falta especificar la categoria");
         }
         else
         {
-            toaster.ShowWarning("Olvidaste algún valor importante");
+            cargando = true;
+
+            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/inventario");
+            }
         }
     }
 }
