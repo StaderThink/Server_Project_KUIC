@@ -2,45 +2,39 @@
 @inject NavigationManager navegador
 @inject HttpClient http
 @inject IToastService toaster
+@attribute [Authorize(Roles = "logistica")]
 
 @using Aplicacion.Entradas.Formularios
 @page "/entrada/registrar"
 
-<AuthorizeView Roles="logistica" Context="auth">
-    <Authorized>
-        <h3 class="title is-3">Registrar entrada</h3>
+<h3 class="title is-3">Registrar entrada</h3>
 
-        <EditForm Model="entrada" OnValidSubmit="Enviar">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <FormField>
-                <div class="control">
-                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
-                </div>
-            </FormField>
+<EditForm Model="entrada" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <FormField>
+        <div class="control">
+            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+        </div>
+    </FormField>
 
-            <FormField>
-                @foreach (var detalle in detalles)
-                {
-                    <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" />
-                }
-            </FormField>
+    <FormField>
+        @foreach (var detalle in detalles)
+        {
+            <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" />
+        }
+    </FormField>
 
-            <FormField Label="Observación">
-                <TextField id="observacion" @bind-Value="entrada.Observacion"></TextField>
-                <FormFeedback For="() => entrada.Observacion" Help="Opcional"></FormFeedback>
-            </FormField>
+    <FormField Label="Observación">
+        <TextField id="observacion" @bind-Value="entrada.Observacion"></TextField>
+        <FormFeedback For="() => entrada.Observacion" Help="Opcional"></FormFeedback>
+    </FormField>
 
-            <FormField IsLoading="cargando">
-                <SubmitButton>Registrar</SubmitButton>
-                <CancelButton GoTo="/entrada">Cancelar</CancelButton>
-            </FormField>
+    <FormField IsLoading="cargando">
+        <SubmitButton>Registrar</SubmitButton>
+        <CancelButton GoTo="/entrada">Cancelar</CancelButton>
+    </FormField>
 
-        </EditForm>
-    </Authorized>
-    <NotAuthorized>
-        <p>No tienes permisos para esta vista</p>
-    </NotAuthorized>
-</AuthorizeView>
+</EditForm>
 
 @code {
     Entrada entrada { get; set; } = new Entrada();

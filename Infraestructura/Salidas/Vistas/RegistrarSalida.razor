@@ -5,49 +5,43 @@
 
 @using Aplicacion.Salidas.Formularios
 @page "/salida/registrar"
+@attribute [Authorize(Roles = "logistica")] 
 
-<AuthorizeView Roles="logistica" Context="auth">
-    <Authorized>
-        <h3 class="title is-3">Registrar Salida</h3>
+    <h3 class="title is-3">Registrar Salida</h3>
 
-        @if (mensaje is string)
-        {
-            <blockquote class="is-warn">
-                <p>@mensaje</p>
-            </blockquote>
-        }
+    @if (mensaje is string)
+    {
+        <blockquote class="is-warn">
+            <p>@mensaje</p>
+        </blockquote>
+    }
 
-        <EditForm Model="salida" OnValidSubmit="Enviar">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <FormField>
-                <div class="control">
-                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
-                </div>
-            </FormField>
+    <EditForm Model="salida" OnValidSubmit="Enviar">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <FormField>
+            <div class="control">
+                <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+            </div>
+        </FormField>
 
-            <FormField>
-                @foreach (var detalle in detalles)
-                {
-                    <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
-                }
-            </FormField>
+        <FormField>
+            @foreach (var detalle in detalles)
+            {
+                <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
+            }
+        </FormField>
 
-            <FormField Label="Observación">
-                <TextField id="observacion" @bind-Value="salida.Observacion"></TextField>
-                <FormFeedback For="() => salida.Observacion" Help="Opcional"></FormFeedback>
-            </FormField>
+        <FormField Label="Observación">
+            <TextField id="observacion" @bind-Value="salida.Observacion"></TextField>
+            <FormFeedback For="() => salida.Observacion" Help="Opcional"></FormFeedback>
+        </FormField>
 
-            <FormField IsLoading="cargando">
-                <SubmitButton>Registrar</SubmitButton>
-                <CancelButton GoTo="/salida">Cancelar</CancelButton>
-            </FormField>
+        <FormField IsLoading="cargando">
+            <SubmitButton>Registrar</SubmitButton>
+            <CancelButton GoTo="/salida">Cancelar</CancelButton>
+        </FormField>
 
-        </EditForm>
-    </Authorized>
-    <NotAuthorized>
-        <p>No tienes permisos para esta vista</p>
-    </NotAuthorized>
-</AuthorizeView>
+    </EditForm>
 
 @code {
     bool cargando = false;

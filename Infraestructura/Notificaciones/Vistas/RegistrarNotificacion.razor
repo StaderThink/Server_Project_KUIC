@@ -5,53 +5,47 @@
 @inject NavigationManager navegador
 @inject AuthenticationStateProvider autentificacion
 @inject IToastService toaster
+@attribute [Authorize(Roles = "usuarios")]
 
 @page "/notificacion/registrar"
 @layout AppLayout
 
-<AuthorizeView Roles="usuarios" Context="auth">
-    <Authorized>
-        <h3 class="title is-3">Registrar nueva notificacion</h3>
-        <EditForm Model="notificacion" OnValidSubmit="Enviar">
-            <DataAnnotationsValidator></DataAnnotationsValidator>
-            <FormField>
-                <div class="control">
-                    <button type="button" class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
-                </div>
-            </FormField>
+    <h3 class="title is-3">Registrar nueva notificacion</h3>
+    <EditForm Model="notificacion" OnValidSubmit="Enviar">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <FormField>
+            <div class="control">
+                <button type="button" class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
+            </div>
+        </FormField>
 
-            <FormField>
-                @foreach (var segmento in segmentos)
-                {
-                    <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
-                }
-            </FormField>
+        <FormField>
+            @foreach (var segmento in segmentos)
+            {
+                <ItemSegmento cargos="cargos" segmento="@segmento" OnDeleted="EliminarElemento" />
+            }
+        </FormField>
 
-            <FormField Label="Mensaje">
-                <TextField id="texto" @bind-Value="notificacion.Texto" />
-                <FormFeedback For="() => notificacion.Texto"></FormFeedback>
-            </FormField>
+        <FormField Label="Mensaje">
+            <TextField id="texto" @bind-Value="notificacion.Texto" />
+            <FormFeedback For="() => notificacion.Texto"></FormFeedback>
+        </FormField>
 
-            <FormField Label="Fecha de inicio">
-                <DateField id="inicio" @bind-Value="notificacion.FechaInicio" disabled />
-                <FormFeedback For="() => notificacion.FechaInicio"></FormFeedback>
-            </FormField>
+        <FormField Label="Fecha de inicio">
+            <DateField id="inicio" @bind-Value="notificacion.FechaInicio" disabled />
+            <FormFeedback For="() => notificacion.FechaInicio"></FormFeedback>
+        </FormField>
 
-            <FormField Label="Fecha de finalización">
-                <DateField id="fin" @bind-Value="notificacion.FechaFin" />
-                <FormFeedback For="() => notificacion.FechaFin"></FormFeedback>
-            </FormField>
+        <FormField Label="Fecha de finalización">
+            <DateField id="fin" @bind-Value="notificacion.FechaFin" />
+            <FormFeedback For="() => notificacion.FechaFin"></FormFeedback>
+        </FormField>
 
-            <FormField IsLoading="cargando">
-                <SubmitButton>Registrar</SubmitButton>
-                <CancelButton GoTo="/notificacion">Cancelar</CancelButton>
-            </FormField>
-        </EditForm>
-    </Authorized>
-    <NotAuthorized>
-        <h2>No tienes permisos para acceder a esta vista</h2>
-    </NotAuthorized>
-</AuthorizeView>
+        <FormField IsLoading="cargando">
+            <SubmitButton>Registrar</SubmitButton>
+            <CancelButton GoTo="/notificacion">Cancelar</CancelButton>
+        </FormField>
+    </EditForm>
 
 @code {
 

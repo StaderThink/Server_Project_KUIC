@@ -1,37 +1,31 @@
 ﻿@inject HttpClient http
 @page "/notificacion"
 @layout AppLayout
+@attribute [Authorize(Roles = "usuarios")]
 
-    <AuthorizeView Roles="usuarios" Context="auth">
-        <Authorized>
-            <h3 class="title is-3">Listar Notificaciones</h3>
+    <h3 class="title is-3">Listar Notificaciones</h3>
 
-            @if (notificaciones == null)
+    @if (notificaciones == null)
+    {
+        <div class="buttons">
+            <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
+        </div>
+        <div class="loader is-medium"></div>
+    }
+    else
+    {
+        <div class="buttons">
+            <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
+        </div>
+        <div class="columns is-multiline">
+            @foreach (Notificacion notificacion in notificaciones)
             {
-                <div class="buttons">
-                    <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
-                </div>
-                <div class="loader is-medium"></div>
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                    <TarjetaNotificacion notificacion="notificacion" OnNotificacionEliminada="ObtenerListado"></TarjetaNotificacion>
+                </div>    
             }
-            else
-            {
-                <div class="buttons">
-                    <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
-                </div>
-                <div class="columns is-multiline">
-                    @foreach (Notificacion notificacion in notificaciones)
-                    {
-                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                            <TarjetaNotificacion notificacion="notificacion" OnNotificacionEliminada="ObtenerListado"></TarjetaNotificacion>
-                        </div>    
-                    }
-                </div>
-            }
-        </Authorized>
-        <NotAuthorized>
-            <h2>No tienes permisos para acceder a esta vista</h2>
-        </NotAuthorized>
-    </AuthorizeView>
+        </div>
+    }
 
 @code {
     Notificacion[] notificaciones { get; set; }

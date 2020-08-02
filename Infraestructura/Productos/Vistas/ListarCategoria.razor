@@ -2,39 +2,34 @@
 
 @page "/categoria"
 @layout AppLayout
+@attribute [Authorize(Roles = "logistica")]
 
-    <AuthorizeView Roles="logistica">
-        <Authorized>
-            <h3 class="title is-3">Listar Categorias</h3>
+    
+    <h3 class="title is-3">Listar Categorias</h3>
 
-            @if (categoria == null)
+    @if (categoria == null)
+    {
+        <div class="buttons">
+            <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+            <a href="/inventario" class="button is-primary">Ver Productos</a>
+        </div>
+        <div class="loader is-medium"></div>
+    }
+    else
+    {
+        <div class="buttons">
+            <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+            <a href="/inventario" class="button is-primary">Ver Productos</a>
+        </div>
+        <div class="columns is-multiline">
+            @foreach (Categoria categoria in categoria)
             {
-                <div class="buttons">
-                    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
-                    <a href="/inventario" class="button is-primary">Ver Productos</a>
-                </div>
-                <div class="loader is-medium"></div>
-            }
-            else
-            {
-                <div class="buttons">
-                    <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
-                    <a href="/inventario" class="button is-primary">Ver Productos</a>
-                </div>
-                <div class="columns is-multiline">
-                    @foreach (Categoria categoria in categoria)
-                    {
-                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                            <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
-                        </div>
-                    }
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                    <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
                 </div>
             }
-        </Authorized>
-        <NotAuthorized>
-            <p>No tienes permisos para esta vista</p>
-        </NotAuthorized>
-    </AuthorizeView>
+        </div>
+    }
 
 @code {
     Categoria[] categoria { get; set; }

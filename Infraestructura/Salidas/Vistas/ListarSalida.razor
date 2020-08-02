@@ -1,37 +1,31 @@
 ﻿@inject HttpClient http
 @page "/salida"
 @layout AppLayout
+@attribute [Authorize(Roles = "logistica")]
 
-    <AuthorizeView Roles="logistica">
-        <Authorized>
-            <h3 class="title is-3">Listar salidas</h3>
+    <h3 class="title is-3">Listar salidas</h3>
 
-            @if (salidas is null)
+    @if (salidas is null)
+    {
+        <div class="buttons">
+            <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
+        </div>
+        <div class="loader is-medium"></div>
+    }
+    else
+    {
+        <div class="buttons">
+        <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
+        </div>
+        <div class="columns is-multiline">
+            @foreach (Salida salida in salidas)
             {
-                <div class="buttons">
-                    <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
-                </div>
-                <div class="loader is-medium"></div>
-            }
-            else
-            {
-                <div class="buttons">
-                <a href="/salida/registrar" class="button is-primary">Agregar Salida</a>
-                </div>
-                <div class="columns is-multiline">
-                    @foreach (Salida salida in salidas)
-                    {
-                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                            <TarjetaSalida salida="salida"></TarjetaSalida>
-                        </div>
-                    }
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                    <TarjetaSalida salida="salida"></TarjetaSalida>
                 </div>
             }
-        </Authorized>
-        <NotAuthorized>
-            <p>No tienes permisos para esta vista</p>
-        </NotAuthorized>
-    </AuthorizeView>
+        </div>
+    }
 
 @code {
     Salida[] salidas { get; set; }

@@ -1,32 +1,26 @@
 ﻿@inject HttpClient http
 @page "/bandeja"
 @layout AppLayout
+@attribute [Authorize]
 
-<AuthorizeView Context="auth">
-    <Authorized>
-        <h3 class="title is-3">Bandeja de Entrada</h3>
+<h3 class="title is-3">Bandeja de Entrada</h3>
 
-        @if (notificaciones == null)
+@if (notificaciones == null)
+{
+    <p>No hay notificaciones disponibles</p>
+    <div class="is-loading"></div>
+}
+else
+{
+    <div class="columns is-multiline">
+        @foreach (Notificacion notificacion in notificaciones)
         {
-            <p>No hay notificaciones disponibles</p>
-            <div class="is-loading"></div>
-        }
-        else
-        {
-            <div class="columns is-multiline">
-                @foreach (Notificacion notificacion in notificaciones)
-                {
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                        <TarjetaBandeja notificacion="notificacion"></TarjetaBandeja>
-                    </div>
-                }
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaBandeja notificacion="notificacion"></TarjetaBandeja>
             </div>
         }
-    </Authorized>
-    <NotAuthorized>
-        <h2>No tienes permisos para acceder a esta vista</h2>
-    </NotAuthorized>
-</AuthorizeView>
+    </div>
+}
 
 @code {
     Notificacion[] notificaciones { get; set; }

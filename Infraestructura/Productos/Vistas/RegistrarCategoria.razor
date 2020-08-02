@@ -3,33 +3,27 @@
 
 @page "/categoria/registrar"
 @layout AppLayout
+@attribute [Authorize(Roles = "logistica")] 
 
-    <AuthorizeView Roles="logistica" Context="auth">
-        <Authorized>
-            <h3 class="title is-3">Registrar nueva categoria</h3>
+    <h3 class="title is-3">Registrar nueva categoria</h3>
 
-            <EditForm Model="categoria" OnValidSubmit="Enviar">
-                <DataAnnotationsValidator></DataAnnotationsValidator>
-                <FormField Label="Nombre">
-                    <TextField id="nombre" @bind-Value="categoria.Nombre"/>
-                    <FormFeedback For="() => categoria.Nombre" />
-                </FormField>
+    <EditForm Model="categoria" OnValidSubmit="Enviar">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <FormField Label="Nombre">
+            <TextField id="nombre" @bind-Value="categoria.Nombre"/>
+            <FormFeedback For="() => categoria.Nombre" />
+        </FormField>
 
-                <FormField Label="Descripción">
-                    <TextField id="descripcion" @bind-Value="categoria.Descripcion"></TextField>
-                    <FormFeedback For="() => categoria.Descripcion" Help="Opcional"></FormFeedback>
-                </FormField>
+        <FormField Label="Descripción">
+            <TextField id="descripcion" @bind-Value="categoria.Descripcion"></TextField>
+            <FormFeedback For="() => categoria.Descripcion" Help="Opcional"></FormFeedback>
+        </FormField>
 
-                <FormField IsLoading="cargando">
-                    <SubmitButton>Registrar</SubmitButton>
-                    <CancelButton GoTo="/categoria">Cancelar</CancelButton>
-                </FormField>
-            </EditForm>
-        </Authorized>
-        <NotAuthorized>
-            <p>No tienes permisos para esta vista</p>
-        </NotAuthorized>
-    </AuthorizeView>
+        <FormField IsLoading="cargando">
+            <SubmitButton>Registrar</SubmitButton>
+            <CancelButton GoTo="/categoria">Cancelar</CancelButton>
+        </FormField>
+    </EditForm>
 
 @code {
     Categoria categoria { get; set; } = new Categoria();
