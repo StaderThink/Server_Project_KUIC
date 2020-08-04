@@ -46,18 +46,17 @@
         </CheckboxField>
     </FormField>
 
-    <FormField IsLoading="Cargando">
+    <FormButtons IsLoading="Cargando">
+        <CancelButton To="/cargo">Cancelar</CancelButton>
         <SubmitButton>Modificar</SubmitButton>
-        <CancelButton GoTo="/cargo">Cancelar</CancelButton>
-    </FormField>
+    </FormButtons>
 </EditForm>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    private Cargo Cargo { get; set; }
-
+    private Cargo Cargo = new Cargo();
     private bool Cargando = false;
 
     protected override async Task OnInitializedAsync()
@@ -86,7 +85,9 @@
         catch
         {
             toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+            #if DEBUG
             throw;
+            #endif
         }
 
         finally

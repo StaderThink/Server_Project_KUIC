@@ -1,5 +1,6 @@
 ﻿@inject HttpClient http
 @inject AuthenticationStateProvider autentificacion
+@inject IToastService toaster
 
 @using Aplicacion.Sesiones.Formularios
 
@@ -21,19 +22,9 @@
         <FormFeedback For="() => Formulario.ConfirmacionClave" />
     </FormField>
 
-    <div class="field">
-        <div class="control">
-            @if (Guardando)
-            {
-                <button class="button is-primary is-loading" disabled>Actualizar contraseña</button>
-            }
-
-            else
-            {
-                <button type="submit" class="button is-primary">Actualizar contraseña</button>
-            }
-        </div>
-    </div>
+    <FormButtons IsLoading="Guardando">
+        <SubmitButton>Cambiar clave</SubmitButton>
+    </FormButtons>
 </EditForm>
 
 @code {
@@ -57,6 +48,7 @@
 
         catch
         {
+            toaster.ShowError("Hubo un error en el proceso, recarga la página e intenta nuevamente");
             throw;
         }
 

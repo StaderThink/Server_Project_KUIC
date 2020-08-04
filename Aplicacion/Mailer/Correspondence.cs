@@ -9,19 +9,19 @@ namespace Aplicacion.Mailer
 
         public Correspondence()
         {
-            this.mailer = new SendGridMailer();
+            mailer = new SendGridMailer();
         }
 
         public void SendPasswordChange(Usuario usuario)
         {
-            string content = $"Hola <strong>{usuario.Nombre}</strong>, hemos registrado el cambio de tu contraseña hace menos de una hora, si no has sido tu, contacta con el administrador del sistema.";
+            string content = $"<strong>Hallo {usuario.Nombre}</strong>! Hemos registrado el cambio de tu contraseña hace menos de una hora, si no has sido tu, contacta con el encargado de recursos humanos en el sistema.";
 
             mailer.SendHtml(usuario.Correo, "Cambio de contraseña", content);
         }
 
         public void SendDefaultPassword(Usuario usuario)
         {
-            string html = $"¡Te damos la bienvenida al sistema de información <strong>Aurelia</strong>! estamos a la espera de como podemos mejorar tus actividades. Estamos aquí para informarte que has sido registrada satisfactoriamente en nuestro sistema y para poder acceder debes utilizar tu documento y tu contraseña es <strong>{usuario.Clave}</strong> (esta clave fue generada por el sistema y puedes cambiarla en cualquier momento). <i>Te esperamos 🎉</i>.";
+            string html = $"¡Te damos la bienvenida a tu nueva amiga, <strong>Aurelia</strong>! estamos a la espera de como podemos mejorar tus actividades. Estamos aquí para informarte que has sido registrada satisfactoriamente en nuestro sistema y para poder acceder debes utilizar tu documento y tu contraseña es <strong>{usuario.Clave}</strong> (esta clave fue generada por el sistema y puedes cambiarla en cualquier momento).<br>Este mensaje fue enviado con amor, por el equipo de desarrollo de Aurelia.";
 
             mailer.SendHtml(usuario.Correo, "Te damos la bienvenida", html);
         }

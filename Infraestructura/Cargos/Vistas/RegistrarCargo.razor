@@ -48,7 +48,7 @@
 
     <FormField IsLoading="Cargando">
         <SubmitButton>Registrar</SubmitButton>
-        <CancelButton GoTo="/cargo">Cancelar</CancelButton>
+        <CancelButton To="/cargo">Cancelar</CancelButton>
     </FormField>
 </EditForm>
 
@@ -72,13 +72,15 @@
 
             else
             {
-                toaster.ShowWarning("No se logro realizar el registro, verifica los datos e intenta nuevamente.");
+                toaster.ShowWarning("No se logro realizar el registro, verifica los datos e intenta nuevamente");
             }
         }
         catch
         {
-            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde.");
+            toaster.ShowError("Hubo un error desconocido, intenta más tarde");
+            #if DEBUG
             throw;
+            #endif
         }
 
         finally

@@ -7,7 +7,7 @@
 @page "/usuario/modificar/{Id:int}"
 @layout AppLayout
 
-<h3 class="title is-3">Registrar usuario</h3>
+<h3 class="title is-3">Modificar usuario</h3>
 
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
@@ -35,7 +35,7 @@
     </FormField>
 
     <FormField Label="Telefono">
-        <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
+        <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
@@ -62,21 +62,20 @@
         </CheckboxField>
     </FormField>
 
-    <FormField IsLoading="Cargando">
+    <FormButtons IsLoading="Cargando">
+        <CancelButton To="/usuario">Cancelar</CancelButton>
         <SubmitButton>Modificar</SubmitButton>
-        <CancelButton GoTo="/usuario">Cancelar</CancelButton>
-    </FormField>
+    </FormButtons>
 </EditForm>
 
 @code {
     [Parameter]
     public int Id { get; set; }
 
-    private Cargo[] ListadoCargos { get; set; } = new Cargo[0];
+    private Cargo[] ListadoCargos = new Cargo[0];
     private string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
-    private Usuario Usuario { get; set; } = new Usuario();
-
+    private Usuario Usuario  = new Usuario();
     private bool Cargando = false;
 
     protected override async Task OnInitializedAsync()
@@ -107,7 +106,10 @@
         catch
         {
             toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+
+            #if DEBUG
             throw;
+            #endif
         }
 
         finally

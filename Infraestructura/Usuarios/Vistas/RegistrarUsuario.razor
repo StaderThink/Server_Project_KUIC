@@ -40,7 +40,7 @@
     </FormField>
 
     <FormField Label="Telefono">
-        <EmailField id="telefono" @bind-Value="Usuario.Telefono" />
+        <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
@@ -61,24 +61,24 @@
         <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
     </FormField>
 
-    <FormField Label="Fecha de expedición">
+    <FormField>
         <CheckboxField @bind-Value="Usuario.Activo">
-            <span>@(Usuario.Activo ? "Activo" : "Inactivo")</span>
+            <span>¿Va a estar activo en el sistema?</span>
         </CheckboxField>
     </FormField>
 
-    <FormField IsLoading="Cargando">
+    <FormButtons IsLoading="Cargando">
+        <CancelButton To="/usuario">Cancelar</CancelButton>
         <SubmitButton>Registrar</SubmitButton>
-        <CancelButton GoTo="/usuario">Cancelar</CancelButton>
-    </FormField>
+    </FormButtons>
 </EditForm>
 
 @code {
-    Cargo[] ListadoCargos = new Cargo[0];
-    string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
+    private Cargo[] ListadoCargos = new Cargo[0];
+    private string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
-    Usuario Usuario { get; set; } = new Usuario();
-    private bool Cargando { get; set; } = false;
+    private Usuario Usuario = new Usuario();
+    private bool Cargando = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,8 +114,11 @@
 
         catch
         {
-            toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
+            toaster.ShowError("Hubo un error desconocido, intenta más tarde");
+
+            #if DEBUG
             throw;
+            #endif
         }
 
         finally

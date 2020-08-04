@@ -36,6 +36,7 @@ namespace Dominio.Usuarios
         [Required(ErrorMessage = "Este campo es obligatorio")]
         public DateTime Expedicion { get; set; } = DateTime.Now;
 
+        [Range(1, int.MaxValue, ErrorMessage = "Seleccione un valor valido")]
         [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Cargo { get; set; }
 

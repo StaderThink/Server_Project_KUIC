@@ -1,7 +1,11 @@
-﻿@layout BaseLayout
-@page "/reestablecer"
+﻿@inject HttpClient http
+@inject IToastService toaster
+@inject NavigationManager navegador
 
-@using Aplicacion.Sesiones.Formularios 
+@page "/reestablecer"
+@layout BaseLayout
+
+@using Aplicacion.Sesiones.Formularios
 
 <h3 class="title is-3">Reestablecer contraseña</h3>
 
@@ -31,19 +35,48 @@
                 <FormFeedback For="() => Formulario.NuevaClave" Help="Minimo 6 caracteres" />
             </FormField>
 
-            <FormField>
+            <FormButtons>
+                <CancelButton To="/">Cancelar</CancelButton>
                 <SubmitButton>Reestablecer clave</SubmitButton>
-                <CancelButton GoTo="/">Cancelar</CancelButton>
-            </FormField>
+            </FormButtons>
         </EditForm>
     </NotAuthorized>
 </AuthorizeView>
 
 @code {
-    private FormularioReestablecerClave Formulario { get; set; } = new FormularioReestablecerClave();
+    private FormularioReestablecerClave Formulario = new FormularioReestablecerClave();
+    private bool Cargando = false;
 
     private async Task Enviar()
     {
+        Cargando = true;
 
+        try
+        {
+            var respuesta = await http.PutAsJsonAsync("/api/sesion/reestablecer_clave", Formulario);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/login");
+            }
+
+            else
+            {
+                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
+            }
+        }
+
+        catch
+        {
+            toaster.ShowError("Hubo un error desconocido, intenta más tarde");
+            #if DEBUG
+            throw;
+            #endif
+        }
+
+        finally
+        {
+            Cargando = false;
+        }
     }
 }

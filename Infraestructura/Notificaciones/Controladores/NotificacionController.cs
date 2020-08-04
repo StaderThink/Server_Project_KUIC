@@ -11,11 +11,11 @@ namespace Infraestructura.Controladores.Inventarios
     [Route("api/[controller]")]
     public class NotificacionController : Controller
     {
-        private readonly RepositorioNotificacion repo;
+        private readonly RepositorioNotificacion repositorio;
 
         public NotificacionController()
         {
-            repo = new RepositorioNotificacion();
+            repositorio = new RepositorioNotificacion();
         }
         
         [Authorize]
@@ -31,7 +31,7 @@ namespace Infraestructura.Controladores.Inventarios
 
                 if (repositorioUsuario.PorId(idUsuario) is Usuario usuario)
                 {
-                    var listado = repo.PorCargo(usuario.Cargo);
+                    var listado = repositorio.PorCargo(usuario.Cargo);
                     return Ok(listado);
                 }
 
@@ -43,7 +43,7 @@ namespace Infraestructura.Controladores.Inventarios
 
             catch
             {
-                return Unauthorized();
+                return Unauthorized(); 
             }
         }
 
@@ -60,7 +60,7 @@ namespace Infraestructura.Controladores.Inventarios
 
                 if (repositorioUsuario.PorId(idUsuario) is Usuario usuario)
                 {
-                    var listado = repo.PorAutor(usuario.Id);
+                    var listado = repositorio.PorAutor(usuario.Id);
                     return Ok(listado);
                 }
 
@@ -79,7 +79,7 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpGet("{id}")]
         public ActionResult<Notificacion> Obtener(int id)
         {
-            Notificacion notificacion = repo.PorId(id);
+            Notificacion notificacion = repositorio.PorId(id);
 
             if (notificacion is Notificacion)
             {
@@ -91,7 +91,7 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpGet("autor/{idAutor}")]
         public IEnumerable<Notificacion> ObtenerAutor(int idAutor)
         {
-            return repo.PorAutor(idAutor);
+            return repositorio.PorAutor(idAutor);
         }
 
         [Authorize(Roles = "usuarios")]
@@ -112,7 +112,7 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            Notificacion notificacion = repo.PorId(id);
+            Notificacion notificacion = repositorio.PorId(id);
             if (notificacion is Notificacion)
             {
                 ServicioEliminadorNotificacion servicio = new ServicioEliminadorNotificacion();

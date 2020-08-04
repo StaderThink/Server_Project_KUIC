@@ -1,6 +1,6 @@
 ﻿@inject NavigationManager navegador
 
-<button type="button" class="button" disabled="@IsLoading" @onclick="ButtonClicked">
+<button type="button" class="button is-light" disabled="@IsLoading" @onclick="ButtonClicked">
     @if (Icon is string)
     {
         <span class="icon is-small">
@@ -13,7 +13,7 @@
 
 @code {
     [Parameter]
-    public string GoTo { get; set; } = "/";
+    public string To { get; set; } = "/";
 
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -36,7 +36,7 @@
 
         else
         {
-            navegador.NavigateTo(GoTo, forceLoad: true);
+            navegador.NavigateTo(To, forceLoad: true);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿@inject HttpClient http
 @inject AuthenticationStateProvider autentificacion
+@inject IToastService toaster
 
-<EditForm Model="@Usuario" OnValidSubmit="Enviar">
+<EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
-    <ValidationSummary />
 
     <FormField Label="Nombre">
         <TextField id="nombre" @bind-Value="Usuario.Nombre" />
@@ -25,19 +25,9 @@
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
-    <div class="field">
-        <div class="control">
-            @if (Guardando)
-            {
-                <button class="button is-primary is-loading" disabled>Actualizar perfil</button>
-            }
-
-            else
-            {
-                <button type="submit" class="button is-primary">Actualizar perfil</button>
-            }
-        </div>
-    </div>
+    <FormButtons IsLoading="Guardando">
+        <SubmitButton>Actualizar perfil</SubmitButton>
+    </FormButtons>
 </EditForm>
 
 @code {
@@ -63,11 +53,22 @@
 
         try
         {
-            await http.PutAsJsonAsync<Usuario>($"/api/sesion", Usuario);
+            var respuesta = await http.PutAsJsonAsync<Usuario>($"/api/sesion", Usuario);
+
+            if (respuesta.IsSuccessStatusCode)
+            {
+                toaster.ShowMessage("Datos actualizados correctamente");
+            }
+
+            else
+            {
+                toaster.ShowWarning("No se realizo los datos, recarga la página e intenta nuevamente");
+            }
         }
 
         catch
         {
+            toaster.ShowError("Hubo un error en el proceso, recarga la página e intenta nuevamente");
             throw;
         }
 

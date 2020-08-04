@@ -40,10 +40,10 @@ namespace Dominio.Notificaciones
             return conexion.Obtener<Notificacion>(consulta, new { id });
         }
 
-        public IEnumerable<Notificacion> PorAutor (int idAutor)
+        public IEnumerable<Notificacion> PorAutor (int usuario)
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Notificacion>("select * from notificacion where autor = @idAutor", new { idAutor } );
+            return conexion.Seleccionar<Notificacion>("select * from notificacion where autor = @usuario", new { usuario } );
         }
 
         public int PorUltimoId()
@@ -55,14 +55,16 @@ namespace Dominio.Notificaciones
             return notificacion.Id;
         }
 
-        public IEnumerable<Notificacion> PorCargo (int idCargo)
+        public IEnumerable<Notificacion> PorCargo (int cargo)
         {
             using Conexion conexion = new Conexion();
-            string consulta =
-                "select notificacion.* from notificacion" +
-                "inner join segmento on segmento.notificacion = notificacion.id" +
-                "where segmento.cargo = @idCargo";
-            return conexion.Seleccionar<Notificacion>(consulta, new { idCargo });
+            string consulta = @"
+                select notificacion.* from notificacion
+                inner join segmento on segmento.notificacion = notificacion.id
+                where segmento.cargo = @cargo
+            ";
+
+            return conexion.Seleccionar<Notificacion>(consulta, new { cargo });
         }
     }
 }
