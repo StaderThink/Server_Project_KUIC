@@ -1,10 +1,124 @@
-﻿@inject IToastService toaster
+﻿@page "/"
 
-@attribute [Authorize]
 
-@layout AppLayout
-@page "/inicio"
+<div id="start">
+    <header class="is-active">
+        <div class="logo">
+            <img src="./src/img/logo.png">
+        </div>
 
-<h1 class="title is-1">Hola 👋</h1>
+        <nav>
+            <ul>
+                <li><a>Inicio</a></li>
+                <li><a>Caracteristicas</a></li>
+                <li><a>Planes</a></li>
+            </ul>
+        </nav>
 
-<p>Que bueno verte por aquí.</p>
+        <ul class="options">
+            <a href="" class="button is-primary">Iniciar sesión</a>
+        </ul>
+    </header>
+
+    <main>
+        <section class="landing">
+            <h1 class="title is-1">Aurelia</h1>
+            <slider>
+                <tab>
+                    <p>Sistema de información orientado a la parte de inventario y pedidos de una empresa. Este software podrá adaptarse a su empresa.</p>
+                </tab>
+
+                <tab>
+                    <p>
+                        Si ya eres un usuario y quieres empezar a explorar nuestros apartados puedes hacerlo. <br>
+                        <b>Recuerda: </b> Solo podrás ver las secciones a las cuales estes autorizado.
+                    </p>
+                    <div class="buttons">
+                        <a href="#hola" class="button is-primary">Iniciar sesión</a>
+                    </div>
+                </tab>
+            </slider>
+        </section>
+
+        <section class="features">
+            <div class="card">
+                <div class="card-content">
+                    <ion-icon name="cloud-outline" size="large"></ion-icon>
+                    <p>La información y ubicación del software es totalmente en la nube.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <ion-icon name="file-tray-stacked-outline" size="large"></ion-icon>
+                    <p>Almacena tu inventario con las existencias al día, actualizandose segundo a segundo.</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-content">
+                    <ion-icon name="bug-outline" size="large"></ion-icon>
+                    <p>Se hace manejo de roles los cuales permiten la autorización en las vistas y módulos.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="details">
+            <article class="detail">
+                <div class="image">
+                    <img src="src/img/screen.png" alt="">
+                </div>
+                <div class="content">
+                    <h4 class="title is-4">Inventario</h4>
+                    <p>En esta parte del sistema podrás actualizar las existencias de tus productos, realizando también entradas y ventas que modificarán la cantidad de stock que se encuentre en tu inventario.</p>
+                </div>
+            </article>
+
+            <article class="detail">
+                <div class="image">
+                    <img src="src/img/screen.png" alt="">
+                </div>
+
+                <div class="content">
+                    <h4 class="title is-4">Pedidos</h4>
+                    <p>Asesor de venta, este apartado es para ti. Podrás realizar los pedidos para tus clientes, especificando qué producto desea, cuánta cantidad y para cuando quiere que le sea entregado.</p>
+                </div>
+            </article>
+        </section>
+
+        <section class="contact">
+            <form>
+                <div class="field">
+                    <label for="fullname" class="label">Nombre</label>
+                    <input type="text" class="input" placeholder="Ej. Andres Celis">
+                </div>
+
+                <div class="field">
+                    <label for="mail" class="label">Email</label>
+                    <input type="email" class="input" placeholder="hello@mail.com">
+                </div>
+
+                <div class="field">
+                    <label for="mail">Mensaje</label>
+                    <textarea class="textarea" rows="3" placeholder="Hallo!"></textarea>
+                </div>
+
+                <div class="buttons">
+                    <button type="submit" class="button is-primary">Enviar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <nav>
+            <ul>
+                <li><a>Inicio</a></li>
+                <li><a>Caracteristicas</a></li>
+                <li><a>Planes</a></li>
+            </ul>
+        </nav>
+
+        <p>Bogotá, D.C 2020 - 2021, Todos los derechos reservados. Desarrollo con 💖 por Kuic, conformado por Johan Sebastian Vargas Sanchez, Amy Lorena Cuadros Herran y Andres Camilo Celis Pacheco.</p>
+    </footer>
+</div>
