@@ -18,7 +18,7 @@ Vue.component("slider", {
             "div",
 
             {
-                class: { "slide": true },
+                class: { "slider": true },
             },
 
             [
@@ -75,8 +75,8 @@ Vue.component("tab", {
             <slot></slot>
         </div>
     `
-})
+});
 
 new Vue({
-    el: ".landing"
-})
+    el: "#sliding"
+});

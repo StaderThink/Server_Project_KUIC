@@ -3,7 +3,7 @@
 @inject ILocalStorageService localStorage
 @inject IToastService toaster
 
-@page "/login"
+@page "/iniciar_sesion"
 @layout BaseLayout
 
 @using Aplicacion.Sesiones.Formularios
@@ -44,11 +44,11 @@ else
 }
 
 @code {
-    private FormularioIniciarSesion Modelo { get; set; } = new FormularioIniciarSesion();
+    private FormularioIniciarSesion Modelo = new FormularioIniciarSesion();
 
-    private bool Cargando { get; set; } = false;
-    private int Intentos { get; set; } = 0;
-    private TimeSpan TiempoRestante { get; set; }
+    private bool Cargando = false;
+    private int Intentos = 0;
+    private TimeSpan TiempoRestante;
 
     protected override async Task OnInitializedAsync()
     {
@@ -99,7 +99,7 @@ else
         try
         {
             var nuevoProveedor = (ProveedorAutenticacion) autentificacion;
-            await nuevoProveedor.IniciarSesion(Modelo.Documento, Modelo.Clave);
+            await nuevoProveedor.SignIn(Modelo.Documento, Modelo.Clave);
 
             navegador.NavigateTo("/inicio");
         }

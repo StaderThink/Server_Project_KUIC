@@ -61,12 +61,6 @@
         <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
     </FormField>
 
-    <FormField>
-        <CheckboxField @bind-Value="Usuario.Activo">
-            <span>¿Va a estar activo en el sistema?</span>
-        </CheckboxField>
-    </FormField>
-
     <FormButtons IsLoading="Cargando">
         <CancelButton To="/usuario">Cancelar</CancelButton>
         <SubmitButton>Registrar</SubmitButton>

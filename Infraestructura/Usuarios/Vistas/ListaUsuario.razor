@@ -4,51 +4,23 @@
 @attribute [Authorize(Roles = "usuarios")]
 
 @page "/usuario"
-@page "/usuario/{busqueda}"
 @layout AppLayout
 
-<AuthorizeView Roles="usuarios">
-    @if (cargando)
-    {
-        <div class="loader is-medium"></div>
-    }
+<h2 class="title is-2">Usuarios</h2>
 
-    else
-    {
-        <div class="container">
-            <h2 class="title is-2">Listado de usuarios</h2>
+@if (Cargando)
+{
+    <div class="loader"></div>
+}
 
-            <div class="buttons">
-                <a class="button is-primary" href="/usuario/registrar">Registrar usuario</a>
-            </div>
-
-            @if (lista is null)
-            {
-                <p>Algo salio muy mal...</p>
-            }
-
-            else
-            {
-                <div class="columns is-multiline">
-                    @foreach (var usuario in lista)
-                    {
-                        <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                            <TarjetaUsuario usuario="usuario" onDeleted="ObtenerListado" />
-                        </div>
-                    }
-                </div>
-            }
-        </div>
-    }
-</AuthorizeView>
+else
+{
+    
+} 
 
 @code {
-    Usuario[] lista { get; set; }
-
-    bool cargando = true;
-
-    [Parameter]
-    public string busqueda { get; set; } = "";
+    private Usuario[] ListadoUsuarios;
+    private bool Cargando = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -57,31 +29,24 @@
 
     private async Task ObtenerListado()
     {
-        cargando = true;
-        var respuesta = await http.GetAsync($"/api/usuario?buscar={busqueda}");
+        Cargando = true;
 
         try
         {
-            if (respuesta.StatusCode == HttpStatusCode.OK)
-            {
-                lista = await respuesta.Content.ReadFromJsonAsync<Usuario[]>();
-            }
-
-            else
-            {
-                lista = null;
-            }
+            ListadoUsuarios = await http.GetFromJsonAsync<Usuario[]>($"/api/usuario");
         }
 
-        catch (Exception ex)
+        catch
         {
-            lista = new Usuario[0];
-            Console.WriteLine(ex);
+            ListadoUsuarios = null;
+            #if DEBUG
+            throw;
+            #endif
         }
 
         finally
         {
-            cargando = false;
+            Cargando = false;
         }
     }
 }

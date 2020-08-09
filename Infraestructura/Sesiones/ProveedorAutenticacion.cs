@@ -26,36 +26,35 @@ namespace Infraestructura.Sesiones
             this.navigation = navigation;
         }
 
-        private async Task<AuthenticationState> ObtenerIdentidad()
+        private async Task<AuthenticationState> GetAuthenticationState()
         {
-            AuthenticationState estado = new AuthenticationState(new ClaimsPrincipal());
-
-            string token = await localStorage.GetItemAsync<string>("token");
+            var status = new AuthenticationState(new ClaimsPrincipal());
+            var token = await localStorage.GetItemAsync<string>("token");
 
             if (token is string)
             {
                 http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
-                HttpResponseMessage respuesta = await http.GetAsync("/api/sesion");
+                var respuesta = await http.GetAsync("/api/sesion");
 
                 if (respuesta.IsSuccessStatusCode)
                 {
-                    Usuario usuario = await respuesta.Content.ReadFromJsonAsync<Usuario>();
-                    ServicioSesion servicio = new ServicioSesion();
+                    var usuario = await respuesta.Content.ReadFromJsonAsync<Usuario>();
+                    var servicio = new ServicioSesion();
 
-                    ClaimsPrincipal identidad = servicio.GenerarIdentidad(usuario);
-                    estado = new AuthenticationState(identidad);
+                    var identidad = servicio.GenerarIdentidad(usuario);
+                    status = new AuthenticationState(identidad);
                 }
             }
 
-            return estado;
+            return status;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             try
             {
-                return await ObtenerIdentidad();
+                return await GetAuthenticationState();
             }
 
             catch (Exception ex)
@@ -65,31 +64,47 @@ namespace Infraestructura.Sesiones
             }
         }
 
-        public async Task IniciarSesion(string documento, string clave)
+        public async Task SignIn(string documento, string clave)
         {
-            FormularioIniciarSesion credencial = new FormularioIniciarSesion(documento, clave);
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/sesion", credencial);
+            var credentials = new FormularioIniciarSesion(documento, clave);
+            var response = await http.PostAsJsonAsync("/api/sesion", credentials);
 
-            if (respuesta.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
-                string token = await respuesta.Content.ReadAsStringAsync();
+                string token = await response.Content.ReadAsStringAsync();
                 await localStorage.SetItemAsync("token", token);
 
-                NotifyAuthenticationStateChanged(ObtenerIdentidad());
-                navigation.NavigateTo("/inicio");
+                NotifyAuthenticationStateChanged(GetAuthenticationState());
+                navigation.NavigateTo("/");
             }
 
             else
             {
-                throw new ArgumentException("Credenciales invalidas");
+                throw new ArgumentException("Invalid credentials");
             }
         }
 
-        public async Task CerrarSesion()
+        public async Task SignOut()
         {
             await localStorage.ClearAsync();
-            NotifyAuthenticationStateChanged(ObtenerIdentidad());
+
+            NotifyAuthenticationStateChanged(GetAuthenticationState());
             navigation.NavigateTo("/");
         }
+
+        #nullable enable
+        public async Task<Usuario?> GetUserAsync()
+        {
+            try
+            {
+                return await http.GetFromJsonAsync<Usuario>("/api/sesion");
+            }
+
+            catch
+            {
+                return null;
+            }
+        }
+        #nullable disable
     }
 }

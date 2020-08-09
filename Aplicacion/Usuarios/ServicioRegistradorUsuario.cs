@@ -14,7 +14,6 @@ namespace Aplicacion.Usuarios
 
             usuario.Clave = Guid.NewGuid().ToString()[0..8];
 
-            usuario.Activo = true;
             usuario.Actualizado = DateTime.Now;
             usuario.Creado = DateTime.Now;
 

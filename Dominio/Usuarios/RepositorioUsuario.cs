@@ -15,17 +15,17 @@ namespace Dominio.Usuarios
 					correo = @Correo,
 					clave = @Clave,
 					telefono = @Telefono,
-					actualizado = curdate(),
                     cargo = @Cargo,
-					activo = @Activo
+					activo = @Activo,
+					actualizado = curdate()
 				where id = @Id
 			";
 
-            Usuario temporal = PorId(entidad.Id);
+            var usuario = PorId(entidad.Id);
 
             if (entidad.Clave == null)
             {
-                entidad.Clave = temporal.Clave;
+                entidad.Clave = usuario.Clave;
             }
 
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
@@ -34,7 +34,7 @@ namespace Dominio.Usuarios
 
         public bool Eliminar(Usuario entidad)
         {
-            using Conexion conexion = new Conexion();
+            using var conexion = new Conexion();
 
             string consulta = "delete from usuario where id = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
@@ -44,14 +44,16 @@ namespace Dominio.Usuarios
 
         public bool Insertar(Usuario entidad)
         {
-            using Conexion conexion = new Conexion();
+            using var conexion = new Conexion();
 
             string consulta = @$"
 				call crear_usuario(
-					@Nombre, @Apellido, @Documento, '{entidad.TipoDocumento}',
-					@Expedicion, @Correo, @Clave, @Cargo, @Telefono, @Nacimiento
-				)
+                    @Nombre, @Apellido, @Documento, '{entidad.TipoDocumento}', @FechaNacimiento,
+                    @FechaExpedicion, @Correo, @Clave, @Cargo, @Telefono
+                )
 			";
+
+            conexion.Ejecutar(consulta, entidad);
 
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;

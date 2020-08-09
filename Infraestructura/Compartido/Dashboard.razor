@@ -1,0 +1,17 @@
+﻿@layout AppLayout
+
+@inject AuthenticationStateProvider authProvider
+
+@using Infraestructura.Sesiones
+
+<h1>Hola @(Usuario?.Nombre ?? "anonimo")!</h1>
+
+@code {
+    private Usuario Usuario;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var provider = (ProveedorAutenticacion) authProvider;
+        Usuario = await provider.GetUserAsync();
+    }
+}

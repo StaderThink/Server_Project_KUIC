@@ -1,0 +1,9 @@
+#landing > footer {
+    max-width: $max-with;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 35% 65%;
+    grid-gap: 2rem;
+    padding: 2rem 0;
+    padding-bottom: 4rem;
+}

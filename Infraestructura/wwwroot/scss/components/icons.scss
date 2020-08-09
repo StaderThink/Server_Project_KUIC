@@ -1,0 +1,7 @@
+ion-icon {
+    @extend %icon;
+
+    font-size: 18px;
+    --ionicon-stroke-width: 32px;
+    color: rgba(0,0,0,0.8);
+}

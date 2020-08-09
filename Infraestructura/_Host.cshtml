@@ -14,18 +14,20 @@
     <link rel="stylesheet" href="https://kuic-sena.github.io/estilos/dist/index.min.css">
     <link rel="stylesheet" href="/css/style.css" />
 
-    <script type="module" src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.esm.js"></script>
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.js" nomodule></script>
+    
+    <environment names="Development">
+        <script src="/src/vue.js"></script>
+    </environment>
 
-    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <environment names="Production">
+        <script src="/src/vue.min.js"></script>
+    </environment>
 
     <script src="~/src/app.js" defer></script>
 </head>
 <body>
-    <app>
-        <component type="typeof(App)" render-mode="Server" />
-    </app>
-
+    <component type="typeof(App)" render-mode="Server" />
     <script src="_framework/blazor.server.js"></script>
 </body>
 </html>

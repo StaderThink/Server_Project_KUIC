@@ -42,7 +42,7 @@
             if (respuesta.IsSuccessStatusCode)
             {
                 var proveedor = (ProveedorAutenticacion) autentificacion;
-                await proveedor.CerrarSesion();
+                await proveedor.SignOut();
             }
         }
 

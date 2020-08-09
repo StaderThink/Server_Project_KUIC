@@ -1,14 +1,300 @@
-﻿@import "counter.css";
-@import "layout.css";
-@import "start.css";
-@import "toasts.css";
+.counter {
+  max-width: 15rem;
+}
 
-html {
-    font-size: 11pt;
+.counter input[type=number] {
+  text-align: center;
+  max-width: 5rem;
+}
+
+.counter button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.counter ion-icon {
+  --ionicon-stroke-width: 32px;
+  font-size: 16px;
+}
+
+.counter ion-icon[name=trash-outline] {
+  color: #f14668;
 }
 
 ion-icon {
-    font-size: 18px;
-    --ionicon-stroke-width: 32px;
-    color: rgba(0,0,0,0.8);
+  font-size: 18px;
+  --ionicon-stroke-width: 32px;
+  color: rgba(0, 0, 0, 0.8);
 }
+
+.toaster {
+  width: 100%;
+  max-width: 22rem;
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.toaster .toast:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+#landing {
+  min-width: 100vw;
+  min-height: 100vh;
+  padding: 0 2.5rem;
+}
+
+@media (min-width: 720px) {
+  #landing {
+    background-image: url("../img/background.png");
+    background-size: 100%;
+    background-repeat: no-repeat;
+  }
+}
+
+#landing > main {
+  padding: 8.5rem 0 2.5rem 0;
+  margin: 0 auto;
+  max-width: 60vw;
+}
+
+@media (max-width: 720px) {
+  #landing > main {
+    max-width: 100%;
+  }
+}
+
+#landing > header {
+  width: 60vw;
+  height: 6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+}
+
+#landing > header.is-active {
+  background: white;
+  border-bottom: solid 1px #eee;
+}
+
+#landing > header .logo {
+  display: flex;
+}
+
+#landing > header .logo img {
+  width: 7rem;
+}
+
+#landing > header nav ul {
+  display: flex;
+}
+
+#landing > header nav ul li a {
+  color: #111;
+}
+
+#landing > header nav ul li:not(:last-child) {
+  margin-right: 4rem;
+}
+
+@media (max-width: 720px) {
+  #landing > header {
+    width: 100%;
+  }
+  #landing > header .logo {
+    display: none;
+  }
+}
+
+#landing > main section:not(:last-child) {
+  margin-bottom: 4rem;
+}
+
+#landing > main section.landing {
+  min-height: 22rem;
+  height: 45vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#landing > main section.features {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 2rem;
+}
+
+@media (max-width: 1044px) {
+  #landing > main section.features {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 520px) {
+  #landing > main section.features {
+    grid-template-columns: 1fr;
+  }
+}
+
+#landing > main section.features .card ion-icon {
+  margin-bottom: 1.5rem;
+}
+
+#landing > main section.details {
+  display: grid;
+  grid-gap: 4rem;
+}
+
+#landing > main section.details .detail {
+  display: flex;
+}
+
+#landing > main section.details .detail .image {
+  min-width: calc(45% - 2rem);
+  border: solid 1px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0.6rem 1rem rgba(0, 0, 0, 0.2);
+}
+
+#landing > main section.details .detail .content {
+  align-self: center;
+}
+
+@media (min-width: 1044px) {
+  #landing > main section.details .detail:nth-child(n) .image {
+    margin-right: 2rem;
+  }
+  #landing > main section.details .detail:nth-child(2n) {
+    flex-direction: row-reverse;
+  }
+  #landing > main section.details .detail:nth-child(2n) .image {
+    margin-left: 2rem;
+  }
+}
+
+@media (max-width: 1044px) {
+  #landing > main section.details .detail {
+    flex-direction: column;
+  }
+  #landing > main section.details .detail .image {
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+}
+
+#landing > footer {
+  max-width: 60vw;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 35% 65%;
+  grid-gap: 2rem;
+  padding: 2rem 0;
+  padding-bottom: 4rem;
+}
+
+.slide-move,
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform ease 0.6s;
+}
+
+.slide-enter-active {
+  transition: transform ease 0.6s, opacity ease 1s;
+}
+
+.slide-enter {
+  opacity: 0;
+  transform: translateX(-4rem);
+}
+
+.slide-enter-to {
+  opacity: 1;
+}
+
+.slide-leave-active {
+  opacity: 0;
+  transform-origin: left center;
+  position: absolute;
+}
+
+.slide-leave-to {
+  opacity: 0;
+  display: none;
+  transform: translateX(-4rem);
+}
+
+#sliding .dots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(0.8rem, 0.8rem));
+  grid-gap: 1rem;
+  margin-top: 2rem;
+}
+
+#sliding .dots .dot {
+  width: 0.8rem;
+  height: 0.8rem;
+  background: rgba(0, 0, 0, 0.15);
+  border-radius: 0.8rem;
+  cursor: pointer;
+  transition: ease transform 0.2s;
+}
+
+#sliding .dots .dot.is-active {
+  border-radius: 0.2rem;
+  background: #111;
+  transform: rotate(45deg);
+}
+
+#app {
+  display: grid;
+  grid-template-columns: minmax(15rem, 25%) 1fr;
+  position: relative;
+}
+
+#app::before {
+  content: "";
+  display: block;
+}
+
+#app .main {
+  padding: 2.5rem;
+}
+
+.aside {
+  width: var(--aside-width);
+  min-width: 15rem;
+  height: 100%;
+  padding: 2rem;
+  position: fixed;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: solid 1px #eee;
+}
+
+.aside .options {
+  width: 100%;
+  display: flex;
+}
+
+.aside .options ion-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.aside .options:not(:last-child) {
+  margin-right: 1.5rem;
+}
+
+/*# sourceMappingURL=style.css.map */

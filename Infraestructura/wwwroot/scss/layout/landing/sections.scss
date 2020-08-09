@@ -1,0 +1,82 @@
+#landing > main section {
+    &:not(:last-child) {
+        margin-bottom: 4rem;
+    }
+
+    &.landing {
+        min-height: 22rem;
+        height: 45vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    &.features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-gap: 2rem;
+
+        @media(max-width: 1044px) {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media(max-width: 520px) {
+            grid-template-columns: 1fr;
+        }
+
+        .card {
+            ion-icon {
+                margin-bottom: 1.5rem;
+            }
+        }
+    }
+
+    &.details {
+        display: grid;
+        grid-gap: 4rem;
+
+        .detail {
+            $gap: 2rem;
+
+            display: flex;
+
+            .image {
+                min-width: calc(45% - #{$gap});
+                border: solid 1px rgba(0,0,0,0.1);
+                border-radius: 1rem;
+                overflow: hidden;
+                box-shadow: 0 0.6rem 1rem rgba(0,0,0,0.2);
+            }
+
+            .content {
+                align-self: center;
+            }
+            
+            @media(min-width: 1044px) {
+                &:nth-child(n) {
+                    
+                    .image {
+                        margin-right: $gap;
+                    }
+                }
+                
+                &:nth-child(2n) {
+                    flex-direction: row-reverse;
+
+                    .image {
+                        margin-left: $gap;
+                    }
+                }
+            }
+
+            @media(max-width: 1044px) {
+                flex-direction: column;
+
+                .image {
+                    width: 100%;
+                    margin-bottom: 2rem;
+                }
+            }
+        }
+    }
+}
