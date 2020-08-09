@@ -2,11 +2,9 @@ Vue.component("slider", {
     created() {
         this.tabs = this.$slots.default.filter(n => n.tag);
         this.tabs.map((t, i) => t.key = i);
-        console.log(this);
     },
 
     mounted() {
-
         setInterval(
             () => {
                 if (this.selected == (this.tabs.length - 1)) {

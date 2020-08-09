@@ -1,13 +1,5 @@
 ﻿@inject HttpClient http
-@inject NavigationManager navegador
 @inject IToastService toaster
-
-@attribute [Authorize(Roles = "usuarios")]
-
-@page "/usuario/modificar/{Id:int}"
-@layout AppLayout
-
-<h3 class="title is-3">Modificar usuario</h3>
 
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
@@ -61,40 +53,29 @@
             <span>El usuario esta activo en el sistema.</span>
         </CheckboxField>
     </FormField>
-
-    <FormButtons IsLoading="Cargando">
-        <CancelButton To="/usuario">Cancelar</CancelButton>
-        <SubmitButton>Modificar</SubmitButton>
-    </FormButtons>
 </EditForm>
 
 @code {
     [Parameter]
-    public int Id { get; set; }
+    public Usuario Usuario { get; set; }
 
     private Cargo[] ListadoCargos = new Cargo[0];
     private string[] TiposDeDocumento = Enum.GetNames(typeof(TipoDocumento));
 
-    private Usuario Usuario  = new Usuario();
-    private bool Cargando = false;
-
     protected override async Task OnInitializedAsync()
     {
         ListadoCargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
-        Usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Id}");
     }
 
     private async Task Enviar()
     {
-        Cargando = true;
-
         try
         {
-            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/usuario/{Id}", Usuario);
+            var respuesta = await http.PutAsJsonAsync($"/api/usuario/{Usuario.Id}", Usuario);
 
             if (respuesta.IsSuccessStatusCode)
             {
-                navegador.NavigateTo("/usuario");
+                toaster.ShowMessage("Datos actualizados correctamente");
             }
 
             else
@@ -110,11 +91,6 @@
             #if DEBUG
             throw;
             #endif
-        }
-
-        finally
-        {
-            Cargando = false;
         }
     }
 }

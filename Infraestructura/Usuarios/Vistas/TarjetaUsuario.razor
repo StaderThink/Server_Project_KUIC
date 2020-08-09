@@ -1,58 +1,38 @@
 ﻿@inject HttpClient http
+@inject IToastService toaster
 
-<div class="card">
-    <div class="card-content">
-        <div class="content">
-            <h6 class="title is-6">@(usuario.Nombre.ToCapitalize())</h6>
+<div class="column is-one-third">
+    <div class="card">
+        <div class="card-content">
+            <h6 class="title is-6">@(Usuario.TipoDocumento) @(Usuario.Documento)</h6>
+            <p>Nombre: @(Usuario.Nombre) @(Usuario.Apellido)</p>
 
-            <div class="field is-grouped is-grouped-multiline">
-                <div class="control">
-                    <div class="tags has-addons">
-                        <div class="tag is-dark">@usuario.TipoDocumento</div>
-                        <div class="tag is-light">@usuario.Documento</div>
-                    </div>
-                </div>
+            <div class="tags">
+                @if (Usuario.Activo)
+                {
+                    <div class="tag is-success">Activo</div>
+                }
 
-                <div class="control">
-                    <div class="tag is-light">@(usuario.Activo ? "Activo" : "Inactivo")</div>
-                </div>
+                else
+                {
+                    <div class="tag is-warning">Inactivo</div>
+                }
             </div>
         </div>
-    </div>
 
-    <div class="card-footer">
-        <a href="/usuario/modificar/@usuario.Id" class="card-footer-item">Editar</a>
-
-        @if (cargando)
-        {
-            <a class="card-footer-item" disabled>Borrar</a>
-        }
-
-        else
-        {
-            <a class="card-footer-item" @onclick="Eliminar">Borrar</a>
-        }
+        <footer class="card-footer">
+            <a class="card-footer-item">Modificar</a>
+            <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
+        </footer>
     </div>
 </div>
 
 @code {
     [Parameter]
-    public Usuario usuario { get; set; }
+    public Usuario Usuario { get; set; }
 
-    [Parameter]
-    public EventCallback onDeleted { get; set; }
+    private void Eliminar()
+    {
 
-    bool cargando = false;
-
-    async Task Eliminar() {
-        cargando = true;
-
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/usuario/{usuario.Id}");
-
-        if (respuesta.IsSuccessStatusCode && onDeleted.HasDelegate) {
-            await onDeleted.InvokeAsync(null);
-        }
-
-        cargando = false;
     }
 }

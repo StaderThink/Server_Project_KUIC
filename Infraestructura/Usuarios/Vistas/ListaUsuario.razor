@@ -1,5 +1,4 @@
 ﻿@inject HttpClient http
-@inject NavigationManager navegador
 
 @attribute [Authorize(Roles = "usuarios")]
 
@@ -15,7 +14,12 @@
 
 else
 {
-    
+    <div class="columns is-desktop is-multiline">
+        @foreach(var usuario in ListadoUsuarios)
+        {
+            <TarjetaUsuario Usuario="usuario" />
+        }
+    </div>
 } 
 
 @code {
