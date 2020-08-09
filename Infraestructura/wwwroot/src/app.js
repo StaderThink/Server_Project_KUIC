@@ -2,6 +2,24 @@ Vue.component("slider", {
     created() {
         this.tabs = this.$slots.default.filter(n => n.tag);
         this.tabs.map((t, i) => t.key = i);
+        console.log(this);
+    },
+
+    mounted() {
+
+        setInterval(
+            () => {
+                if (this.selected == (this.tabs.length - 1)) {
+                    this.selected = 0;
+                }
+
+                else {
+                    this.selected++;
+                }
+            },
+
+            6000
+        );
     },
 
     data() {
@@ -11,9 +29,19 @@ Vue.component("slider", {
         };
     },
 
-    render: function(createElement) {
-        const that = this;
+    methods: {
+        slideTab() {
+            if (this.selected == (this.tabs.length - 1)) {
+                this.selected = 0;
+            }
 
+            else {
+                this.selected++;
+            }
+        }
+    },
+
+    render: function(createElement) {
         return createElement(
             "div",
 
@@ -42,16 +70,16 @@ Vue.component("slider", {
                         class: { "dots": true }
                     },
 
-                    that.tabs.map(
+                    this.tabs.map(
                         (_, index) => {
                             return createElement(
                                 "span",
             
                                 {
-                                    class: { "dot": true, "is-active": that.selected == index },
+                                    class: { "dot": true, "is-active": this.selected == index },
                                     key: index,
                                     on: {
-                                        click: () => that.changeSelected(index)
+                                        click: () => this.changeSelected(index)
                                     }
                                 },
                             );
@@ -77,6 +105,8 @@ Vue.component("tab", {
     `
 });
 
-new Vue({
-    el: "#sliding"
-});
+function loadSlidingPage() {
+    new Vue({
+        el: "#sliding"
+    });
+}

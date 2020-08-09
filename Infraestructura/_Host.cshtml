@@ -5,16 +5,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <title>Proyecto Aurelia</title>
+    <title>Aurelia - Inventario y pedidos</title>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <base href="~/" />
+    <base href="~/" /> 
     <link rel="stylesheet" href="https://kuic-sena.github.io/estilos/dist/index.min.css">
     <link rel="stylesheet" href="/css/style.css" />
 
-    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.js" nomodule></script>
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons/ionicons.js" async></script>
     
     <environment names="Development">
         <script src="/src/vue.js"></script>
@@ -24,10 +24,11 @@
         <script src="/src/vue.min.js"></script>
     </environment>
 
-    <script src="~/src/app.js" defer></script>
 </head>
 <body>
     <component type="typeof(App)" render-mode="Server" />
-    <script src="_framework/blazor.server.js"></script>
+
+    <script src="_framework/blazor.server.js" async defer></script>
+    <script src="/src/app.js" defer></script>
 </body>
 </html>

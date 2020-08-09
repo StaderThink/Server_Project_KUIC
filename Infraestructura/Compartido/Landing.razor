@@ -1,4 +1,6 @@
-﻿<div id="landing">
+﻿@inject Microsoft.JSInterop.IJSRuntime runtime
+
+<div id="landing">
     <header class="is-active">
         <div class="logo">
             <img src="/img/logo.png">
@@ -122,3 +124,10 @@
         <p>Bogotá, D.C 2020 - 2021, Todos los derechos reservados. Desarrollo con 💖 por Kuic, conformado por Johan Sebastian Vargas Sanchez, Amy Lorena Cuadros Herran y Andres Camilo Celis Pacheco.</p>
     </footer>
 </div>
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await runtime.InvokeAsync<object>("loadSlidingPage", null);
+    }
+} 
