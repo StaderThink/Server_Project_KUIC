@@ -18,27 +18,12 @@ namespace Infraestructura.Usuarios
             repositorio = new RepositorioUsuario();
         }
 
-        private IEnumerable<Usuario> Busqueda(string criterio = "")
-        {
-            IEnumerable<Usuario> lista = repositorio.Listar();
-
-            criterio = criterio?.ToLower() ?? "";
-
-            return
-                from usuario in lista
-                where
-                    usuario.Documento.Contains(criterio) ||
-                    usuario.Nombre.Contains(criterio) ||
-                    usuario.Apellido.Contains(criterio)
-                select usuario;
-        }
-
         [HttpGet]
-        public IActionResult Listar([FromQuery] string buscar)
+        public IActionResult Listar()
         {
             try
             {
-                IEnumerable<Usuario> resultado = Busqueda(buscar);
+                var resultado = repositorio.Listar();
                 return Ok(resultado);
             }
 
@@ -52,6 +37,17 @@ namespace Infraestructura.Usuarios
         public ActionResult<Usuario> Obtener(int id)
         {
             if (repositorio.PorId(id) is Usuario usuario)
+            {
+                return usuario;
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet("documento/{documento}")]
+        public ActionResult<Usuario> PorDocumento(string documento)
+        {
+            if (repositorio.PorDocumento(documento) is Usuario usuario)
             {
                 return usuario;
             }

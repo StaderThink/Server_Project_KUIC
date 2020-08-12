@@ -11,20 +11,8 @@
                     <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
                 }
             </div>
-            <p>@notificacion.Texto.ToCapitalize()</p>
-            <p>@notificacion.FechaInicio</p>
-            <p>@notificacion.FechaFin</p>
-            <p>
-                @if (usuario is null)
-                {
-                    <span>Sin nombre</span>
-                }
-
-                else
-                {
-                    <span>@usuario.Nombre</span>
-                }
-            </p>
+            <p>@notificacion.Texto</p>
+            <p><span>@(usuario?.Nombre ?? "Sistema")</span></p>
         </div>
     </div>
 </div>

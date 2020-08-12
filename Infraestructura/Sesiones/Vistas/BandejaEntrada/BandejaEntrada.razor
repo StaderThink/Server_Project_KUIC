@@ -1,15 +1,17 @@
-﻿@inject HttpClient http
-@page "/bandeja"
+﻿@page "/bandeja"
 @layout AppLayout
+
 @attribute [Authorize]
+
+@inject HttpClient http
 
 <h3 class="title is-3">Bandeja de Entrada</h3>
 
 @if (notificaciones == null)
 {
-    <p>No hay notificaciones disponibles</p>
     <div class="is-loading"></div>
 }
+
 else
 {
     <div class="columns is-multiline">
@@ -23,7 +25,7 @@ else
 }
 
 @code {
-    Notificacion[] notificaciones { get; set; }
+    private Notificacion[] notificaciones { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -35,7 +37,9 @@ else
         catch
         {
             notificaciones = new Notificacion[0];
+#if DEBUG
             throw;
+#endif
         }
     }
 }

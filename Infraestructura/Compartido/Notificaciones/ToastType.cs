@@ -1,4 +1,4 @@
 ﻿namespace Infraestructura.Compartido.Notificaciones
 {
-    public enum ToastType { Warning, Danger, Normal }
+    public enum ToastType { Warning, Danger, Normal, Success }
 }

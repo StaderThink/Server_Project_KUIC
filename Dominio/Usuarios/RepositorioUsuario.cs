@@ -48,8 +48,8 @@ namespace Dominio.Usuarios
 
             string consulta = @$"
 				call crear_usuario(
-                    @Nombre, @Apellido, @Documento, '{entidad.TipoDocumento}', @FechaNacimiento,
-                    @FechaExpedicion, @Correo, @Clave, @Cargo, @Telefono
+                    @Nombre, @Apellido, @Documento, '{entidad.TipoDocumento}', @Nacimiento,
+                    @Expedicion, @Correo, @Clave, @Cargo, @Telefono
                 )
 			";
 

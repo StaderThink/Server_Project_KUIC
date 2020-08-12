@@ -270,8 +270,8 @@ ion-icon {
   padding: 2.5rem;
 }
 
-.aside {
-  width: var(--aside-width);
+#app .aside {
+  width: 25%;
   min-width: 15rem;
   height: 100%;
   padding: 2rem;
@@ -283,17 +283,21 @@ ion-icon {
   border-right: solid 1px #eee;
 }
 
-.aside .options {
+#app .aside .media {
+  margin-bottom: 3rem;
+}
+
+#app .aside .options {
   width: 100%;
   display: flex;
 }
 
-.aside .options ion-icon {
+#app .aside .options .option ion-icon {
   font-size: 20px;
   cursor: pointer;
 }
 
-.aside .options:not(:last-child) {
+#app .aside .options .option:not(:last-child) {
   margin-right: 1.5rem;
 }
 

@@ -1,13 +1,16 @@
-﻿@inject HttpClient http
+﻿@page "/usuario"
+@layout AppLayout
 
 @attribute [Authorize(Roles = "usuarios")]
 
-@page "/usuario"
-@layout AppLayout
+@inject HttpClient http
+@inject IToastService toaster
 
 <h2 class="title is-2">Usuarios</h2>
 
-@if (Cargando)
+<a href="/usuario/registrar">Registrar nuevo usuario</a>
+
+@if (loading)
 {
     <div class="loader"></div>
 }
@@ -15,42 +18,48 @@
 else
 {
     <div class="columns is-desktop is-multiline">
-        @foreach(var usuario in ListadoUsuarios)
+        @foreach (var usuario in list)
         {
             <TarjetaUsuario Usuario="usuario" />
         }
     </div>
-} 
+}
 
 @code {
-    private Usuario[] ListadoUsuarios;
-    private bool Cargando = true;
+    private Usuario[] list;
+    private bool loading = true;
 
     protected override async Task OnInitializedAsync()
     {
-        await ObtenerListado();
+        await GetList();
     }
 
-    private async Task ObtenerListado()
+    private async Task GetList()
     {
-        Cargando = true;
+        loading = true;
 
         try
         {
-            ListadoUsuarios = await http.GetFromJsonAsync<Usuario[]>($"/api/usuario");
+            list = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
         }
 
         catch
         {
-            ListadoUsuarios = null;
-            #if DEBUG
+            toaster.ShowError("Hubo un error recuperando los datos, por favor intente más tarde");
+
+#if DEBUG
             throw;
-            #endif
+#endif
         }
 
         finally
         {
-            Cargando = false;
+            loading = false;
         }
+    }
+
+    private async Task UserDeleted(Usuario usuario)
+    {
+        await GetList();
     }
 }

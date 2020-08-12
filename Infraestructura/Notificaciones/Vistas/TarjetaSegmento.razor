@@ -3,12 +3,12 @@
 <div class="detalle">
     @if (cargando)
     {
-        <button class="button is-small is-light">Espere...</button>
+        <span class="tag is-light">Espere...</span>
     }
 
     else
     {
-        <button class="button is-small is-light">@cargo.Nombre.ToCapitalize()</button>
+        <button class="tag is-dark">@(cargo.Nombre.ToCapitalize())</button>
     }
 </div>
 
@@ -16,9 +16,8 @@
     [Parameter]
     public Segmento segmento { get; set; }
 
-    Cargo cargo { get; set; }
-
-    bool cargando = true;
+    private Cargo cargo;
+    private bool cargando = true;
 
     protected override async Task OnInitializedAsync()
     {

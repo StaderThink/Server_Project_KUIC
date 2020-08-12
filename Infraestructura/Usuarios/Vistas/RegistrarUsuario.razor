@@ -1,11 +1,18 @@
-﻿@inject HttpClient http
-@inject NavigationManager navegador
-@inject IToastService toaster
+﻿@page "/usuario/registrar"
+@layout AppLayout
 
 @attribute [Authorize(Roles = "usuarios")]
 
-@page "/usuario/registrar"
-@layout AppLayout
+@inject HttpClient http
+@inject NavigationManager navegador
+@inject IToastService toaster
+
+<nav class="breadcrumb">
+    <ul>
+        <li><a href="/usuario">Usuario</a></li>
+        <li class="is-active"><a href="#">Registrar</a></li>
+    </ul>
+</nav>
 
 <h3 class="title is-3">Registrar usuario</h3>
 
@@ -84,7 +91,14 @@
         catch
         {
             ListadoCargos = new Cargo[0];
+            toaster.ShowError("No se cargaron correctamente los cargos");
         }
+    }
+
+    private async Task<bool> UserAlreadyExist()
+    {
+        var response = await http.GetAsync($"/api/usuario/documento/{Usuario.Documento}");
+        return response.IsSuccessStatusCode;
     }
 
     private async Task Enviar()
@@ -93,16 +107,25 @@
 
         try
         {
-            var respuesta = await http.PostAsJsonAsync("/api/usuario", Usuario);
-
-            if (respuesta.IsSuccessStatusCode)
+            if (await UserAlreadyExist())
             {
-                navegador.NavigateTo("/usuario");
+                var response = await http.PostAsJsonAsync("/api/usuario", Usuario);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/usuario");
+                }
+
+                else
+                {
+                    toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
+
+                }
             }
 
             else
             {
-                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
+                toaster.ShowWarning("Ya hay un usuario registrado con ese número de documento");
             }
         }
 
@@ -110,9 +133,9 @@
         {
             toaster.ShowError("Hubo un error desconocido, intenta más tarde");
 
-            #if DEBUG
+#if DEBUG
             throw;
-            #endif
+#endif
         }
 
         finally

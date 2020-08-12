@@ -1,5 +1,5 @@
-.aside {
-    width: var(--aside-width);
+#app .aside {
+    width: $aside-width;
     min-width: 15rem;
     height: 100%;
     padding: 2rem;
@@ -10,17 +10,23 @@
     justify-content: space-between;
     border-right: solid 1px #eee;
 
+    .media {
+        margin-bottom: 3rem;
+    }
+
     .options {
         width: 100%;
         display: flex;
 
-        %icon {
-            font-size: 20px;
-            cursor: pointer;
-        }
+        .option {
+            %icon {
+                font-size: 20px;
+                cursor: pointer;
+            }
 
-        &:not(:last-child) {
-            margin-right: 1.5rem;
+            &:not(:last-child) {
+                margin-right: 1.5rem;
+            }
         }
     }
 }

@@ -21,6 +21,11 @@ namespace Infraestructura.Compartido.Notificaciones
             Show(message, ToastType.Normal);
         }
 
+        public void ShowSuccess(string message)
+        {
+            Show(message, ToastType.Success);
+        }
+
         protected void Show(string message, ToastType type)
         {
             var toast = new Toast

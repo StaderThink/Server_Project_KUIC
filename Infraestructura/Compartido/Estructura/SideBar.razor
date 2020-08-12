@@ -5,6 +5,13 @@
 
 <aside class="aside">
     <nav class="menu">
+        <div class="media">
+            <div class="media-content">
+                <p class="title is-6">Hola @(Usuario?.Nombre ?? "anonimo")</p>
+                <p class="subtitle is-6">@(Usuario?.Correo ?? "Espere...")</p>
+            </div>
+        </div>
+
         <AuthorizeView Roles="usuarios">
             <p class="menu-label">USUARIOS</p>
 
@@ -61,6 +68,14 @@
 </aside>
 
 @code {
+    private Usuario Usuario;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var provider = (ProveedorAutenticacion) authProvider;
+        Usuario = await provider.GetUserAsync();
+    }
+
     async Task CerrarSesion()
     {
         var proveedor = (ProveedorAutenticacion) authProvider;

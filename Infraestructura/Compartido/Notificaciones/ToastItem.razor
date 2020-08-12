@@ -1,6 +1,4 @@
-﻿@using System.Threading
-
-<div class="toast notification @CssClass">
+﻿<div class="toast notification @CssClass">
     @if (OnDelete.HasDelegate)
     {
         <button type="button" class="delete" @onclick="Delete"></button>
@@ -24,7 +22,8 @@
         {
             ToastType.Danger => "is-danger",
             ToastType.Warning => "is-warning",
-            _ => string.Empty
+            ToastType.Success => "is-success",
+            _ => "is-link"
         };
     }
 
@@ -37,12 +36,12 @@
     {
         try
         {
-            await Task.Delay(TimeSpan.FromSeconds(6));
+            await Task.Delay(TimeSpan.FromSeconds(7));
         }
 
         catch
         {
-            Delete();
+            throw new TimeoutException();
         }
 
         finally

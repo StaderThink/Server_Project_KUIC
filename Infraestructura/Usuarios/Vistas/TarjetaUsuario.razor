@@ -4,25 +4,44 @@
 <div class="column is-one-third">
     <div class="card">
         <div class="card-content">
-            <h6 class="title is-6">@(Usuario.TipoDocumento) @(Usuario.Documento)</h6>
-            <p>Nombre: @(Usuario.Nombre) @(Usuario.Apellido)</p>
+            <div class="media">
+                <div class="media-content">
+                    <p class="title is-6">@(Usuario.Nombre) @(Usuario.Apellido)</p>
+                    <p class="subtitle is-6">@(Usuario.TipoDocumento) @(Usuario.Documento)</p>
+                </div>
+            </div>
 
-            <div class="tags">
-                @if (Usuario.Activo)
-                {
-                    <div class="tag is-success">Activo</div>
-                }
+            <div class="content">
+                <div class="tags">
+                    @if (Usuario.Activo)
+                    {
+                        <div class="tag is-success">Activo</div>
+                    }
 
-                else
-                {
-                    <div class="tag is-warning">Inactivo</div>
-                }
+                    else
+                    {
+                        <div class="tag is-warning">Inactivo</div>
+                    }
+                </div>
+
+                <div><a href="mailto:@(Usuario.Correo)">@Usuario.Correo</a></div>
+                <div>@Usuario.Telefono</div>
             </div>
         </div>
 
         <footer class="card-footer">
-            <a class="card-footer-item">Modificar</a>
-            <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
+            @if (deleting)
+            {
+                <span class="card-footer-item">
+                    <span class="loader"></span>
+                </span>
+            }
+
+            else
+            {
+                <a class="card-footer-item" href="/usuario/modificar/@Usuario.Id">Modificar</a>
+                <a class="card-footer-item" @onclick="Delete">Eliminar</a>
+            }
         </footer>
     </div>
 </div>
@@ -31,8 +50,45 @@
     [Parameter]
     public Usuario Usuario { get; set; }
 
-    private void Eliminar()
-    {
+    [Parameter]
+    public EventCallback<Usuario> OnDeleted { get; set; }
 
+    private bool deleting = false;
+
+    private async Task Delete()
+    {
+        deleting = true;
+
+        try
+        {
+            var response = await http.DeleteAsync($"/api/usuario/{Usuario.Id}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                toaster.ShowSuccess("Usuario eliminado");
+
+                if (OnDeleted.HasDelegate)
+                    await OnDeleted.InvokeAsync(Usuario);
+            }
+
+            else
+            {
+                toaster.ShowWarning("Vuelve a intentarlo, no se eliminó el usuario");
+            }
+        }
+
+        catch
+        {
+            toaster.ShowError("Hubo un error al realizar el proceso, intenta más tarde");
+
+#if DEBUG
+            throw;
+#endif
+        }
+
+        finally
+        {
+            deleting = false;
+        }
     }
 }
