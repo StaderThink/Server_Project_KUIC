@@ -1,0 +1,11 @@
+﻿@inherits FieldBase<string>
+
+<div class="field has-addons">
+    <div class="control">
+        <span class="button is-static">+57</span>
+    </div>
+
+    <div class="control is-expanded">
+        <input type="tel" @attributes="AdditionalAttributes" class="input @CssClass" @bind="CurrentValue" />
+    </div>
+</div>

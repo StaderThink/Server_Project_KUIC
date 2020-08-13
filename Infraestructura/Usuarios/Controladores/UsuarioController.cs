@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using Aplicacion.Usuarios;
 using Dominio.Usuarios;
 using Microsoft.AspNetCore.Authorization;
@@ -23,8 +24,12 @@ namespace Infraestructura.Usuarios
         {
             try
             {
-                var resultado = repositorio.Listar();
-                return Ok(resultado);
+                var list = repositorio.Listar();
+
+                // remover el usuario en sesion
+
+                string documento = HttpContext.User.FindFirstValue(ClaimTypes.Dns);
+                return Ok(list.Where(u => u.Documento != documento));
             }
 
             catch

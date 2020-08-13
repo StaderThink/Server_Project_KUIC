@@ -101,7 +101,7 @@ else
             var nuevoProveedor = (ProveedorAutenticacion) autentificacion;
             await nuevoProveedor.SignIn(Modelo.Documento, Modelo.Clave);
 
-            navegador.NavigateTo("/inicio");
+            navegador.NavigateTo("/");
         }
 
         catch

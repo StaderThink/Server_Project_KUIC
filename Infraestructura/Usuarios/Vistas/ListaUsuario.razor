@@ -8,7 +8,9 @@
 
 <h2 class="title is-2">Usuarios</h2>
 
-<a href="/usuario/registrar">Registrar nuevo usuario</a>
+<a href="/usuario/registrar" class="button is-primary">Registrar nuevo usuario</a>
+
+<hr />
 
 @if (loading)
 {
@@ -20,7 +22,7 @@ else
     <div class="columns is-desktop is-multiline">
         @foreach (var usuario in list)
         {
-            <TarjetaUsuario Usuario="usuario" />
+            <TarjetaUsuario Usuario="usuario" OnDeleted="UserDeleted" />
         }
     </div>
 }

@@ -38,12 +38,8 @@ namespace Infraestructura.Controladores.Inventarios
         [HttpGet("notificacion/{notificacionId}")]
         public IEnumerable<Segmento> ListarPorNotificacion(int notificacionId)
         {
-            IEnumerable<Segmento> lista = repositorio.Listar();
-
-            return
-                from segmento in lista
-                where segmento.Notificacion == notificacionId
-                select segmento;
+            var lista = repositorio.PorNotificacion(notificacionId);
+            return lista.Where(s => s.Notificacion == notificacionId);
         }
 
         [HttpPost]

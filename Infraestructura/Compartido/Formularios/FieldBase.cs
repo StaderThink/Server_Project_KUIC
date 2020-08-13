@@ -8,8 +8,14 @@ namespace Infraestructura.Compartido.Formularios
     {
         protected string ControlCssClass()
         {
+            string cssClass = "";
+
             bool isInvalid = EditContext.GetValidationMessages(FieldIdentifier).Any();
-            return isInvalid ? "is-danger" : "";
+
+            if (isInvalid)
+                cssClass += "is-danger ";
+
+            return cssClass;
         }
 
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)

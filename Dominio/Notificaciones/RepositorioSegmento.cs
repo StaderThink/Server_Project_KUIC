@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Dominio.Notificaciones
 {
@@ -27,6 +28,16 @@ namespace Dominio.Notificaciones
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }
+
+        public IEnumerable<Segmento> PorNotificacion(int notificacion)
+        {
+            using Conexion conexion = new Conexion();
+
+            string consulta = "select * from segmento where notificacion = @notificacion";
+
+            return conexion.Seleccionar<Segmento>(consulta, new { notificacion });
+        }
+
         public IEnumerable<Segmento> Listar()
         {
             using Conexion conexion = new Conexion();
@@ -42,7 +53,7 @@ namespace Dominio.Notificaciones
         public bool EliminarPorNotificacion (Notificacion notificacion)
         {
             using Conexion conexion = new Conexion();
-            string consulta = "delete from segmento where notificacion = @id";
+            string consulta = "delete from segmento where notificacion = @Id";
             int filasAfectadas = conexion.Ejecutar(consulta, notificacion);
             return filasAfectadas >= 0;
         }

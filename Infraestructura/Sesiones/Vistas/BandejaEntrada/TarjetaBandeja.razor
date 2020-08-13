@@ -11,23 +11,26 @@
                     <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
                 }
             </div>
-            <p>@notificacion.Texto</p>
-            <p><span>@(usuario?.Nombre ?? "Sistema")</span></p>
+            <p>@Notificacion.Texto</p>
+            <p><span>@(autor?.Nombre ?? "Sistema")</span></p>
         </div>
     </div>
 </div>
 
 @code {
-    Segmento[] segmentos { get; set; } = new Segmento[0];
-
     [Parameter]
-    public Notificacion notificacion { get; set; }
+    public Notificacion Notificacion { get; set; }
 
-    Usuario usuario { get; set; }
+    private Segmento[] segmentos = new Segmento[0];
+    private Usuario autor;
 
     protected override async Task OnInitializedAsync()
     {
-        segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{notificacion.Id}");
-        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{notificacion.Autor}");
+        segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
+
+        if (!(Notificacion.Autor is null))
+        {
+            autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
+        }
     }
 }

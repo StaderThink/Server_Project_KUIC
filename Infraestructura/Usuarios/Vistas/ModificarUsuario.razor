@@ -15,6 +15,8 @@
 
 <h3 class="title is-3">Modificar los datos #@Id</h3>
 
+<hr />
+
 @if (Usuario is null)
 {
     <p class="subtitle is-5">Se estan cargando los datos del usuario, por favor espere.</p>
@@ -26,14 +28,14 @@ else
         <DataAnnotationsValidator />
 
         <FormField Label="Tipo de documento">
-            <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
+            <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento" readonly>
                 <option value="@value">@value</option>
             </SelectField>
             <FormFeedback For="() => Usuario.TipoDocumento" />
         </FormField>
 
         <FormField Label="Documento">
-            <NumberField id="documento" @bind-Value="Usuario.Documento" />
+            <NumberField id="documento" @bind-Value="Usuario.Documento" readonly />
             <FormFeedback For="() => Usuario.Documento" />
         </FormField>
 
@@ -53,7 +55,7 @@ else
         </FormField>
 
         <FormField Label="Telefono">
-            <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
+            <PhoneField id="telefono" @bind-Value="Usuario.Telefono" />
             <FormFeedback For="() => Usuario.Telefono" />
         </FormField>
 
@@ -62,6 +64,11 @@ else
                 <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
             </SelectField>
             <FormFeedback Help="Esto define los accesos que tiene el usuario" For="() => Usuario.Cargo" />
+        </FormField>
+
+        <FormField Label="Fecha de nacimiento">
+            <DateField id="fechaExpedicion" @bind-Value="Usuario.Nacimiento" readonly />
+            <FormFeedback For="() => Usuario.Expedicion" />
         </FormField>
 
         <FormField Label="Fecha de expedición">

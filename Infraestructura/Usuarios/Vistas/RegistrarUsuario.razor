@@ -16,6 +16,8 @@
 
 <h3 class="title is-3">Registrar usuario</h3>
 
+<hr />
+
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
@@ -47,7 +49,7 @@
     </FormField>
 
     <FormField Label="Telefono">
-        <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
+        <PhoneField id="telefono" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
@@ -109,6 +111,11 @@
         {
             if (await UserAlreadyExist())
             {
+                toaster.ShowWarning("Ya hay un usuario registrado con ese número de documento");
+            }
+
+            else
+            {
                 var response = await http.PostAsJsonAsync("/api/usuario", Usuario);
 
                 if (response.IsSuccessStatusCode)
@@ -121,11 +128,6 @@
                     toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
 
                 }
-            }
-
-            else
-            {
-                toaster.ShowWarning("Ya hay un usuario registrado con ese número de documento");
             }
         }
 
