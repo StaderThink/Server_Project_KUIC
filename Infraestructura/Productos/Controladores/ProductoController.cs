@@ -54,6 +54,17 @@ namespace Infraestructura.Productos.Controladores
             }
         }
 
+        [HttpGet("codigo/{codigo}")]
+        public ActionResult<Producto> PorCodigo (string codigo)
+        {
+            if (repositorio.PorCodigo(codigo) is Producto producto)
+            {
+                return producto;
+            }
+
+            return NotFound();
+        }
+
         [HttpPost]
         public IActionResult Insertar([FromBody] Producto datos)
         {

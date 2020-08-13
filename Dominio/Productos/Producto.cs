@@ -36,6 +36,7 @@ namespace Dominio.Productos
         [Required]
         public Presentacion Presentacion { get; set; } = Presentacion.Bandeja;
 
+        [Range(1, int.MaxValue, ErrorMessage = "Seleccione un valor valido")]
         [Required(ErrorMessage = "Elige una categoria")]
         public int Categoria { get; set; }
     }

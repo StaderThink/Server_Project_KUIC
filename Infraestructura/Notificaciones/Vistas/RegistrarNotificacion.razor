@@ -63,6 +63,7 @@
     {
         try
         {
+            AgregarElemento();
             usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
             cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
         }
@@ -90,7 +91,6 @@
         {
             foreach (var segmento in segmentos)
             {
-
                 if (notificacion.FechaFin < notificacion.FechaInicio)
                 {
                     toaster.ShowWarning("La fecha de caducidad de una notificación no puede ser menor a la de inicio");

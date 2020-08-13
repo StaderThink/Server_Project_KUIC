@@ -37,26 +37,27 @@
 </EditForm>
 
 @code {
-    Entrada entrada { get; set; } = new Entrada();
+        Entrada entrada { get; set; } = new Entrada();
 
-    bool cargando = false;
+        bool cargando = false;
 
-    List<DetalleEntrada> detalles = new List<DetalleEntrada>();
+        List<DetalleEntrada> detalles = new List<DetalleEntrada>();
 
-    Producto[] listaProductos = new Producto[0];
+        Producto[] listaProductos = new Producto[0];
 
-    bool deshabilitar
+        bool deshabilitar
     {
-        get
+            get
         {
-            return listaProductos.Length == 0;
+                return listaProductos.Length == 0;
+            }
         }
-    }
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
+            AgregarElemento();
             listaProductos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
         }
 

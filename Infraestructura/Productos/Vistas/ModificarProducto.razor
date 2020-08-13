@@ -95,19 +95,19 @@
 
         try
         {
-            if (producto.Categoria == 0)
-            {
-                toaster.ShowWarning("Te falta especificar la categoria");
-            }
-            else
-            {
-                HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/producto/{Id}", producto);
+            //if (producto.Categoria == 0)
+            //{
+            //    toaster.ShowWarning("Te falta especificar la categoria");
+            //}
+            //else
+            //{
+            HttpResponseMessage respuesta = await http.PutAsJsonAsync($"/api/producto/{Id}", producto);
 
-                if (respuesta.IsSuccessStatusCode)
-                {
-                    navegador.NavigateTo("/inventario");
-                }
+            if (respuesta.IsSuccessStatusCode)
+            {
+                navegador.NavigateTo("/inventario");
             }
+            //}
         }
 
         catch (Exception ex)

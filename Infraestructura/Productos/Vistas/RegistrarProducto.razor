@@ -101,22 +101,37 @@
         categorias = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
     }
 
+    private async Task<bool> CodigoExistente()
+    {
+        var response = await http.GetAsync($"/api/producto/codigo/{producto.Codigo}");
+        return response.IsSuccessStatusCode;
+    }
+
     async Task Enviar()
     {
-        if (producto.Categoria == 0)
+        try
         {
-            toaster.ShowWarning("Te falta especificar la categoria");
-        }
-        else
-        {
-            cargando = true;
-
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
-
-            if (respuesta.IsSuccessStatusCode)
+            if (await CodigoExistente())
             {
-                navegador.NavigateTo("/inventario");
+                toaster.ShowWarning("Este código ya está registrado");
             }
+
+            else
+            {
+                cargando = true;
+
+                HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/producto", producto);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/inventario");
+                }
+            }
+        }
+
+        catch
+        {
+            toaster.ShowError("Hubo un error, por favor intentelo más tarde");
         }
     }
 }

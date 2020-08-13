@@ -2,15 +2,20 @@
 
     <div class="field">
         <DataAnnotationsValidator></DataAnnotationsValidator>
-        <FormField Label="Cargo">
-            <SelectField @bind-Value="segmento.Cargo" Context="cargo" Data="cargos">
-                <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
-            </SelectField>
-            <FormFeedback For="() => segmento.Cargo" Help="Esto define a quien se dirijirá la notificación" />
-        </FormField>
-
-        <div class="field">
-            <button class="button is-primary is-light is-small" @onclick="Eliminar">Quitar</button>
+        <div class="field is-grouped">
+            <div class="control is-expanded">
+                <FormField>
+                    <SelectField @bind-Value="segmento.Cargo" Context="cargo" Data="cargos">
+                        <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+                    </SelectField>
+                    <FormFeedback For="() => segmento.Cargo" Help="Esto define a quien se dirijirá la notificación" />
+                </FormField>
+            </div>
+            <div class="control">
+                <button class="button is-primary is-light" @onclick="Eliminar">
+                    <ion-icon name="trash-outline"></ion-icon>
+                </button>
+            </div>
         </div>
     </div>
 
