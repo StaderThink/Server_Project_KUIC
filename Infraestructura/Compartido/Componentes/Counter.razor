@@ -49,6 +49,12 @@
     [Parameter]
     public EventCallback OnDelete { get; set; }
 
+    [Parameter]
+    public EventCallback OnAdd { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubtract { get; set; }
+
     #region Events
     private void ChangeValue(int value)
     {
@@ -100,7 +106,15 @@
     {
         if (Value < Max)
         {
-            ChangeValue(++Value);
+            if (OnAdd.HasDelegate)
+            {
+                OnAdd.InvokeAsync(null);
+            }
+
+            else
+            {
+                ChangeValue(++Value);
+            }
         }
     }
 
@@ -108,7 +122,15 @@
     {
         if (Value > Min)
         {
-            ChangeValue(--Value);
+            if (OnSubtract.HasDelegate)
+            {
+                OnSubtract.InvokeAsync(null);
+            }
+
+            else
+            {
+                ChangeValue(--Value);
+            }
         }
 
         else

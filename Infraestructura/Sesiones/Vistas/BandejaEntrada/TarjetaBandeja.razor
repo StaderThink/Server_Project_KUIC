@@ -28,7 +28,7 @@
     {
         segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
 
-        if (!(Notificacion.Autor is null))
+        if (Notificacion.Autor != 0)
         {
             autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
         }

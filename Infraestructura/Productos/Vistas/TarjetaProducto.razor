@@ -12,11 +12,7 @@
                 </div>
 
                 <div class="field">
-                    <p>
-                        <a href="/entrada/registrar" class="button is-small">+</a>
-                        <button class="button is-small is-static is-white">@producto.Existencias</button>
-                        <a href="/salida/registrar" class="button is-small">-</a>
-                    </p>
+                    <Counter @bind-Value="@producto.Existencias" OnAdd="AddStock" OnSubtract="SubtractStock" ReadOnly />
                 </div>
 
             </div>
@@ -52,10 +48,10 @@
         categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{producto.Categoria}");
     }
 
-    async Task Eliminar()
+    private async Task Eliminar()
     {
         cargando = true;
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/producto/{producto.Id}");
+        var respuesta = await http.DeleteAsync($"/api/producto/{producto.Id}");
 
         if (respuesta.IsSuccessStatusCode && OnProductoEliminado.HasDelegate)
         {
@@ -65,8 +61,18 @@
         cargando = false;
     }
 
-    void Editar()
+    private void Editar()
     {
         navegador.NavigateTo($"/producto/modificar/{producto.Id}");
+    }
+
+    private void AddStock()
+    {
+        navegador.NavigateTo("/entrada/registrar");
+    }
+
+    private void SubtractStock()
+    {
+        navegador.NavigateTo("/salida/registrar");
     }
 }
