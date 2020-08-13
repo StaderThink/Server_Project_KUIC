@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Aplicacion.Clientes;
 using Dominio.Clientes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Clientes.Controladores
 {
-    [Authorize(Roles = "clientes")]
+    [Authorize(Roles = "clientes, solicitar")]
     [Route("api/[controller]")]
     public class ClienteController : Controller
     {
@@ -60,11 +61,12 @@ namespace Infraestructura.Clientes.Controladores
         [HttpPost]
         public IActionResult Insertar([FromBody] Cliente cliente)
         {
-            if (repositorio.Insertar(cliente))
-            {
-                return Accepted();
-            }
-            return BadRequest();
+            ServicioRegistradorCliente servicio = new ServicioRegistradorCliente();
+
+            if (servicio.Registrar(cliente))
+                return Ok();
+            else
+                return BadRequest();
         }
 
         [HttpPut("{id}")]

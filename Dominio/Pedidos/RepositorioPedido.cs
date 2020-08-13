@@ -32,7 +32,7 @@ namespace Dominio.Pedidos
         public bool Insertar(Pedido entidad)
         {
             using Conexion conexion = new Conexion();
-            string consulta =$@"insert into pedido (fecha, cliente, asesor, estado, descuento, observacion) values (@Fecha, @Cliente, @Asesor, '{entidad.Estado}', @Descuento, @Observacion)";
+            string consulta = $@"insert into pedido (fecha, cliente, asesor, estado, descuento, observacion) values (@Fecha, @Cliente, @Asesor, '{entidad.Estado}', @Descuento, @Observacion)";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }

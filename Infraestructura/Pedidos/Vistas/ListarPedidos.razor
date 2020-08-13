@@ -1,25 +1,28 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@attribute [Authorize(Roles = "pedidos, solicitar")]
 
 @page "/pedido"
 @page "/pedido/{busqueda}"
 @layout AppLayout
 
-<AuthorizeView Roles="pedidos">
-    <Authorized>
 
         @if (cargando)
         {
             <div class="buttons">
-                <a href="/pedido/registrar" class="button is-primary">Agregar Pedido</a>
+                <a href="/pedido/registrar" class="button is-primary">Solicitar Pedido</a>
             </div>
-            <div class="loader is-medium"></div> }
+            <div class="loader is-medium"></div> 
+         
+        }
+
         else
         {
-            <h2 class="title is-2">Pedidos</h2>
+            <h2 class="title is-2">Listado de solicitudes</h2>
             <div class="buttons">
-            <a href="/pedido/registrar" class="button is-primary">Agregar Pedido</a>
+                <a href="/pedido/registrar" class="button is-primary">Solicitar Pedido</a>
             </div>
+
             <div class="columns is-multiline">
                 @foreach (var pedido in lista)
                 {
@@ -30,12 +33,6 @@
                 }
             </div>
         }
-    </Authorized>
-
-    <NotAuthorized>
-        <p>Oops... parece que no tienes permisos para estar aquí</p>
-    </NotAuthorized>
-</AuthorizeView>
 
 @code {
     Pedido[] lista { get; set; }

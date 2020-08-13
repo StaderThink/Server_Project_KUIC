@@ -1,11 +1,13 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
+@attribute [Authorize(Roles = "clientes, solicitar")]
+
 @page "/cliente"
 @page "/cliente/{busqueda}"
 @layout AppLayout
 
-<AuthorizeView Roles="clientes">
+<AuthorizeView Roles="clientes, solicitar">
     <Authorized>
         @if (cargando)
         {
@@ -15,7 +17,7 @@
         else
         {
             <div class="container">
-                <h2 class="title is-2">Clientes</h2>
+                <h2 class="title is-2">Listado de clientes</h2>
 
                 <div class="buttons">
                     <a class="button is-primary" href="/cliente/registrar">Registrar cliente</a>

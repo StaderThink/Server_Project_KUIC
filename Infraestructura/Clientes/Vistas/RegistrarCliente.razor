@@ -1,109 +1,70 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
+@inject IToastService toaster
+
+@attribute [Authorize(Roles = "clientes, solicitar")]
 
 @page "/cliente/registrar"
 @layout AppLayout
 
-<h2>Registrar cliente</h2>
+<h3 class="title is-3">Registrar cliente</h3>
 
-@if (mensaje is string)
-{
-    <blockquote class="is-error">
-        <p>@mensaje</p>
-    </blockquote>
-}
+<EditForm Model="Cliente" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator />
 
-<AuthorizeView Roles="clientes">
-    <Authorized>
-        <form @onsubmit="Enviar">
-            <div class="grid xs-1 md-2 has-gap">
-                <div class="field">
-                    <label for="rut">RUT</label>
-                    <input id="rut" type="number" pattern="^\d{9}$" placeholder="###" class="@(yaExiste ? "input is-error" : "input")" @bind="cliente.Rut" @onfocusout="BuscarExistencia" required />
+    <FormField Label="Rut">
+        <NumberField id="rut" @bind-Value="Cliente.Rut" />
+        <FormFeedback For="() => Cliente.Rut" />
+    </FormField>
 
-                    @if (yaExiste)
-                    {
-                        <small class="is-error">Este número ya ha sido registrado</small>
-                    }
+    <FormField Label="Nombre">
+        <TextField id="nombre" @bind-Value="Cliente.Nombre" />
+        <FormFeedback For="() => Cliente.Nombre" />
+    </FormField>
 
-                    else
-                    {
-                        <small>Número de <abbr title="Registro Único Tributario">RUT</abbr></small>
-                    }
-                </div>
+    <FormField Label="Encargado">
+        <TextField id="encargado" @bind-Value="Cliente.Encargado" />
+        <FormFeedback For="() => Cliente.Encargado" />
+    </FormField>
 
-                <div class="field">
-                    <label for="nombre">Nombre de la empresa</label>
-                    <input id="nombre" type="text" placeholder="Ej. Google LLC" class="input" @bind="cliente.Nombre" required />
-                </div>
+    <FormField Label="Direccion">
+        <TextField id="direccion" @bind-Value="Cliente.Direccion" />
+        <FormFeedback For="() => Cliente.Direccion" />
+    </FormField>
 
-                <div class="field">
-                    <label for="encargado">Encargado</label>
-                    <input id="encargado" type="text" placeholder="Ej. Juan Avellano" class="input" @bind="cliente.Encargado" required />
-                    <small>Nombre de la persona contacto con la empresa</small>
-                </div>
+    <FormField Label="Correo">
+        <EmailField id="correo" @bind-Value="Cliente.Correo" />
+        <FormFeedback For="() => Cliente.Correo" />
+    </FormField>
 
-                <div class="field">
-                    <label for="correo">Correo</label>
-                    <input id="correo" type="email" pattern="^\w{3,}@@\w{3,}(\.\w{2,5})+$" placeholder="correo@dominio.com" class="input" @bind="cliente.Correo" required />
-                </div>
+    <FormField Label="Telefono">
+        <NumberField id="telefono" @bind-Value="Cliente.Telefono" />
+        <FormFeedback For="() => Cliente.Telefono" />
+    </FormField>
 
-                <div class="field">
-                    <label for="direccion">Direccion</label>
-                    <input id="direccion" class="input" type="text" placeholder="Ej: Calle 25 #125-74" @bind="cliente.Direccion" required />
-                </div>
+    <FormField>
+        <CheckboxField @bind-Value="Cliente.Activo">
+            <span>¿Va a estar activo en el sistema?</span>
+        </CheckboxField>
+    </FormField>
 
-                <div class="field">
-                    <label for="telefono">Teléfono</label>
-                    <div class="control is-attached">
-                        <span class="button is-static">+57</span>
-                        <input id="telefono" type="tel" placeholder="###" minlength="7" class="input" @bind="cliente.Telefono" required />
-                    </div>
-                </div>
-
-                <div class="field is-inline">
-                    <label for="activo">Activo</label>
-                    <input type="checkbox" class="checkbox" @bind="cliente.Activo" />
-                </div>
-            </div>
-
-            <div class="field">
-                <div class="control is-grouped">
-                    @if (cargando)
-                    {
-                        <button class="is-primary has-loader" disabled>Registrar</button>
-                    }
-
-                    else
-                    {
-                        <button type="submit" class="is-primary" disabled="@yaExiste">Registrar</button>
-                    }
-
-                    <a href="/cliente" class="button is-outlined">Cancelar</a>
-                </div>
-            </div>
-        </form>
-    </Authorized>
-
-    <NotAuthorized>
-        <h1>Oops... Parece que no tienes permisos</h1>
-    </NotAuthorized>
-</AuthorizeView>
+    <FormButtons IsLoading="Cargando">
+        <CancelButton To="/cliente">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
+    </FormButtons>
+</EditForm>
 
 @code {
-    Cliente cliente { get; set; } = new Cliente();
+    private Cliente Cliente = new Cliente();
+    private bool Cargando = false;
 
-    bool yaExiste = false;
-    string mensaje;
-    bool cargando = false;
-
-    async Task Enviar()
+    private async Task Enviar()
     {
-        cargando = true;
+        Cargando = true;
 
         try
         {
-            HttpResponseMessage respuesta = await http.PostAsJsonAsync("/api/cliente", cliente);
+            var respuesta = await http.PostAsJsonAsync("/api/cliente", Cliente);
 
             if (respuesta.IsSuccessStatusCode)
             {
@@ -112,48 +73,22 @@
 
             else
             {
-                mensaje = "Hubo un error al insertar";
+                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
             }
         }
 
         catch
         {
-            mensaje = "Hubo un error al insertar";
+            toaster.ShowError("Hubo un error desconocido, intenta más tarde");
+
+#if DEBUG
+            throw;
+#endif
         }
 
         finally
         {
-            cargando = false;
-        }
-    }
-
-    async Task BuscarExistencia()
-    {
-        try
-        {
-            if (string.IsNullOrWhiteSpace(cliente.Rut))
-            {
-                yaExiste = false;
-                return;
-            }
-
-            HttpResponseMessage respuesta = await http.GetAsync($"/api/cliente?buscar={cliente.Rut}");
-
-            if (respuesta.IsSuccessStatusCode)
-            {
-                var existencias = await respuesta.Content.ReadFromJsonAsync<Cliente[]>();
-                yaExiste = existencias.Length > 0;
-            }
-
-            else
-            {
-                yaExiste = true;
-            }
-        }
-
-        catch
-        {
-            yaExiste = true;
+            Cargando = false;
         }
     }
 }
