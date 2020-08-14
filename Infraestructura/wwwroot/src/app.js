@@ -105,6 +105,6 @@ Vue.component("tab", {
 
 function loadSlidingPage() {
     new Vue({
-        el: "#sliding"
+        el: ".sliding"
     });
 }
