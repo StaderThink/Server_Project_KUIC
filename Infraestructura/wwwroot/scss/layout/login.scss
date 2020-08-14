@@ -1,0 +1,31 @@
+.login {
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 3rem;
+    
+    @media(min-width: 1044px) {
+        justify-content: flex-end;
+        padding-right: 6rem;
+    }
+    
+    &-box {
+        .title {
+            margin-bottom: 3rem;
+        }
+        
+        .buttons {
+            margin-top: 3rem;
+        }
+        
+        @media(min-width: 1044px) {
+            padding: 3rem 2rem;
+            border: solid 1px #eee;
+            border-radius: 1rem;
+            box-shadow: 0 0.2rem 0.5rem rgba(black, 0.08);
+            background-color: white;
+        }
+    }
+}

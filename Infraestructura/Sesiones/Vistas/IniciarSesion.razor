@@ -4,44 +4,53 @@
 @inject IToastService toaster
 
 @page "/iniciar_sesion"
-@layout BaseLayout
 
 @using Aplicacion.Sesiones.Formularios
 
-<h1 class="title is-1">Inicio de sesión</h1>
+<div class="login">
+    <div class="login-box">
+        <div class="content">
+            <h3 class="title is-3">Inicio de sesión</h3>
 
-<hr />
+            @if (TiempoRestante.Minutes == 0 && Intentos != 3)
+            {
+                <EditForm Model="Modelo" OnValidSubmit="Enviar">
+                    <FormField Label="Documento">
+                        <NumberField @bind-Value="Modelo.Documento" placeholder="CC o NIT" />
+                        <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad" />
+                    </FormField>
 
-@if (TiempoRestante.Minutes == 0 && Intentos <= 3)
-{
-    <EditForm Model="Modelo" OnValidSubmit="Enviar">
-        <DataAnnotationsValidator />
+                    <FormField Label="Contraseña">
+                        <PasswordField @bind-Value="Modelo.Clave" placeholder="Ej. MiContraseña" />
+                        <FormFeedback For="() => Modelo.Clave" />
+                    </FormField>
 
-        <FormField Label="Documento">
-            <NumberField @bind-Value="Modelo.Documento" />
-            <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad (CC o NIT)" />
-        </FormField>
+                    <div class="content">
+                        <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
+                    </div>
 
-        <FormField Label="Contraseña">
-            <PasswordField @bind-Value="Modelo.Clave" />
-            <FormFeedback For="() => Modelo.Clave" />
-        </FormField>
+                    <div class="buttons">
+                        @if (Cargando)
+                        {
+                            <button type="button" class="button is-primary is-fullwidth is-loading" disabled>Ingresar</button>
+                        }
 
-        <FormField>
-            <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
-        </FormField>
+                        else
+                        {
+                            <button type="submit" class="button is-primary is-fullwidth">Ingresar</button>
+                        }
+                    </div>
+                </EditForm>
+            }
 
-        <FormField IsLoading="Cargando">
-            <SubmitButton>Ingresar</SubmitButton>
-        </FormField>
-    </EditForm>
-}
-
-else
-{
-    <h4 class="title is-4">Lamentamos ponerte a esperar.</h4>
-    <p>Tu sesión ha sido cancelada por seguridad, por favor espera @(TiempoRestante.Minutes) minuto(s) para volver a ingresar tus credenciales.</p>
-}
+            else
+            {
+                <h4 class="title is-4">Lamentamos ponerte a esperar.</h4>
+                <p>Tu sesión ha sido cancelada por seguridad, por favor espera @(TiempoRestante.Minutes) minuto(s) para volver a ingresar tus credenciales.</p>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
     private FormularioIniciarSesion Modelo = new FormularioIniciarSesion();

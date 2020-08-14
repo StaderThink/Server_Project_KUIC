@@ -1,45 +1,85 @@
-.counter {
-  max-width: 15rem;
-}
-
-.counter input[type=number] {
-  text-align: center;
-  max-width: 5rem;
-}
-
-.counter button {
+.login {
+  min-width: 100vw;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 3rem;
 }
 
-.counter ion-icon {
-  --ionicon-stroke-width: 32px;
-  font-size: 16px;
+@media (min-width: 1044px) {
+  .login {
+    justify-content: flex-end;
+    padding-right: 6rem;
+  }
 }
 
-.counter ion-icon[name=trash-outline] {
-  color: #f14668;
+.login-box .title {
+  margin-bottom: 3rem;
 }
 
-ion-icon {
-  font-size: 18px;
-  --ionicon-stroke-width: 32px;
-  color: rgba(0, 0, 0, 0.8);
+.login-box .buttons {
+  margin-top: 3rem;
 }
 
-.toaster {
-  width: 100%;
-  max-width: 22rem;
+@media (min-width: 1044px) {
+  .login-box {
+    padding: 3rem 2rem;
+    border: solid 1px #eee;
+    border-radius: 1rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.08);
+    background-color: white;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */oast:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: minmax(15rem, 25%) 1fr;
+  position: relative;
+}
+
+#app::before {
+  content: "";
+  display: block;
+}
+
+#app .main {
+  padding: 2.5rem;
+}
+
+#app .aside {
+  width: 25%;
+  min-width: 15rem;
+  height: 100%;
+  padding: 2rem;
   position: fixed;
-  right: 1rem;
-  bottom: 1rem;
+  left: 0;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  border-right: solid 1px #eee;
 }
 
-.toaster .toast:not(:last-child) {
-  margin-bottom: 1rem;
+#app .aside .media {
+  margin-bottom: 3rem;
+}
+
+#app .aside .options {
+  width: 100%;
+  display: flex;
+}
+
+#app .aside .options .option ion-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#app .aside .options .option:not(:last-child) {
+  margin-right: 1.5rem;
 }
 
 @media (min-width: 720px) {
@@ -247,50 +287,38 @@ ion-icon {
   }
 }
 
-#app {
-  display: grid;
-  grid-template-columns: minmax(15rem, 25%) 1fr;
-  position: relative;
-}
-
-#app::before {
-  content: "";
-  display: block;
-}
-
-#app .main {
-  padding: 2.5rem;
-}
-
-#app .aside {
-  width: 25%;
-  min-width: 15rem;
-  height: 100%;
-  padding: 2rem;
-  position: fixed;
-  left: 0;
+.login {
+  min-width: 100vw;
+  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  border-right: solid 1px #eee;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
 }
 
-#app .aside .media {
+@media (min-width: 1044px) {
+  .login {
+    justify-content: flex-end;
+    padding-right: 6rem;
+  }
+}
+
+.login-box .title {
   margin-bottom: 3rem;
 }
 
-#app .aside .options {
-  width: 100%;
-  display: flex;
+.login-box .buttons {
+  margin-top: 3rem;
 }
 
-#app .aside .options .option ion-icon {
-  font-size: 20px;
-  cursor: pointer;
-}
-
-#app .aside .options .option:not(:last-child) {
-  margin-right: 1.5rem;
+@media (min-width: 1044px) {
+  .login-box {
+    padding: 3rem 2rem;
+    border: solid 1px #eee;
+    border-radius: 1rem;
+    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.08);
+    background-color: white;
+  }
 }
 
 .slide-move,
