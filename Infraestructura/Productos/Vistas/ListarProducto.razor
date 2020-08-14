@@ -4,32 +4,34 @@
 @layout AppLayout
 @attribute [Authorize(Roles = "logistica")]
 
-    <h3 class="title is-3">Inventario</h3>
+<h3 class="title is-3">Inventario</h3>
 
-    @if (productos is null)
-    {
-        <div class="buttons">
-            <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
-            <a href="/categoria" class="button is-primary">Ver Categorias</a>
-        </div>
-        <div class="loader is-medium"></div>
-    }
+@if (productos is null)
+{
+    <div class="buttons">
+        <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
+        <a href="/categoria" class="button is-primary">Ver Categorias</a>
+    </div>
+    <hr />
+    <div class="loader is-medium"></div>
+}
 
-    else
-    {
-        <div class="buttons">
-            <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
-            <a href="/categoria" class="button is-primary">Ver Categorias</a>
-        </div>
-        <div class="columns is-multiline">
-            @foreach (Producto producto in productos)
-            {
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <TarjetaProducto producto="producto" OnProductoEliminado="ObtenerListado"></TarjetaProducto>
-                </div>
-            }
-        </div>
-    }
+else
+{
+    <div class="buttons">
+        <a href="/producto/registrar" class="button is-primary">Agregar producto</a>
+        <a href="/categoria" class="button is-primary">Ver Categorias</a>
+    </div>
+    <hr />
+    <div class="columns is-multiline">
+        @foreach (Producto producto in productos)
+        {
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaProducto producto="producto" OnProductoEliminado="ObtenerListado"></TarjetaProducto>
+            </div>
+        }
+    </div>
+}
 
 @code {
     Producto[] productos { get; set; }
@@ -41,11 +43,13 @@
 
     async Task ObtenerListado()
     {
-        try {
+        try
+        {
             productos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
         }
 
-        catch (Exception ex) {
+        catch (Exception ex)
+        {
             productos = new Producto[0];
             Console.WriteLine(ex.ToString());
         }

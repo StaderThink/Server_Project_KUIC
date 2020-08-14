@@ -1,31 +1,33 @@
 ﻿@inject HttpClient http
 @page "/entrada"
 @layout AppLayout
-@attribute [Authorize(Roles = "logistica")] 
+@attribute [Authorize(Roles = "logistica")]
 
-    <h3 class="title is-3">Listar Entradas</h3>
+<h3 class="title is-3">Listar Entradas</h3>
 
-    @if (entradas == null)
-    {
-        <div class="buttons">
-            <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
-        </div>
-        <div class="loader is-medium"></div>
-    }
-    else
-    {
-        <div class="buttons">
-            <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
-        </div>
-        <div class="columns is-multiline">
-            @foreach (Entrada entrada in entradas)
-            {
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <TarjetaEntrada entrada="entrada" OnEntradaEliminada="ObtenerListado"></TarjetaEntrada>
-                </div>
-            }
-        </div>
-    }
+@if (entradas == null)
+{
+    <div class="buttons">
+        <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
+    </div>
+    <hr />
+    <div class="loader is-medium"></div>
+}
+else
+{
+    <div class="buttons">
+        <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
+    </div>
+    <hr />
+    <div class="columns is-multiline">
+        @foreach (Entrada entrada in entradas)
+        {
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaEntrada entrada="entrada" OnEntradaEliminada="ObtenerListado"></TarjetaEntrada>
+            </div>
+        }
+    </div>
+}
 
 @code {
     Entrada[] entradas { get; set; }

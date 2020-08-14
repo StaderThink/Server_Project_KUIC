@@ -3,29 +3,31 @@
 @layout AppLayout
 @attribute [Authorize(Roles = "usuarios")]
 
-    <h3 class="title is-3">Listar Notificaciones</h3>
+<h3 class="title is-3">Listar Notificaciones</h3>
 
-    @if (notificaciones == null)
-    {
-        <div class="buttons">
-            <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
-        </div>
-        <div class="loader is-medium"></div>
-    }
-    else
-    {
-        <div class="buttons">
-            <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
-        </div>
-        <div class="columns is-multiline">
-            @foreach (Notificacion notificacion in notificaciones)
-            {
-                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                    <TarjetaNotificacion notificacion="notificacion" OnNotificacionEliminada="ObtenerListado"></TarjetaNotificacion>
-                </div>    
-            }
-        </div>
-    }
+@if (notificaciones == null)
+{
+    <div class="buttons">
+        <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
+    </div>
+    <hr />
+    <div class="loader is-medium"></div>
+}
+else
+{
+    <div class="buttons">
+        <a href="/notificacion/registrar" class="button is-primary">Agregar Notificacion</a>
+    </div>
+    <hr />
+    <div class="columns is-multiline">
+        @foreach (Notificacion notificacion in notificaciones)
+        {
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaNotificacion notificacion="notificacion" OnNotificacionEliminada="ObtenerListado"></TarjetaNotificacion>
+            </div>
+        }
+    </div>
+}
 
 @code {
     Notificacion[] notificaciones { get; set; }
