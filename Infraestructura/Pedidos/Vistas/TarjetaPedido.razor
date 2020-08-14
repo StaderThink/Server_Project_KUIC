@@ -46,18 +46,10 @@
                 }
             </p>
 
-            <div class="card-footer">
-
-                @if (cargando)
-                {
-                    <button class="card-footer-item" disabled>Eliminar</button>
-                }
-
-                else
-                {
-                    <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
-                }
+            <div class="control">
+                <div class="tag is-light">@(pedido.Estado.ToString())</div>
             </div>
+
         </div>
     </div>
 </div>

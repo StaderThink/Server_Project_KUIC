@@ -5,69 +5,57 @@
 @inject HttpClient http
 @inject NavigationManager navegador
 @inject AuthenticationStateProvider autentificacion
+@inject IToastService toaster
+@attribute [Authorize(Roles = "solicitar")]
 
 @page "/pedido/registrar"
 @layout AppLayout
 
-<h3>Registrar Pedido</h3>
-<div class="form">
-    <div class="field">
+<h3 class="title is-3">Solicitar Pedido</h3>
+
+<EditForm Model="pedido" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <FormField>
         <div class="control">
-            <button class="button is-primary" @onclick="AgregarElemento">+ Producto</button>
+            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
         </div>
-    </div>
+    </FormField>
 
-    <div class="field">
-        <div class="columns is-multiline">
-            @foreach (var detalle in detalles)
-            {
-                <div class="column">
-                    <ItemDetail listadoProductos="listaProductos" detalle="detalle" OnDeleted="EliminarElemento" />
-                </div>
-            }
-        </div>
-    </div>
-    <div class="field">
-        <label>Cliente</label>
-        <select class="input" @bind="pedido.Cliente" required>
-            <option value="0" disabled>Seleccionar...</option>
+    <FormField>
+        @foreach (var detalle in detalles)
+        {
+            <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
+        }
+    </FormField>
 
-            @foreach (Cliente cliente in cliente)
-            {
-                <option value="@cliente.Id">@(cliente.Nombre.ToCapitalize())</option>
-            }
-        </select>
-    </div>
-    <div class="field">
-        <label for="fecha">Fecha</label>
-        <input id="fecha" class="input" type="datetime-local" @bind="pedido.Fecha" @bind:format="@CultureInfo.CurrentCulture.DateTimeFormat.SortableDateTimePattern" step="1" required />
-    </div>
-    <div class="field">
-        <label for="descuento">Descuento</label>
-        <div class="control is-attached">
-            <span class="button is-static">%</span>
-            <input id="descuento" type="number" placeholder="###" minlength="1" class="input" @bind="pedido.Descuento" required />
-        </div>
-        <div class="field">
-            <label class="label">Estado</label>
-            <select class="input" @bind="pedido.Estado" required>
-                <option value="0" disabled>Seleccionar...</option>
-                @foreach (Estado estado in estados)
-                {
-                    <option value="@estado">@estado</option>
-                }
-            </select>
-        </div>
-    </div>
-</div>
+    <FormField Label="Cliente">
+        <SelectField @bind-Value="pedido.Cliente" Context="cliente" Data="cliente">
+            <option value="@cliente.Id">@(cliente.Nombre.ToCapitalize())</option>
+        </SelectField>
+        <FormFeedback For="() => pedido.Cliente"></FormFeedback>
+    </FormField>
 
+    <FormField Label="Fecha">
+        <DateField id="fecha" @bind-Value="pedido.Fecha" />
+        <FormFeedback For="() => pedido.Fecha"></FormFeedback>
+    </FormField>
 
-<div class="field">
-    <div class="control is-grouped">
-        <button class="button is-primary" @onclick="Enviar">Registrar</button>
-        <a href="/pedido" class="button is-outlined">Cancelar</a>
-    </div>
-</div>
+    <FormField Label="Descuento">
+        <NumberField id="descuento" placeholder="% ##" @bind-Value="pedido.Descuento" />
+        <FormFeedback For="() => pedido.Descuento"></FormFeedback>
+    </FormField>
+
+    <FormField Label="Observación">
+        <TextField id="observacion" @bind-Value="pedido.Observacion"></TextField>
+        <FormFeedback For="() => pedido.Observacion" Help="Opcional"></FormFeedback>
+    </FormField>
+
+    <FormField IsLoading="cargando">
+        <CancelButton To="/pedido">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
+    </FormField>
+</EditForm>
+
 @code {
     Array estados = Enum.GetValues(typeof(Estado));
     Cliente[] cliente { get; set; } = new Cliente[0];

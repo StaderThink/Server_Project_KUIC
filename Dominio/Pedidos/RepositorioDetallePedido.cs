@@ -13,7 +13,6 @@ namespace Dominio.Pedidos
                     pedido = @Pedido,
                     cantidad = @Cantidad,
                     producto = @Producto
-
                     where id = @Id
            ";
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);

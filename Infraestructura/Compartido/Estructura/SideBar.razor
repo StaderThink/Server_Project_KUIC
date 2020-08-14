@@ -27,8 +27,8 @@
 
             <ul class="menu-list">
                 <li><a href="/cliente">Clientes</a></li>
-                <AuthorizeView Roles="solicitar" Context="auth">
-                    <li><a href="/solicitar">Solicitar</a></li>
+                <AuthorizeView Roles="solicitar, pedidos" Context="auth">
+                    <li><a href="/pedido">Solicitar</a></li>
                 </AuthorizeView>
             </ul>
         </AuthorizeView>
@@ -40,14 +40,6 @@
                 <li><a href="/inventario">Inventario</a></li>
                 <li><a href="/entrada">Entrada</a></li>
                 <li><a href="/salida">Salida</a></li>
-            </ul>
-        </AuthorizeView>
-
-        <AuthorizeView Roles="pedidos">
-            <p class="menu-label">Pedidos</p>
-
-            <ul class="menu-list">
-                <li><a href="/pedido">Pedido</a></li>
             </ul>
         </AuthorizeView>
     </nav>

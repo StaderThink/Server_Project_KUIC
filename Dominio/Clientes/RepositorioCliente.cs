@@ -35,10 +35,6 @@ namespace Dominio.Clientes
         public bool Insertar(Cliente entidad)
         {
             using Conexion conexion = new Conexion();
-
-            entidad.Actualizado = DateTime.Now;
-            entidad.Creado = DateTime.Now;
-
             string consulta = $@"
                 insert into cliente (nombre, encargado, rut, correo, direccion, telefono, creado, actualizado, activo) 
                 values (@Nombre, @Encargado, @Rut, @Correo, @Direccion, @Telefono, @Creado, @Actualizado, @Activo)";

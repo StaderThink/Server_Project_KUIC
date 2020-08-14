@@ -21,7 +21,8 @@ namespace Aplicacion.Pedidos
             {
                 Pedido pedido = formulario.Pedido;
                 IEnumerable<DetallePedido> detalles = formulario.Detalles;
-
+                pedido.Activo = true;
+                pedido.Estado = Estado.Pendiente;
                 if (repoPedido.Insertar(pedido))
                 {
                     var repoDetalle = new RepositorioDetallePedido();
