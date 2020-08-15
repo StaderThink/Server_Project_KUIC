@@ -13,7 +13,7 @@ namespace Dominio.Pedidos
                     fecha = @Fecha,
                     cliente = @Cliente,
                     asesor = @Asesor,
-                    estado = @Estado,
+                    estado = '{entidad.Estado}',
                     descuento = @Descuento,
                     observacion = @Observacion
                     where id = @Id

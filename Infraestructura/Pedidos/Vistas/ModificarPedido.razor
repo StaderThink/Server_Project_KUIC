@@ -1,0 +1,150 @@
+﻿@using System.Security.Claims
+@using static System.Globalization.CultureInfo
+@using Aplicacion.Pedidos.Formularios
+
+@inject HttpClient http
+@inject NavigationManager navegador
+@inject AuthenticationStateProvider autentificacion
+@inject IToastService toaster
+@attribute [Authorize(Roles = "pedidos")]
+
+@page "/pedido/modificar/{Id:int}"
+@layout AppLayout
+
+<h3 class="title is-3">Modificar Solicitud</h3>
+
+<EditForm Model="pedido" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <FormField>
+        <div class="control">
+            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+        </div>
+    </FormField>
+
+    <FormField>
+        @foreach (var detalle in detalles)
+        {
+            <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
+        }
+    </FormField>
+
+    <FormField Label="Cliente">
+        <SelectField @bind-Value="pedido.Cliente" Context="cliente" Data="cliente">
+            <option value="@cliente.Id">@(cliente.Nombre.ToCapitalize())</option>
+        </SelectField>
+        <FormFeedback For="() => pedido.Cliente"></FormFeedback>
+    </FormField>
+
+    <FormField Label="Fecha">
+        <DateField id="fecha" @bind-Value="pedido.Fecha" />
+        <FormFeedback For="() => pedido.Fecha"></FormFeedback>
+    </FormField>
+
+    <FormField Label="Descuento">
+        <NumberField id="descuento" placeholder="% ##" @bind-Value="pedido.Descuento" />
+        <FormFeedback For="() => pedido.Descuento"></FormFeedback>
+    </FormField>
+
+    <FormField Label="Estado">
+        <SelectField Context="estado" Data="estados" @bind-Value="pedido.Estado">
+            <option value="@estado">@estado</option>
+        </SelectField>
+        <FormFeedback For="() => pedido.Estado"></FormFeedback>
+    </FormField>
+
+    <FormField Label="Observación">
+        <TextField id="observacion" @bind-Value="pedido.Observacion"></TextField>
+        <FormFeedback For="() => pedido.Observacion" Help="Opcional"></FormFeedback>
+    </FormField>
+
+    <FormField IsLoading="cargando">
+        <CancelButton To="/pedido">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
+    </FormField>
+</EditForm>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    string[] estados = Enum.GetNames(typeof(Estado));
+    Cliente[] cliente { get; set; } = new Cliente[0];
+    Usuario[] usuarios { get; set; } = new Usuario[0];
+    Producto[] listaProductos { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        usuarios = await http.GetFromJsonAsync<Usuario[]>("/api/usuario");
+        cliente = await http.GetFromJsonAsync<Cliente[]>("/api/cliente");
+        pedido = await http.GetFromJsonAsync<Pedido>($"/api/pedido/{Id}");
+
+        try
+        {
+            listaProductos = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+
+        }
+        catch
+        {
+            listaProductos = new Producto[0];
+        }
+
+    }
+
+    private void AgregarElemento()
+    {
+        detalles.Add(new DetallePedido());
+    }
+
+    private void EliminarElemento(IDetalle detalle)
+    {
+        detalles.Remove((DetallePedido)detalle);
+    }
+
+    List<DetallePedido> detalles = new List<DetallePedido>();
+
+    Pedido pedido { get; set; } = new Pedido();
+    bool cargando = false;
+
+    async Task Enviar()
+    {
+        cargando = true;
+
+        try
+        {
+            var estado = await autentificacion.GetAuthenticationStateAsync();
+            var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
+            var formulario = new FormularioRegistrarPedido()
+            {
+                Pedido = pedido,
+                Detalles = detalles
+            };
+            if (serial is null)
+            {
+                // TODO
+            }
+
+            else
+            {
+                int id = int.Parse(serial.Value);
+                pedido.Asesor = id;
+
+                var respuesta = await http.PutAsJsonAsync($"/api/pedido/{Id}", pedido);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/pedido");
+                }
+            }
+        }
+
+        catch
+        {
+            // TODO
+        }
+
+        finally
+        {
+            cargando = false;
+        }
+    }
+}

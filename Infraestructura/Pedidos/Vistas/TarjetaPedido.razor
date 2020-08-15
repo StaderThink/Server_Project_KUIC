@@ -49,10 +49,26 @@
             <div class="control">
                 <div class="tag is-light">@(pedido.Estado.ToString())</div>
             </div>
+            <hr />
+            <div class="card-footer">
 
+                @if (cargando)
+                {
+                <AuthorizeView Roles="pedidos" Context="auth">
+                    <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
+                </AuthorizeView>
+                }
+
+                else
+                {
+                <AuthorizeView Roles="pedidos" Context="auth">
+                    <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
+                </AuthorizeView>                }
+            </div>
+        </div>
         </div>
     </div>
-</div>
+
 
 @code {
     #region Modal
