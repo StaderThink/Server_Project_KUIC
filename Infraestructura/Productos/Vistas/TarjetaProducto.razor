@@ -19,16 +19,6 @@
         </div>
         <div class="card-footer">
             <a class="card-footer-item" @onclick="Editar">Editar</a>
-
-            @if (cargando)
-            {
-                <a class="card-footer-item" disabled>Eliminar</a>
-            }
-
-            else
-            {
-                <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
-            }
         </div>
     </div>
 
@@ -46,19 +36,6 @@
     protected override async Task OnInitializedAsync()
     {
         categoria = await http.GetFromJsonAsync<Categoria>($"/api/categoria/{producto.Categoria}");
-    }
-
-    private async Task Eliminar()
-    {
-        cargando = true;
-        var respuesta = await http.DeleteAsync($"/api/producto/{producto.Id}");
-
-        if (respuesta.IsSuccessStatusCode && OnProductoEliminado.HasDelegate)
-        {
-            await OnProductoEliminado.InvokeAsync(producto);
-        }
-
-        cargando = false;
     }
 
     private void Editar()
