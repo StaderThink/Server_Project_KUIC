@@ -93,7 +93,7 @@
             {
                 if (notificacion.FechaFin < notificacion.FechaInicio)
                 {
-                    toaster.ShowWarning("La fecha de caducidad de una notificación no puede ser menor a la de inicio");
+                    toaster.ShowWarning("La fecha de caducidad no puede ser menor a 1 día despues del inicio");
                 }
 
                 else if (segmento.Cargo == 0)
