@@ -4,7 +4,7 @@ namespace Aplicacion.Sesiones.Formularios
 {
     public sealed class FormularioIniciarSesion
     {
-        [StringLength(10, MinimumLength = 6, ErrorMessage = "El documento debe tener entre {2} y {1} caracteres")]
+        [StringLength(10, MinimumLength = 7, ErrorMessage = "El documento debe tener entre {2} y {1} caracteres")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Documento { get; set; }
 

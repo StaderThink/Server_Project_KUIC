@@ -1,18 +1,18 @@
 ﻿@inject HttpClient http
-@inject NavigationManager navegador
+
 @using Infraestructura.Notificaciones.Vistas; 
 
 <div class="card">
     <div class="card-content">
         <div class="content">
             <div class="field">
-                @foreach (var segmento in segmentos)
+                @foreach (var segmento in Segmentos)
                 {
                     <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
                 }
             </div>
             <p>@Notificacion.Texto</p>
-            <p><span>@(autor?.Nombre ?? "Sistema")</span></p>
+            <p><span>@(Autor?.Nombre ?? "Sistema")</span></p>
         </div>
     </div>
 </div>
@@ -21,16 +21,16 @@
     [Parameter]
     public Notificacion Notificacion { get; set; }
 
-    private Segmento[] segmentos = new Segmento[0];
-    private Usuario autor;
+    private Segmento[] Segmentos = new Segmento[0];
+    private Usuario Autor;
 
     protected override async Task OnInitializedAsync()
     {
-        segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
+        Segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
 
         if (Notificacion.Autor != 0)
         {
-            autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
+            Autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
         }
     }
 }

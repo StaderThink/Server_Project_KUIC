@@ -20,16 +20,6 @@ namespace Dominio.Cargos
             return filasAfectadas > 0;
         }
 
-        public bool Eliminar(Cargo entidad)
-        {
-            using Conexion conexion = new Conexion();
-
-            string consulta = "delete from cargo where id = @Id";
-            int filasAfectadas = conexion.Ejecutar(consulta, entidad);
-
-            return filasAfectadas > 0;
-        }
-
         public bool Insertar(Cargo entidad)
         {
             using Conexion conexion = new Conexion();

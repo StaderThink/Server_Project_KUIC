@@ -1,46 +1,23 @@
 ﻿@inject HttpClient http
 @inject NavigationManager navegador
 
-<div class="card">
-    <div class="card-content">
-        <h6 class="title is-6">@(cargo.Nombre.ToCapitalize())</h6>
+<div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+    <div class="card">
+        <div class="card-content">
+            <h6 class="title is-6">@(Cargo.Nombre)</h6>
+        </div>
+        <div class="card-footer">
+            <a class="card-footer-item" @onclick="Editar">Editar</a>
+        </div>
     </div>
-    <div class="card-footer">
-        <a class="card-footer-item" @onclick="Editar">Editar</a>
-
-        @if (cargando)
-        {
-            <a class="card-footer-item" disabled>Borrar</a>
-        }
-
-        else
-        {
-            <a class="card-footer-item" @onclick="Eliminar">Borrar</a>
-        }
-    </div>  
 </div>
 
 @code {
     [Parameter]
-    public Cargo cargo { get; set; }
+    public Cargo Cargo { get; set; }
 
-    [Parameter]
-    public EventCallback<Cargo> OnCargoEliminado { get; set; }
-
-    bool cargando = false;
-
-    async Task Eliminar() {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/cargo/{cargo.Id}");
-
-        if (respuesta.IsSuccessStatusCode && OnCargoEliminado.HasDelegate) {
-            await OnCargoEliminado.InvokeAsync(cargo);
-        }
-
-        cargando = false;
-    }
-
-    void Editar() {
-        navegador.NavigateTo($"/cargo/modificar/{cargo.Id}");
+    void Editar()
+    {
+        navegador.NavigateTo($"/cargo/modificar/{Cargo.Id}");
     }
 }

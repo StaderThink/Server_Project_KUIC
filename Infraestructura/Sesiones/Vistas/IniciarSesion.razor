@@ -15,6 +15,8 @@
             @if (TiempoRestante.Minutes == 0 && Intentos != 3)
             {
                 <EditForm Model="Modelo" OnValidSubmit="Enviar">
+                    <DataAnnotationsValidator />
+
                     <FormField Label="Documento">
                         <NumberField @bind-Value="Modelo.Documento" placeholder="CC o NIT" />
                         <FormFeedback For="() => Modelo.Documento" Help="Número de documento de identidad" />
@@ -29,17 +31,9 @@
                         <p>¿Olvidaste tu contraseña? Puedes <a href="/reestablecer">reestablecerla ahora</a>.</p>
                     </div>
 
-                    <div class="buttons">
-                        @if (Cargando)
-                        {
-                            <button type="button" class="button is-primary is-fullwidth is-loading" disabled>Ingresar</button>
-                        }
-
-                        else
-                        {
-                            <button type="submit" class="button is-primary is-fullwidth">Ingresar</button>
-                        }
-                    </div>
+                    <FormButtons IsLoading="Cargando">
+                        <SubmitButton IsFullWidth>Ingresar</SubmitButton>
+                    </FormButtons>
                 </EditForm>
             }
 

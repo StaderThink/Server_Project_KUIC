@@ -53,8 +53,6 @@ namespace Dominio.Usuarios
                 )
 			";
 
-            conexion.Ejecutar(consulta, entidad);
-
             int filasAfectadas = conexion.Ejecutar(consulta, entidad);
             return filasAfectadas > 0;
         }

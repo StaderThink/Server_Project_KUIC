@@ -63,7 +63,7 @@ namespace Infraestructura.Usuarios
         [HttpPost]
         public IActionResult Insertar([FromBody] Usuario usuario)
         {
-            ServicioRegistradorUsuario servicio = new ServicioRegistradorUsuario();
+            var servicio = new ServicioRegistradorUsuario();
 
             if (servicio.Registrar(usuario))
                 return Ok();

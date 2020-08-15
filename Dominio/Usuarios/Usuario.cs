@@ -15,7 +15,7 @@ namespace Dominio.Usuarios
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Apellido { get; set; }
 
-        [StringLength(10, MinimumLength = 6, ErrorMessage = "El documento debe tener entre {2} y {1} carateres")]
+        [StringLength(10, MinimumLength = 7, ErrorMessage = "El documento debe tener entre {2} y {1} carateres")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
         public string Documento { get; set; }
 

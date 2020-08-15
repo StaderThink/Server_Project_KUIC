@@ -28,14 +28,14 @@ else
         <DataAnnotationsValidator />
 
         <FormField Label="Tipo de documento">
-            <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento" readonly>
+            <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento" disabled>
                 <option value="@value">@value</option>
             </SelectField>
             <FormFeedback For="() => Usuario.TipoDocumento" />
         </FormField>
 
         <FormField Label="Documento">
-            <NumberField id="documento" @bind-Value="Usuario.Documento" readonly />
+            <NumberField id="documento" @bind-Value="Usuario.Documento" disabled />
             <FormFeedback For="() => Usuario.Documento" />
         </FormField>
 
@@ -66,16 +66,6 @@ else
             <FormFeedback Help="Esto define los accesos que tiene el usuario" For="() => Usuario.Cargo" />
         </FormField>
 
-        <FormField Label="Fecha de nacimiento">
-            <DateField id="fechaExpedicion" @bind-Value="Usuario.Nacimiento" readonly />
-            <FormFeedback For="() => Usuario.Expedicion" />
-        </FormField>
-
-        <FormField Label="Fecha de expedición">
-            <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
-            <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
-        </FormField>
-
         <FormField>
             <CheckboxField id="activo" @bind-Value="Usuario.Activo">
                 <span>El usuario esta activo en el sistema.</span>
@@ -84,7 +74,7 @@ else
 
         <FormButtons IsLoading="saving">
             <SubmitButton>Guardar</SubmitButton>
-            <CancelButton To="/usuario">Regresar</CancelButton>
+            <CancelButton To="/usuario">Cancelar</CancelButton>
         </FormButtons>
     </EditForm>
 }

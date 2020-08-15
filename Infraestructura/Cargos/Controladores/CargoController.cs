@@ -59,19 +59,5 @@ namespace Infraestructura.Cargos.Controladores
 
             return NotFound();
         }
-
-        [HttpDelete("{id}")]
-        public IActionResult Eliminar(int id)
-        {
-            if (repo.PorId(id) is Cargo cargo)
-            {
-                if (repo.Eliminar(cargo))
-                    return Ok();
-                else
-                    return BadRequest();
-            }
-
-            return NotFound();
-        }
     }
 }

@@ -5,47 +5,47 @@
 @page "/cargo"
 @layout AppLayout
 
-@if (cargos is null)
+<h3 class="title is-3">Cargos</h3>
+
+<div class="buttons">
+    <a class="button is-primary" href="/cargo/registrar">Registrar cargo</a>
+</div>
+
+<hr />
+
+@if (ListadoCargos is null)
 {
-    <div class="loader is-medium"></div>
+    <div class="loader"></div>
 }
 
 else
 {
-    <h3 class="title is-3">Listar cargos</h3>
-
-    <div class="buttons">
-        <a class="button is-primary" href="/cargo/registrar">Registrar cargo</a>
-    </div>
-    <hr />
     <div class="columns is-multiline">
-        @foreach (Cargo cargo in cargos)
+        @foreach (var cargo in ListadoCargos)
         {
-            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                <TarjetaCargo cargo="@cargo" OnCargoEliminado="ObtenerListado" />
-            </div>
+            <TarjetaCargo cargo="@cargo" />
         }
     </div>
 }
 
 @code {
-    Cargo[] cargos { get; set; }
+    private Cargo[] ListadoCargos { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
         await ObtenerListado();
     }
 
-    async Task ObtenerListado()
+    private async Task ObtenerListado()
     {
         try
         {
-            cargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
+            ListadoCargos = await http.GetFromJsonAsync<Cargo[]>("/api/cargo");
         }
 
         catch
         {
-            cargos = new Cargo[0];
+            ListadoCargos = new Cargo[0];
         }
     }
 }

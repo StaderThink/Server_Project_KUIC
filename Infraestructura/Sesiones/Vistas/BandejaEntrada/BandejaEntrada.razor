@@ -9,16 +9,16 @@
 
 @if (notificaciones == null)
 {
-    <div class="is-loading"></div>
+    <div class="loader"></div>
 }
 
 else
 {
     <div class="columns is-multiline">
-        @foreach (Notificacion notificacion in notificaciones)
+        @foreach (var notificacion in notificaciones)
         {
             <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                <TarjetaBandeja notificacion="notificacion"></TarjetaBandeja>
+                <TarjetaBandeja Notificacion="notificacion"></TarjetaBandeja>
             </div>
         }
     </div>
