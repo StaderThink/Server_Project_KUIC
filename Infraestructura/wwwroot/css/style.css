@@ -1,38 +1,44 @@
-.login {
-  min-width: 100vw;
-  min-height: 100vh;
+.counter {
+  max-width: 15rem;
+}
+
+.counter input[type=number] {
+  text-align: center;
+  max-width: 5rem;
+}
+
+.counter button {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3rem;
 }
 
-@media (min-width: 1044px) {
-  .login {
-    justify-content: flex-end;
-    padding-right: 6rem;
-  }
+.counter ion-icon {
+  --ionicon-stroke-width: 32px;
+  font-size: 16px;
 }
 
-.login-box .title {
-  margin-bottom: 3rem;
+.counter ion-icon[name=trash-outline] {
+  color: #f14668;
 }
 
-.login-box .buttons {
-  margin-top: 3rem;
+ion-icon {
+  font-size: 18px;
+  --ionicon-stroke-width: 32px;
+  color: rgba(0, 0, 0, 0.8);
 }
 
-@media (min-width: 1044px) {
-  .login-box {
-    padding: 3rem 2rem;
-    border: solid 1px #eee;
-    border-radius: 1rem;
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.08);
-    background-color: white;
-  }
+.toaster {
+  width: 100%;
+  max-width: 22rem;
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  display: flex;
+  flex-direction: column;
 }
 
-/*# sourceMappingURL=style.css.map */oast:not(:last-child) {
+.toaster .toast:not(:last-child) {
   margin-bottom: 1rem;
 }
 
