@@ -99,29 +99,43 @@
 
         try
         {
-            var estado = await autentificacion.GetAuthenticationStateAsync();
-            var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
-            var formulario = new FormularioRegistrarPedido()
+            foreach (var detalle in detalles)
             {
-                Pedido = pedido,
-                Detalles = detalles
-            };
-            if (serial is null)
-            {
-                // TODO
-            }
-
-            else
-            {
-                int id = int.Parse(serial.Value);
-                pedido.Asesor = id;
-
-                var respuesta = await http.PostAsJsonAsync("/api/pedido", formulario);
-
-                if (respuesta.IsSuccessStatusCode)
+                if (detalle.Producto == 0 || detalle.Cantidad == 0)
                 {
-                    navegador.NavigateTo("/pedido");
+                    toaster.ShowWarning("Falta algún valor del detalle, favor verificar");
                 }
+                else
+                {
+                    cargando = true;
+                    var estado = await autentificacion.GetAuthenticationStateAsync();
+                    var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
+                    var formulario = new FormularioRegistrarPedido()
+                    {
+                        Pedido = pedido,
+                        Detalles = detalles
+                    };
+                    if (serial is null)
+                    {
+                        // TODO
+                    }
+
+                    else
+                    {
+                        int id = int.Parse(serial.Value);
+                        pedido.Asesor = id;
+
+                        var respuesta = await http.PostAsJsonAsync("/api/pedido", formulario);
+
+                        if (respuesta.IsSuccessStatusCode)
+                        {
+                            navegador.NavigateTo("/pedido");
+                            toaster.ShowSuccess("Registro realizado de forma exitosa");
+                        }
+                        cargando = false;
+                    }
+                }
+
             }
         }
 

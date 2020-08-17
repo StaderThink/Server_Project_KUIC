@@ -47,23 +47,23 @@
             </p>
 
             <div class="control">
-                <div class="tag is-light">@(pedido.Estado.ToString())</div>
+                <div class="tag is-dark">@(pedido.Estado.ToString())</div>
             </div>
-            <hr />
+            <br />
             <div class="card-footer">
 
                 @if (cargando)
-                {
-                <AuthorizeView Roles="pedidos" Context="auth">
-                    <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
-                </AuthorizeView>
+                    {
+                    <AuthorizeView Roles="pedidos" Context="auth">
+                        <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
+                    </AuthorizeView>
                 }
 
                 else
                 {
-                <AuthorizeView Roles="pedidos" Context="auth">
-                    <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
-                </AuthorizeView>                }
+                    <AuthorizeView Roles="pedidos" Context="auth">
+                        <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
+                    </AuthorizeView>}
             </div>
         </div>
         </div>
@@ -74,43 +74,43 @@
     #region Modal
     bool mostrarModal = false;
 
-    void AbrirModal() => mostrarModal = true;
-    void CerrarModal() => mostrarModal = false;
-    #endregion
+                    void AbrirModal() => mostrarModal = true;
+                    void CerrarModal() => mostrarModal = false;
+                    #endregion
 
-    [Parameter]
-    public Pedido pedido { get; set; }
+                    [Parameter]
+                    public Pedido pedido { get; set; }
 
-    [Parameter]
-    public EventCallback<Pedido> OnPedidoEliminado { get; set; }
+                    [Parameter]
+                    public EventCallback<Pedido> OnPedidoEliminado { get; set; }
 
-    DetallePedido[] detalles { get; set; } = new DetallePedido[0];
+                    DetallePedido[] detalles { get; set; } = new DetallePedido[0];
 
-    Producto[] productos { get; set; } = new Producto[0];
+                    Producto[] productos { get; set; } = new Producto[0];
 
-    Cliente clientes { get; set; }
-    Usuario usuario { get; set; }
+                    Cliente clientes { get; set; }
+                    Usuario usuario { get; set; }
 
-    bool cargando = false;
+                    bool cargando = false;
 
-    protected override async Task OnInitializedAsync()
-    {
-        detalles = await http.GetFromJsonAsync<DetallePedido[]>($"/api/detallePedido/pedido/{pedido.Id}");
-        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{pedido.Asesor}");
-        clientes = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
+                    protected override async Task OnInitializedAsync()
+                    {
+                        detalles = await http.GetFromJsonAsync<DetallePedido[]>($"/api/detallePedido/pedido/{pedido.Id}");
+                        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{pedido.Asesor}");
+                        clientes = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
 
-    }
+                    }
 
-    async Task Eliminar()
-    {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/pedido/{pedido.Id}");
+                    async Task Eliminar()
+                    {
+                        cargando = true;
+                        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/pedido/{pedido.Id}");
 
-        if (respuesta.IsSuccessStatusCode && OnPedidoEliminado.HasDelegate)
-        {
-            await OnPedidoEliminado.InvokeAsync(pedido);
-        }
+                        if (respuesta.IsSuccessStatusCode && OnPedidoEliminado.HasDelegate)
+                        {
+                            await OnPedidoEliminado.InvokeAsync(pedido);
+                        }
 
-        cargando = false;
-    }
+                        cargando = false;
+                    }
 }

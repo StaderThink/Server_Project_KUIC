@@ -38,7 +38,7 @@
     </FormField>
 
     <FormField Label="Telefono">
-        <NumberField id="telefono" @bind-Value="Cliente.Telefono" />
+        <PhoneField id="telefono" @bind-Value="Cliente.Telefono" />
         <FormFeedback For="() => Cliente.Telefono" />
     </FormField>
 
@@ -58,22 +58,37 @@
     private Cliente Cliente = new Cliente();
     private bool Cargando = false;
 
+    private async Task<bool> UserAlreadyExist()
+    {
+        var response = await http.GetAsync($"/api/cliente/rut/{Cliente.Rut}");
+        return response.IsSuccessStatusCode;
+    }
+
     private async Task Enviar()
     {
         Cargando = true;
 
         try
         {
-            var respuesta = await http.PostAsJsonAsync("/api/cliente", Cliente);
-
-            if (respuesta.IsSuccessStatusCode)
+            if (await UserAlreadyExist())
             {
-                navegador.NavigateTo("/cliente");
+                toaster.ShowWarning("Ya hay un cliente registrado con ese número de RUT");
             }
 
             else
             {
-                toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
+                var respuesta = await http.PostAsJsonAsync("/api/cliente", Cliente);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/cliente");
+                    toaster.ShowSuccess("Datos registrados correctamente");
+                }
+
+                else
+                {
+                    toaster.ShowWarning("Por favor verifica los datos, no se logró enviar el formulario");
+                }
             }
         }
 

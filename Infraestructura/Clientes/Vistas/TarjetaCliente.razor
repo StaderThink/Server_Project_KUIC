@@ -13,10 +13,20 @@
                         </div>
                     </div>
 
-                    <div class="control">
-                        <div class="tag is-light">@(cliente.Activo ? "Activo" : "Inactivo")</div>
+                    <div class="content">
+                        <div class="tags">
+                            @if (cliente.Activo)
+                            {
+                                <div class="tag is-success">Activo</div>
+                            }
+
+                            else
+                            {
+                                <div class="tag is-warning">Inactivo</div>
+                            }
+                        </div>
+                        </div>
                     </div>
-                </div>
             </div>
         </div>
         <div class="card-footer">

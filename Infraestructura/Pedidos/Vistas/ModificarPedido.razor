@@ -17,7 +17,7 @@
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <FormField>
         <div class="control">
-            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+            <button class="button is-primary" type="button" @onclick="AgregarElemento" disabled>+ Producto</button>
         </div>
     </FormField>
 
@@ -29,19 +29,19 @@
     </FormField>
 
     <FormField Label="Cliente">
-        <SelectField @bind-Value="pedido.Cliente" Context="cliente" Data="cliente">
+        <SelectField @bind-Value="pedido.Cliente" Context="cliente" Data="cliente" disabled>
             <option value="@cliente.Id">@(cliente.Nombre.ToCapitalize())</option>
         </SelectField>
         <FormFeedback For="() => pedido.Cliente"></FormFeedback>
     </FormField>
 
     <FormField Label="Fecha">
-        <DateField id="fecha" @bind-Value="pedido.Fecha" />
+        <DateField id="fecha" @bind-Value="pedido.Fecha" disabled/>
         <FormFeedback For="() => pedido.Fecha"></FormFeedback>
     </FormField>
 
     <FormField Label="Descuento">
-        <NumberField id="descuento" placeholder="% ##" @bind-Value="pedido.Descuento" />
+        <NumberField id="descuento" placeholder="% ##" @bind-Value="pedido.Descuento" disabled/>
         <FormFeedback For="() => pedido.Descuento"></FormFeedback>
     </FormField>
 
@@ -53,7 +53,7 @@
     </FormField>
 
     <FormField Label="Observación">
-        <TextField id="observacion" @bind-Value="pedido.Observacion"></TextField>
+        <TextField id="observacion" @bind-Value="pedido.Observacion" disabled></TextField>
         <FormFeedback For="() => pedido.Observacion" Help="Opcional"></FormFeedback>
     </FormField>
 
@@ -133,6 +133,7 @@
                 if (respuesta.IsSuccessStatusCode)
                 {
                     navegador.NavigateTo("/pedido");
+                    toaster.ShowSuccess("Registro modificado exitosamente");
                 }
             }
         }

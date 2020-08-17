@@ -13,7 +13,7 @@
     <DataAnnotationsValidator />
 
     <FormField Label="Rut">
-        <NumberField id="rut" @bind-Value="Cliente.Rut" />
+        <NumberField id="rut" @bind-Value="Cliente.Rut" disabled/>
         <FormFeedback For="() => Cliente.Rut" />
     </FormField>
 
@@ -78,6 +78,8 @@
             if (respuesta.IsSuccessStatusCode)
             {
                 navegador.NavigateTo("/cliente");
+                toaster.ShowSuccess("Registro modificado exitosamente");
+
             }
 
             else

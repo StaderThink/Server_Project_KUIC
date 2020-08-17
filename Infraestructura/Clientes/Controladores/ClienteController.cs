@@ -58,6 +58,16 @@ namespace Infraestructura.Clientes.Controladores
             return NotFound();
         }
 
+        [HttpGet("rut/{rut}")]
+        public ActionResult<Cliente> PorRUT(string rut)
+        {
+            if (repositorio.PorRut(rut) is Cliente cliente)
+            {
+                return cliente;
+            }
+
+            return NotFound();
+        }
         [HttpPost]
         public IActionResult Insertar([FromBody] Cliente cliente)
         {
