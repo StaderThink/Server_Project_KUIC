@@ -11,22 +11,22 @@
 
             else
             {
-                <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="AbrirModal">Ver detalle</button></p>
+                <p>@detalles.Count() Productos(s). <button class="button is-small is-primary is-outlined" @onclick="AbrirModal">Ver detalle</button></p>
             }
 
             @if (mostrarModal)
             {
                 <div class="modal is-active">
                     <div class="modal-background"></div>
-                    <div class="modal-card">
-                        <header class="modal-card-head">
-                            <span class="modal-card-title">Detalle de entrada #@entrada.Id</span>
+                    <div class="modal-card message is-primary">
+                        <header class="modal-card-head message-header">
+                            <span class="modal-card-title">Detalle de salida #@entrada.Id</span>
                             <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
-                            @foreach(var detalle in detalles)
+                            @foreach (var detalle in detalles)
                             {
-                                <ProductDetail detalle="@detalle"/>
+                                <ProductDetail detalle="@detalle" />
                             }
                         </section>
                     </div>

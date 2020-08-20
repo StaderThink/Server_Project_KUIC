@@ -8,7 +8,7 @@ namespace Dominio.Notificaciones
         [Key]
         public int Id { get; set; }
 
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Este campo es obligatorio")]
+        [Required(ErrorMessage = "Este campo es obligatorio")]
         public string Texto { get; set; }
 
         [Required]

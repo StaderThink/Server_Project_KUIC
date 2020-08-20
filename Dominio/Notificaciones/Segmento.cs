@@ -9,8 +9,6 @@ namespace Dominio.Notificaciones
 
         [Required]
         public int Notificacion { get; set; }
-
-        [Required(ErrorMessage = "Este campo es obligatorio")]
         public int Cargo { get; set; }
     }
 }
