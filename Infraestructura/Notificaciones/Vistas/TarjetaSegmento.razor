@@ -1,14 +1,14 @@
 ﻿@inject HttpClient http
 
 <div class="detalle">
-    @if (cargando)
+    @if (Cargando)
     {
         <span class="tag is-light">Espere...</span>
     }
 
     else
     {
-        <span class="tag is-info is-light">@(cargo.Nombre.ToCapitalize())</span>
+        <span class="tag is-dark">@(Cargo?.Nombre ?? "Desconocido")</span>
     }
 </div>
 
@@ -16,24 +16,30 @@
     [Parameter]
     public Segmento segmento { get; set; }
 
-    private Cargo cargo;
-    private bool cargando = true;
+    private Cargo Cargo;
+    private bool Cargando = true;
 
     protected override async Task OnInitializedAsync()
     {
+        Cargando = true;
+
         try
         {
-            cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{segmento.Cargo}");
+            Cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{segmento.Cargo}");
         }
 
         catch
         {
-            cargo = null;
+            Cargo = null;
+
+#if DEBUG
+            throw;
+#endif
         }
 
         finally
         {
-            cargando = false;
+            Cargando = false;
         }
     }
 } 

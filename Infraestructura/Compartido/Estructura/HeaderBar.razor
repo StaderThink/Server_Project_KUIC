@@ -1,0 +1,74 @@
+﻿@inject AuthenticationStateProvider authProvider
+@inject ILocalStorageService localStorage
+
+<div class="headerbar">
+    <box-icon name="menu" @onclick="ToggleSidebar"></box-icon>
+
+    <div class="dropdown is-right is-hoverable">
+        <div class="dropdown-trigger">
+            @if (Usuario is null)
+            {
+                <menu>
+                    <h6>Espere...</h6>
+                </menu>
+            }
+
+            else
+            {
+            <menu>
+                <box-icon name="user-circle"></box-icon>
+
+                <div class="user-data">
+                    <h6>Hola @Usuario.Nombre</h6>
+                </div>
+
+                <box-icon name="chevron-down"></box-icon>
+            </menu>
+            }
+        </div>
+
+        <div class="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+                <a href="/perfil" class="dropdown-item">Mi cuenta</a>
+                <a href="/bandeja" class="dropdown-item">Bandeja de entrada</a>
+                <hr />
+                <a class="dropdown-item" @onclick="SignOut">Cerrar sesión</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private Usuario Usuario;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var provider = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
+        Usuario = await provider.GetUserAsync();
+    }
+
+    private async Task SignOut()
+    {
+        var proveedor = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
+        await proveedor.SignOut();
+    }
+
+    private async Task ToggleSidebar()
+    {
+        bool showSidebar = false;
+
+        try
+        {
+            showSidebar = await localStorage.GetItemAsync<bool>("show_sidebar");
+            await localStorage.SetItemAsync("show_sidebar", !showSidebar);
+        }
+
+        catch
+        {
+            showSidebar = false;
+#if DEBUG
+            throw;
+#endif
+        }
+    }
+}

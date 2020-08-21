@@ -1,13 +1,65 @@
 ﻿@inherits LayoutComponentBase
+@inject ILocalStorageService localStorage
 
 @using Infraestructura.Compartido.Notificaciones
 
-<div id="app">
-    <SideBar/>
+<div id="app" class="@(showSidebar ? "with-sidebar" : "")">
+    <SideBar Show="@showSidebar" />
 
     <main class="main">
-        @Body
+        <HeaderBar />
+
+        <div class="container">
+            @Body
+        </div>
     </main>
 </div>
 
 <ToastGroup />
+
+@code {
+    private bool showSidebar = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            showSidebar = await localStorage.GetItemAsync<bool>("show_sidebar");
+            localStorage.Changed += OnShowSidebarChange;
+        }
+
+        catch
+        {
+            showSidebar = false;
+
+#if DEBUG
+            throw;
+#endif
+        }
+    }
+
+    private void OnShowSidebarChange(object sender, ChangedEventArgs args)
+    {
+        try
+        {
+            if (args.Key == "show_sidebar")
+            {
+                showSidebar = (bool) args.NewValue;
+            }
+        }
+
+        catch
+        {
+            showSidebar = false;
+
+#if DEBUG
+            throw;
+#endif
+        }
+
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+}

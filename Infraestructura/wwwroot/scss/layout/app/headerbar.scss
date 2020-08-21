@@ -1,0 +1,43 @@
+#app .headerbar {
+    width: 100%;
+    height: 5rem;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 11;
+    background-color: white;
+    padding-left: 2rem;
+
+    %icon {
+        cursor: pointer;
+    }
+
+    .dropdown {
+        height: 100%;
+    }
+
+    menu {
+        min-width: 15rem;
+        max-width: 70vw;
+        height: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0;
+        padding: 0 1rem;
+        border-left: 1px solid #eee;
+        cursor: pointer;
+        user-select: none;
+        
+        .user-data {
+            font-size: 0.9rem;
+        }
+    }
+
+    .dropdown hr {
+        margin: 0.5rem 0;
+    }
+}

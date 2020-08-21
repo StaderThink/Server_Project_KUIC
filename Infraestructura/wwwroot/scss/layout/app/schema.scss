@@ -1,0 +1,27 @@
+#app {
+    position: relative;
+    background-color: #fbfbfb;
+    display: flex;
+
+    @media(min-width: 720px) {
+        &.with-sidebar {
+            .main {
+                width: calc(100% - #{$aside-width});
+                left: $aside-width;
+            }
+        }
+    }
+
+    .main {
+        width: 100%;
+        position: absolute;
+        transition: all ease 0.2s;
+        width: 100%;
+        left: 0;
+
+        .container {
+            padding: $padding;
+            transition: width ease 0.2s;
+        }
+    }
+}

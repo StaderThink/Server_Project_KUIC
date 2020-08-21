@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Cargos.Controladores
 {
-    [Authorize(Roles = "usuarios")]
+    [Authorize]
     [Route("api/[controller]")]
     public class CargoController : Controller
     {
@@ -23,6 +23,7 @@ namespace Infraestructura.Cargos.Controladores
         }
 
         [HttpPost]
+        [Authorize(Roles = "usuarios")]
         public IActionResult Insertar([FromBody] Cargo datos)
         {
             if (repo.Insertar(datos))
@@ -45,6 +46,7 @@ namespace Infraestructura.Cargos.Controladores
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "usuarios")]
         public IActionResult Editar(int id, [FromBody] Cargo datos)
         {
             if (repo.PorId(id) is Cargo)

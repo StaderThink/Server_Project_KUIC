@@ -5,12 +5,21 @@
 <div class="card">
     <div class="card-content">
         <div class="content">
-            <div class="field">
-                @foreach (var segmento in Segmentos)
-                {
-                    <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
-                }
-            </div>
+            @if (Segmentos is null)
+            {
+                <div class="loader"></div>
+            }
+
+            else
+            {
+                <div class="field">
+                    @foreach (var segmento in Segmentos)
+                    {
+                        <TarjetaSegmento segmento="segmento"></TarjetaSegmento>
+                    }
+                </div>
+            }
+
             <p>@Notificacion.Texto</p>
             <p><span>@(Autor?.Nombre ?? "Sistema")</span></p>
         </div>
@@ -21,16 +30,26 @@
     [Parameter]
     public Notificacion Notificacion { get; set; }
 
-    private Segmento[] Segmentos = new Segmento[0];
+    private Segmento[] Segmentos;
     private Usuario Autor;
 
     protected override async Task OnInitializedAsync()
     {
-        Segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
-
-        if (Notificacion.Autor != 0)
+        try
         {
-            Autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
+            Segmentos = await http.GetFromJsonAsync<Segmento[]>($"/api/segmento/notificacion/{Notificacion.Id}");
+
+            if (Notificacion.Autor != 0)
+            {
+                Autor = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{Notificacion.Autor}");
+            }
+        }
+
+        catch
+        {
+#if DEBUG
+            throw;
+#endif
         }
     }
 }

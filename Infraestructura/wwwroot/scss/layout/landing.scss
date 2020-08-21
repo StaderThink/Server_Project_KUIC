@@ -3,7 +3,7 @@
     $padding: 3rem;
 
     @media (min-width: 720px) {
-        background-image: url("../img/background.png");
+        background-image: url("../img/background-landing.png");
     }
     
     .main,
@@ -151,7 +151,7 @@
             background-color: white;
             transition: box-shadow ease 0.2s, transform ease 0.2s, background-color ease 0.2s;
             
-            ion-icon {
+            %icon {
                 margin-bottom: 0.5rem;
             }
             

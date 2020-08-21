@@ -1,0 +1,35 @@
+#app .aside {
+    width: $aside-width;
+    max-width: 70vw;
+    height: 100vh;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    z-index: 10;
+    border-right: 1px solid #eee;
+    transition: left ease 0.2s;
+
+    &.is-active {
+        left: 0;
+    }
+
+    .media {
+        margin-bottom: 4rem;
+        display: flex;
+        align-items: center;
+        padding-left: 0.6rem;
+
+        img {
+            height: 2rem;
+        }
+    }
+
+    li a {
+        padding: 0.6rem 0.8rem;
+        border-radius: 0.3rem;
+    }
+}

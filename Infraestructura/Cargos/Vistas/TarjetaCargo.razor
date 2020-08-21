@@ -5,6 +5,33 @@
     <div class="card">
         <div class="card-content">
             <h6 class="title is-6">@(Cargo.Nombre)</h6>
+
+            <div class="tags">
+                @if (Cargo.Usuarios)
+                {
+                    <div class="tag is-light">Usuarios</div>
+                }
+
+                @if (Cargo.Logistica)
+                {
+                    <div class="tag is-light">Inventario</div>
+                }
+
+                @if (Cargo.Pedidos)
+                {
+                    <div class="tag is-light">Pedidos</div>
+                }
+
+                @if (Cargo.Clientes)
+                {
+                    <div class="tag is-light">Clientes</div>
+                }
+
+                @if (Cargo.Solicitar)
+                {
+                    <div class="tag is-light">Solicitudes</div>
+                }
+            </div>
         </div>
         <div class="card-footer">
             <a class="card-footer-item" @onclick="Editar">Editar</a>

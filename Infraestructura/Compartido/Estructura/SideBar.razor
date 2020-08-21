@@ -1,20 +1,16 @@
-﻿@inject AuthenticationStateProvider authProvider
-@inject NavigationManager navegador
-
-@using Infraestructura.Sesiones
-
-<aside class="aside">
+﻿<aside class="aside @(Show ? "is-active" : "")">
     <nav class="menu">
         <div class="media">
+            <div class="media-left">
+                <img src="img/logo.png" alt="Logo de aurelia" />
+            </div>
+
             <div class="media-content">
-                <p class="title is-6">Hola @(Usuario?.Nombre ?? "anonimo")</p>
-                <p class="subtitle is-6">@(Usuario?.Correo ?? "Espere...")</p>
+                <h5 class="title is-5">Aurelia</h5>
             </div>
         </div>
 
         <AuthorizeView Roles="usuarios">
-            <p class="menu-label">USUARIOS</p>
-
             <ul class="menu-list">
                 <li><a href="/usuario">Usuarios</a></li>
                 <li><a href="/cargo">Cargos</a></li>
@@ -23,8 +19,6 @@
         </AuthorizeView>
 
         <AuthorizeView Roles="solicitar, clientes">
-            <p class="menu-label">CLIENTES</p>
-
             <ul class="menu-list">
                 <li><a href="/cliente">Clientes</a></li>
                 <AuthorizeView Roles="solicitar, pedidos" Context="auth">
@@ -34,8 +28,6 @@
         </AuthorizeView>
 
         <AuthorizeView Roles="logistica">
-            <p class="menu-label">LOGISTICA</p>
-
             <ul class="menu-list">
                 <li><a href="/inventario">Inventario</a></li>
                 <li><a href="/entrada">Ingresos</a></li>
@@ -43,44 +35,9 @@
             </ul>
         </AuthorizeView>
     </nav>
-
-    <div class="options">
-        <div class="option" @onclick="IrPerfil">
-            <ion-icon name="person-outline"></ion-icon>
-        </div>
-
-        <div class="option" @onclick="IrBandeja">
-            <ion-icon name="file-tray-outline"></ion-icon>
-        </div>
-
-        <div class="option" @onclick="CerrarSesion">
-            <ion-icon name="exit-outline"></ion-icon>
-        </div>
-    </div>
 </aside>
 
 @code {
-    private Usuario Usuario;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var provider = (ProveedorAutenticacion) authProvider;
-        Usuario = await provider.GetUserAsync();
-    }
-
-    async Task CerrarSesion()
-    {
-        var proveedor = (ProveedorAutenticacion) authProvider;
-        await proveedor.SignOut();
-    }
-
-    void IrBandeja()
-    {
-        navegador.NavigateTo("/bandeja");
-    }
-
-    void IrPerfil()
-    {
-        navegador.NavigateTo("/perfil");
-    }
+    [Parameter]
+    public bool Show { get; set; } = false;
 }

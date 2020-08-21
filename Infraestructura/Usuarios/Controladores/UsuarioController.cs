@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Usuarios
 {
-    [Authorize(Roles = "usuarios")]
+    [Authorize]
     [Route("api/[controller]")]
     public class UsuarioController : Controller
     {
@@ -61,6 +61,7 @@ namespace Infraestructura.Usuarios
         }
 
         [HttpPost]
+        [Authorize(Roles = "usuarios")]
         public IActionResult Insertar([FromBody] Usuario usuario)
         {
             var servicio = new ServicioRegistradorUsuario();
@@ -72,6 +73,7 @@ namespace Infraestructura.Usuarios
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "usuarios")]
         public IActionResult Editar(int id, [FromBody] Usuario usuario)
         {
             if (repositorio.PorId(id) is Usuario)
@@ -90,6 +92,7 @@ namespace Infraestructura.Usuarios
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "usuarios")]
         public IActionResult Eliminar(int id)
         {
             if (repositorio.PorId(id) is Usuario usuario)

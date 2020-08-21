@@ -23,9 +23,18 @@
                         <div class="tag is-warning">Inactivo</div>
                     }
                 </div>
+                <div>
+                    @if (cargo is null)
+                    {
+                        <p>Espere...</p>
+                    }
 
+                    else
+                    {
+                        <a href="/cargo/modificar/@(Usuario.Cargo)">@(cargo.Nombre.ToCapitalize())</a>
+                    }
+                </div>
                 <div><a href="mailto:@(Usuario.Correo)">@Usuario.Correo</a></div>
-                <div>@Usuario.Telefono</div>
             </div>
         </div>
 
@@ -54,6 +63,24 @@
     public EventCallback<Usuario> OnDeleted { get; set; }
 
     private bool deleting = false;
+    private Cargo cargo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{Usuario.Cargo}");
+        }
+
+        catch
+        {
+            cargo = null;
+
+#if DEBUG
+            throw;
+#endif
+        }
+    }
 
     private async Task Delete()
     {

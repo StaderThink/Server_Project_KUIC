@@ -39,7 +39,7 @@ namespace Infraestructura.Controladores.Inventarios
         public IEnumerable<Segmento> ListarPorNotificacion(int notificacionId)
         {
             var lista = repositorio.PorNotificacion(notificacionId);
-            return lista.Where(s => s.Notificacion == notificacionId);
+            return lista;
         }
 
         [HttpPost]
