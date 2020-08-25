@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Clientes.Controladores
 {
-    [Authorize(Roles = "clientes, solicitar")]
+    [Authorize]
     [Route("api/[controller]")]
     public class ClienteController : Controller
     {

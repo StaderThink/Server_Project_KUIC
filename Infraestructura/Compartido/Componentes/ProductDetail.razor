@@ -1,23 +1,24 @@
 ﻿@inject HttpClient http  
 
-<div class="detalle">
-    @if (cargando)
-    {
-        <span>Espere...</span>
-    }
+    <div class="detalle">
+        @if (cargando)
+        {
+            <span>Espere...</span>
+        }
 
-    else if (producto is null)
-    {
-        <span>Producto desconocido</span>
-    }
+        else if (producto is null)
+        {
+            <span>@detalle.Cantidad unidad(es) de</span>
+            <span>Producto desconocido</span>
+        }
 
-    else
-    {
-        <span>@producto.Nombre</span>
-    }
+        else
+        {
+            <span>@detalle.Cantidad unidad(es) de</span>
+            <span>@producto.Nombre</span>
+        }
 
-    <span>@detalle.Cantidad</span>
-</div>
+    </div>
 
 @code {
     [Parameter]

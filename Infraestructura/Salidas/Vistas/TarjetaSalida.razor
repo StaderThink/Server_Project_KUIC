@@ -36,24 +36,47 @@
 
                 @if (salida.Pedido == 0)
                 {
-                    <p>Sin pedido</p>
+                    <p>@salida.Observacion.ToCapitalize()</p>
                 }
                 else
                 {
-                    <p>@salida.Pedido</p>
+                    <p>Salida con pedido <button class="button is-small is-primary is-outlined" @onclick="AbrirPedido">Ver pedido</button></p>
+                    @if (mostrarPedido)
+                    {
+                        <div class="modal is-active">
+                            <div class="modal-background"></div>
+                            <div class="modal-card message is-primary">
+                                <header class="modal-card-head message-header">
+                                    <span class="modal-card-title">Pedido #@salida.Pedido </span>
+                                    <button class="delete" @onclick="CerrarPedido" aria-label="close"></button>
+                                </header>
+                                <section class="modal-card-body">
+                                    <p>Empresa: @cliente.Nombre</p>
+                                    <p>Encargado: @cliente.Encargado</p>
+                                    <p>Dirección: @cliente.Direccion</p>
+                                    <p>Fecha de entrega: @pedido.Fecha</p>
+                                </section>
+                            </div>
+                        </div>
+                    }
                 }
-
-                <p>@salida.Observacion.ToCapitalize()</p>
             </div>
         </div>
     </div>
    
 @code {
-    #region Modal
+    #region Detalle
     bool mostrarModal = false;
 
     void AbrirModal() => mostrarModal = true;
     void CerrarModal() => mostrarModal = false;
+    #endregion
+
+    #region Pedido
+    bool mostrarPedido = false;
+
+    void AbrirPedido() => mostrarPedido = true;
+    void CerrarPedido() => mostrarPedido = false;
     #endregion
 
     [Parameter]
@@ -64,10 +87,28 @@
 
     DetalleSalida[] detalles { get; set; } = new DetalleSalida[0];
 
-    Pedido[] pedidos { get; set; } = new Pedido[0];
+    private Pedido pedido;
+    private Cliente cliente;
 
     protected override async Task OnInitializedAsync()
     {
-        detalles = await http.GetFromJsonAsync<DetalleSalida[]>($"/api/detalleSalida/salida/{salida.Id}");
+        try
+        {
+            detalles = await http.GetFromJsonAsync<DetalleSalida[]>($"/api/detalleSalida/salida/{salida.Id}");
+
+
+            if (salida.Pedido != 0)
+            {
+                pedido = await http.GetFromJsonAsync<Pedido>($"/api/pedido/{salida.Pedido}");
+                cliente = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
+            }
+        }
+
+        catch
+        {
+#if DEBUG
+            throw;
+#endif
+        }
     }
 }
