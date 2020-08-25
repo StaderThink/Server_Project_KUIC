@@ -7,46 +7,33 @@
 @page "/cliente/{busqueda}"
 @layout AppLayout
 
-<AuthorizeView Roles="clientes, solicitar">
-    <Authorized>
-        @if (cargando)
+@if (cargando)
+{
+    <div class="buttons">
+        <a href="/cliente/registrar" class="button is-primary">Registrar cliente</a>
+    </div>
+    <div class="loader is-medium"></div>
+
+}
+
+else
+{
+    <h2 class="title is-2">Listado de clientes</h2>
+    <div class="buttons">
+        <a href="/cliente/registrar" class="button is-primary">Registrar cliente</a>
+    </div>
+    <hr />
+    <div class="columns is-multiline">
+        @foreach (var clientes in lista)
         {
-            <div class="loader is-medium"></div>
-
-        }
-        else
-        {
-            <div class="container">
-                <h2 class="title is-2">Listado de clientes</h2>
-
-                <div class="buttons">
-                    <a class="button is-primary" href="/cliente/registrar">Registrar cliente</a>
-                </div>
-                <hr />
-                @if (lista is null)
-                {
-                    <p>Algo salio muy mal...</p>
-                }
-                else
-                {
-                    <div class="columns is-multiline">
-                        @foreach (var cliente in lista)
-                        {
-                            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                                <TarjetaCliente cliente="cliente" onDeleted="ObtenerListado" />
-                            </div>
-
-                        }
-                    </div>
-                }
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaCliente cliente="clientes" onDeleted="ObtenerListado" />
             </div>
-        }
-    </Authorized>
 
-    <NotAuthorized>
-        <p>No tienes permisos para acceder a esta vista</p>
-    </NotAuthorized>
-</AuthorizeView>
+        }
+    </div>
+}
+
 
 @code {
     Cliente[] lista { get; set; }
