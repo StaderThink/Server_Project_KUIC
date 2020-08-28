@@ -9,7 +9,9 @@ namespace Infraestructura
     {
         public static void Main(string[] args)
         {
+#if DEBUG
             DotEnv.Config(); // injectar el .env globalmente
+#endif
             CreateHostBuilder(args).Build().Run();
         }
 

@@ -14,12 +14,12 @@
             <span class="button" @onclick="Decrement">
                 @if (OnDelete.HasDelegate)
                 {
-                    <box-icon name="@(Value == Min ? "trash" : "minus")" size="1rem"></box-icon>
+                    <box-icon name="@(Value == Min ? "trash" : "minus")"></box-icon>
                 }
 
                 else
                 {
-                    <box-icon name="minus" size="1rem"></box-icon>
+                    <box-icon name="minus"></box-icon>
                 }
             </span>
         </div>

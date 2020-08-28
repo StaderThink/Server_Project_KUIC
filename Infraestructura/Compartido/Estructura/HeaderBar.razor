@@ -1,12 +1,13 @@
 ﻿@inject AuthenticationStateProvider authProvider
 @inject ILocalStorageService localStorage
+@inject HttpClient http
 
 <div class="headerbar">
     <box-icon name="menu" @onclick="ToggleSidebar"></box-icon>
 
     <div class="dropdown is-right is-hoverable">
         <div class="dropdown-trigger">
-            @if (Usuario is null)
+            @if (usuario is null)
             {
                 <menu>
                     <h6>Espere...</h6>
@@ -16,10 +17,20 @@
             else
             {
             <menu>
-                <box-icon name="user-circle"></box-icon>
-
                 <div class="user-data">
-                    <h6>Hola @Usuario.Nombre</h6>
+                    <h6>Hola @usuario.Nombre</h6>
+
+                    <!-- cargo -->
+                    
+                    @if (cargo is null)
+                    {
+                        <p>Espere...</p>
+                    }
+
+                    else
+                    {
+                        <p>@( cargo.Nombre.ToCapitalize() )</p>
+                    }
                 </div>
 
                 <box-icon name="chevron-down"></box-icon>
@@ -30,21 +41,42 @@
         <div class="dropdown-menu" role="menu">
             <div class="dropdown-content">
                 <a href="/perfil" class="dropdown-item">Mi cuenta</a>
-                <a href="/bandeja" class="dropdown-item">Bandeja de entrada</a>
+                <a href="/bandeja" class="dropdown-item">
+                    <span>Mis notificaciones</span>
+                    <div class="tag is-light">99+</div>
+                </a>
+
                 <hr />
-                <a class="dropdown-item" @onclick="SignOut">Cerrar sesión</a>
+
+                <a class="dropdown-item" @onclick="SignOut">
+                    <span>Cerrar sesión</span>
+                    <box-icon name="x" size="1em"></box-icon>
+                </a>
             </div>
         </div>
     </div>
 </div>
 
 @code {
-    private Usuario Usuario;
+    private Usuario usuario;
+    private Cargo cargo;
 
     protected override async Task OnInitializedAsync()
     {
-        var provider = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
-        Usuario = await provider.GetUserAsync();
+        try
+        {
+            var provider = (Infraestructura.Sesiones.ProveedorAutenticacion) authProvider;
+            usuario = await provider.GetUserAsync();
+
+            cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{usuario.Cargo}");
+        }
+
+        catch
+        {
+#if DEBUG
+            throw;
+#endif
+        }
     }
 
     private async Task SignOut()

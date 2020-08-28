@@ -21,7 +21,7 @@ namespace Aplicacion.Mailer
 
         public void SendDefaultPassword(Usuario usuario)
         {
-            string html = $"¡Te damos la bienvenida a tu nueva amiga, <strong>Aurelia</strong>! estamos a la espera de como podemos mejorar tus actividades. Estamos aquí para informarte que has sido registrada satisfactoriamente en nuestro sistema y para poder acceder debes utilizar tu documento y tu contraseña es <strong>{usuario.Clave}</strong> (esta clave fue generada por el sistema y puedes cambiarla en cualquier momento).<br>Este mensaje fue enviado con amor, por el equipo de desarrollo de Aurelia.";
+            string html = $"¡Te damos la bienvenida a tu nueva amiga, <strong>Aurelia</strong>! estamos a la espera de como podemos mejorar tus actividades. Estamos aquí para informarte que has sido registrada satisfactoriamente en nuestro sistema y para poder iniciar sesión debes utilizar tu número de documento (CC o NIT) y tu contraseña es <strong>{usuario.Clave}</strong> (esta clave fue generada por el sistema y puedes cambiarla en cualquier momento).<br>Recuerda, tu contraseña es: <strong>{usuario.Clave}</strong><br><br>Este mensaje fue enviado con amor, por el equipo de desarrollo de Aurelia.";
 
             mailer.SendHtml(usuario.Correo, "Te damos la bienvenida", html);
         }

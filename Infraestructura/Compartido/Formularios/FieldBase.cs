@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNetCore.Components.Forms;
 
@@ -6,16 +7,20 @@ namespace Infraestructura.Compartido.Formularios
 {
     public class FieldBase<TValue>: InputBase<TValue>
     {
-        protected string ControlCssClass()
+        protected new string CssClass
         {
-            string cssClass = "";
+            get
+            {
+                string classes = "input";
+                var messages = EditContext.GetValidationMessages(FieldIdentifier);
 
-            bool isInvalid = EditContext.GetValidationMessages(FieldIdentifier).Any();
+                if (messages.Any())
+                {
+                    classes += " is-danger";
+                }
 
-            if (isInvalid)
-                cssClass += "is-danger ";
-
-            return cssClass;
+                return classes;
+            }
         }
 
         protected override bool TryParseValueFromString(string value, out TValue result, out string validationErrorMessage)
@@ -34,7 +39,8 @@ namespace Infraestructura.Compartido.Formularios
 
                 else if (typeof(TValue) == typeof(DateTime))
                 {
-                    result = (TValue) (object) DateTime.Parse(value);
+                    var date = (TValue) (object) DateTime.Parse(value);
+                    result = date;
                 }
 
                 else

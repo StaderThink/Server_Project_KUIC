@@ -1,16 +1,8 @@
 ﻿@inject HttpClient http
 
-<div class="detalle">
-    @if (Cargando)
-    {
-        <span class="tag is-light">Espere...</span>
-    }
-
-    else
-    {
-        <span class="tag is-dark">@(Cargo?.Nombre ?? "Desconocido")</span>
-    }
-</div>
+<span class="tag is-dark">
+    @( Cargando ? "Espere..." : Cargo?.Nombre ?? "Desconocido" )
+</span>
 
 @code {
     [Parameter]
