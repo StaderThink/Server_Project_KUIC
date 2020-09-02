@@ -12,10 +12,10 @@ namespace Aplicacion.Sesiones
         {
             string tokenSecreto = Environment.GetEnvironmentVariable("TOKEN");
 
-            SymmetricSecurityKey llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
-            SigningCredentials credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
+            var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
-            JwtSecurityToken token = new JwtSecurityToken
+            var token = new JwtSecurityToken
             (
                 issuer: tokenSecreto,
                 audience: tokenSecreto,
@@ -24,7 +24,7 @@ namespace Aplicacion.Sesiones
                 signingCredentials: credenciales
             );
 
-            JwtSecurityTokenHandler criptografo = new JwtSecurityTokenHandler();
+            var criptografo = new JwtSecurityTokenHandler();
             return criptografo.WriteToken(token);
         }
     }
