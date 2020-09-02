@@ -28,15 +28,16 @@ namespace Infraestructura
 
         private void ConfigurarAutenticacion(JwtBearerOptions opciones)
         {
-            SymmetricSecurityKey llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("TOKEN")));
+            var token = Environment.GetEnvironmentVariable("TOKEN");
+            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token));
 
             opciones.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
-                ValidIssuer = Environment.GetEnvironmentVariable("TOKEN"),
-                ValidAudience = Environment.GetEnvironmentVariable("TOKEN"),
+                ValidIssuer = token,
+                ValidAudience = token,
                 IssuerSigningKey = llave
             };
         }

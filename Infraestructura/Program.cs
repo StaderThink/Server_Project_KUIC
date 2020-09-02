@@ -17,8 +17,8 @@ namespace Infraestructura
 
         public static IHostBuilder CreateHostBuilder(string[] args)
         {
-            IHostBuilder host = Host.CreateDefaultBuilder(args);
-            IHostBuilder builder = host.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+            var host = Host.CreateDefaultBuilder(args);
+            var builder = host.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
 
             return builder;
         }

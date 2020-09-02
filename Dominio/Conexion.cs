@@ -7,33 +7,39 @@ namespace Dominio
 {
     internal sealed class Conexion : IDisposable
     {
-        private readonly MySqlConnection _conexion;
+        private readonly MySqlConnection connection;
 
         public Conexion()
         {
-            string url = Environment.GetEnvironmentVariable("DATABASE_URL");
-            _conexion = new MySqlConnection(url);
+            string host = Environment.GetEnvironmentVariable("DATABASE_HOST");
+            string name = Environment.GetEnvironmentVariable("DATABASE_NAME");
+            string user = Environment.GetEnvironmentVariable("DATABASE_USER");
+            string password = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+
+            string url = $"server={host}; database={name}; user={user}; password={password};";
+
+            connection = new MySqlConnection(url);
         }
 
         public void Dispose()
         {
-            _conexion.Close();
-            _conexion.Dispose();
+            connection.Close();
+            connection.Dispose();
         }
 
         public int Ejecutar(string consulta, object carga = null)
         {
-            return _conexion.Execute(consulta, carga);
+            return connection.Execute(consulta, carga);
         }
 
         public IEnumerable<T> Seleccionar<T>(string consulta, object carga = null)
         {
-            return _conexion.Query<T>(consulta, carga);
+            return connection.Query<T>(consulta, carga);
         }
 
         public T Obtener<T>(string consulta, object carga = null)
         {
-            return _conexion.QuerySingleOrDefault<T>(consulta, carga);
+            return connection.QuerySingleOrDefault<T>(consulta, carga);
         }
     }
 }
