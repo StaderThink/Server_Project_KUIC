@@ -33,8 +33,8 @@ namespace Aplicacion.Sesiones
 
         public ClaimsPrincipal GenerarIdentidad(Usuario usuario)
         {
-            RepositorioCargo repositorioCargo = new RepositorioCargo();
-            Cargo cargo = repositorioCargo.PorId(usuario.Cargo);
+            var repositorioCargo = new RepositorioCargo();
+            var cargo = repositorioCargo.PorId(usuario.Cargo);
 
             List<Claim> listado = new List<Claim>
             {

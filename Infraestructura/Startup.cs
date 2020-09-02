@@ -37,7 +37,8 @@ namespace Infraestructura
                 ValidateIssuerSigningKey = true,
                 ValidIssuer = Environment.GetEnvironmentVariable("TOKEN"),
                 ValidAudience = Environment.GetEnvironmentVariable("TOKEN"),
-                IssuerSigningKey = llave
+                IssuerSigningKey = llave,
+                ValidateLifetime = true
             };
         }
 

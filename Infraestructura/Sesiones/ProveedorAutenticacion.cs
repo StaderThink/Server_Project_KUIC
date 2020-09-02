@@ -29,22 +29,28 @@ namespace Infraestructura.Sesiones
         private async Task<AuthenticationState> GetAuthenticationState()
         {
             var status = new AuthenticationState(new ClaimsPrincipal());
-            var token = await localStorage.GetItemAsync<string>("token");
 
-            if (token is string)
+            try
             {
-                http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
+                var token = await localStorage.GetItemAsync<string>("token");
 
-                var respuesta = await http.GetAsync("/api/sesion");
-
-                if (respuesta.IsSuccessStatusCode)
+                if (token is string)
                 {
-                    var usuario = await respuesta.Content.ReadFromJsonAsync<Usuario>();
-                    var servicio = new ServicioSesion();
+                    http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
-                    var identidad = servicio.GenerarIdentidad(usuario);
-                    status = new AuthenticationState(identidad);
+                    var user = await http.GetFromJsonAsync<Usuario>("/api/sesion");
+                    var service = new ServicioSesion();
+
+                    var identity = service.GenerarIdentidad(user);
+                    status = new AuthenticationState(identity);
                 }
+            }
+
+            catch
+            {
+#if DEBUG
+                throw;
+#endif
             }
 
             return status;
@@ -57,9 +63,8 @@ namespace Infraestructura.Sesiones
                 return await GetAuthenticationState();
             }
 
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine(ex.ToString());
                 return new AuthenticationState(new ClaimsPrincipal());
             }
         }
