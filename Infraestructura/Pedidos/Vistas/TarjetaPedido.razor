@@ -51,66 +51,74 @@
             </div>
             <br />
             <div class="card-footer">
-
                 @if (cargando)
-                    {
+                {
                     <AuthorizeView Roles="pedidos" Context="auth">
-                        <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
+                        <a class="card-footer-item" href="/pedido/modificar/@pedido.Id" disabled>
+                            <span class="icon">
+                                <box-icon name='edit-alt' color='#a69f99'></box-icon>
+                            </span>
+                        </a>
                     </AuthorizeView>
                 }
 
                 else
                 {
                     <AuthorizeView Roles="pedidos" Context="auth">
-                        <a href="/pedido/modificar/@pedido.Id" class="card-footer-item">Editar</a>
-                    </AuthorizeView>}
+                        <a class="card-footer-item" href="/pedido/modificar/@pedido.Id">
+                            <span class="icon">
+                                <box-icon name='edit-alt' color='#a69f99'></box-icon>
+                            </span>
+                        </a>
+                    </AuthorizeView>
+                }
             </div>
         </div>
-        </div>
     </div>
+</div>
 
 
 @code {
     #region Modal
     bool mostrarModal = false;
 
-                    void AbrirModal() => mostrarModal = true;
-                    void CerrarModal() => mostrarModal = false;
-                    #endregion
+    void AbrirModal() => mostrarModal = true;
+    void CerrarModal() => mostrarModal = false;
+    #endregion
 
-                    [Parameter]
-                    public Pedido pedido { get; set; }
+    [Parameter]
+    public Pedido pedido { get; set; }
 
-                    [Parameter]
-                    public EventCallback<Pedido> OnPedidoEliminado { get; set; }
+    [Parameter]
+    public EventCallback<Pedido> OnPedidoEliminado { get; set; }
 
-                    DetallePedido[] detalles { get; set; } = new DetallePedido[0];
+    DetallePedido[] detalles { get; set; } = new DetallePedido[0];
 
-                    Producto[] productos { get; set; } = new Producto[0];
+    Producto[] productos { get; set; } = new Producto[0];
 
-                    Cliente clientes { get; set; }
-                    Usuario usuario { get; set; }
+    Cliente clientes { get; set; }
+    Usuario usuario { get; set; }
 
-                    bool cargando = false;
+    bool cargando = false;
 
-                    protected override async Task OnInitializedAsync()
-                    {
-                        detalles = await http.GetFromJsonAsync<DetallePedido[]>($"/api/detallePedido/pedido/{pedido.Id}");
-                        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{pedido.Asesor}");
-                        clientes = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
+    protected override async Task OnInitializedAsync()
+    {
+        detalles = await http.GetFromJsonAsync<DetallePedido[]>($"/api/detallePedido/pedido/{pedido.Id}");
+        usuario = await http.GetFromJsonAsync<Usuario>($"/api/usuario/{pedido.Asesor}");
+        clientes = await http.GetFromJsonAsync<Cliente>($"/api/cliente/{pedido.Cliente}");
 
-                    }
+    }
 
-                    async Task Eliminar()
-                    {
-                        cargando = true;
-                        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/pedido/{pedido.Id}");
+    async Task Eliminar()
+    {
+        cargando = true;
+        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/pedido/{pedido.Id}");
 
-                        if (respuesta.IsSuccessStatusCode && OnPedidoEliminado.HasDelegate)
-                        {
-                            await OnPedidoEliminado.InvokeAsync(pedido);
-                        }
+        if (respuesta.IsSuccessStatusCode && OnPedidoEliminado.HasDelegate)
+        {
+            await OnPedidoEliminado.InvokeAsync(pedido);
+        }
 
-                        cargando = false;
-                    }
+        cargando = false;
+    }
 }

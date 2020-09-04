@@ -29,12 +29,20 @@
         <div class="card-footer">
             @if (cargando)
             {
-                <a class="card-footer-item" disabled>Eliminar</a>
+                <a class="card-footer-item" disabled>
+                    <span class="icon">
+                        <box-icon name='trash' color='#a69f99'></box-icon>
+                    </span>
+                </a>
             }
 
             else
             {
-                <a class="card-footer-item" @onclick="Eliminar">Eliminar</a>
+                <a class="card-footer-item" @onclick="Eliminar">
+                    <span class="icon">
+                        <box-icon name='trash' color='#a69f99'></box-icon>
+                    </span>
+                </a>
             }
         </div>
     </div>

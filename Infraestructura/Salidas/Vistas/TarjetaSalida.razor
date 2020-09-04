@@ -18,8 +18,8 @@
                     <div class="modal is-active">
                         <div class="modal-background"></div>
                         <div class="modal-card message is-primary">
-                            <header class="modal-card-head message-header">
-                                <span class="modal-card-title">Detalle de salida #@salida.Id</span>
+                            <header class="modal-card-head">
+                                <span class="modal-card-title"><h5 class="title is-5">Detalle de salida #@salida.Id</h5></span>
                                 <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
                             </header>
                             <section class="modal-card-body">
@@ -46,15 +46,31 @@
                         <div class="modal is-active">
                             <div class="modal-background"></div>
                             <div class="modal-card message is-primary">
-                                <header class="modal-card-head message-header">
-                                    <span class="modal-card-title">Pedido #@salida.Pedido </span>
+                                <header class="modal-card-head">
+                                    <span class="modal-card-title"><h5 class="title is-5">Pedido #@salida.Pedido</h5></span>
                                     <button class="delete" @onclick="CerrarPedido" aria-label="close"></button>
                                 </header>
                                 <section class="modal-card-body">
-                                    <p>Empresa: @cliente.Nombre</p>
-                                    <p>Encargado: @cliente.Encargado</p>
-                                    <p>Dirección: @cliente.Direccion</p>
-                                    <p>Fecha de entrega: @pedido.Fecha</p>
+                                    <div class="card">
+                                        <div class="card-content">
+                                            <div class="content">
+                                                <div class="columns is-multiline">
+                                                    <div class="column is-half">
+                                                        <p><b>Empresa:</b></p>
+                                                        <p><b>Encargado:</b></p>
+                                                        <p><b>Dirección:</b></p>
+                                                        <p><b>Fecha de entrega:</b></p>
+                                                    </div>
+                                                    <div class="column is-half">
+                                                        <p>@cliente.Nombre</p>
+                                                        <p>@cliente.Encargado</p>
+                                                        <p>@cliente.Direccion</p>
+                                                        <p>@pedido.Fecha</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </section>
                             </div>
                         </div>

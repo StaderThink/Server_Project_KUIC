@@ -6,23 +6,32 @@
 @page "/cliente"
 @page "/cliente/{busqueda}"
 @layout AppLayout
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Clientes</h3>
+    </div>
+    <div class="level-right">
+        <div class="buttons">
+            <a href="/cliente/registrar" class="button is-primary">
+                <span class="icon">
+                    <box-icon name='plus'></box-icon>
+                </span>
+                <span>Nuevo</span>
+            </a>
+        </div>
+    </div>
+</div>
 
+<hr />
 @if (cargando)
 {
-    <div class="buttons">
-        <a href="/cliente/registrar" class="button is-primary">Registrar cliente</a>
-    </div>
     <div class="loader is-medium"></div>
 
 }
 
 else
 {
-    <h2 class="title is-2">Listado de clientes</h2>
-    <div class="buttons">
-        <a href="/cliente/registrar" class="button is-primary">Registrar cliente</a>
-    </div>
-    <hr />
+
     <div class="columns is-multiline">
         @foreach (var clientes in lista)
         {

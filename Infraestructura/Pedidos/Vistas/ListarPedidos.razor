@@ -6,33 +6,41 @@
 @page "/pedido/{busqueda}"
 @layout AppLayout
 
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Solicitudes</h3>
+    </div>
+    <div class="level-right">
+        <div class="buttons">
+            <a href="/pedido/registrar" class="button is-primary">
+                <span class="icon">
+                    <box-icon name='plus'></box-icon>
+                </span>
+                <span>Nuevo</span>
+            </a>
+        </div>
+    </div>
+</div>
 
-        @if (cargando)
+<hr />
+
+@if (cargando)
+{
+    <div class="loader is-medium"></div>
+}
+
+else
+{
+    <div class="columns is-multiline">
+        @foreach (var pedido in lista)
         {
-            <div class="buttons">
-                <a href="/pedido/registrar" class="button is-primary">Solicitar Pedido</a>
+            <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                <TarjetaPedido pedido="pedido" OnPedidoEliminado="ObtenerListado" />
             </div>
-            <div class="loader is-medium"></div> 
-         
-        }
 
-        else
-        {
-            <h2 class="title is-2">Listado de solicitudes</h2>
-            <div class="buttons">
-                <a href="/pedido/registrar" class="button is-primary">Solicitar Pedido</a>
-            </div>
-            <hr />
-            <div class="columns is-multiline">
-                @foreach (var pedido in lista)
-                {
-                    <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                        <TarjetaPedido pedido="pedido" OnPedidoEliminado="ObtenerListado" />
-                    </div>
-
-                }
-            </div>
         }
+    </div>
+}
 
 @code {
     Pedido[] lista { get; set; }

@@ -3,22 +3,30 @@
 @layout AppLayout
 @attribute [Authorize(Roles = "logistica")]
 
-<h3 class="title is-3">Listar Ingresos</h3>
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Ingresos</h3>
+    </div>
+    <div class="level-right">
+        <div class="buttons">
+            <a href="/entrada/registrar" class="button is-primary">
+                <span class="icon">
+                    <box-icon name='plus'></box-icon>
+                </span>
+                <span>Nuevo</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<hr />
 
 @if (entradas == null)
 {
-    <div class="buttons">
-        <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
-    </div>
-    <hr />
     <div class="loader is-medium"></div>
 }
 else
 {
-    <div class="buttons">
-        <a href="/entrada/registrar" class="button is-primary">Agregar Entrada</a>
-    </div>
-    <hr />
     <div class="columns is-multiline">
         @foreach (Entrada entrada in entradas)
         {
