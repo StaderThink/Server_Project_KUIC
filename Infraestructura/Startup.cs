@@ -54,7 +54,6 @@ namespace Infraestructura
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(ConfigurarAutenticacion);
 
-            services.AddScoped<IToastService, ToastService>();
 
             services.AddSingleton(service => // agregar cliente http
                 new HttpClient
@@ -63,7 +62,12 @@ namespace Infraestructura
                 }
             );
 
+            services.AddScoped<IToastService, ToastService>();
             services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacion>();
+
+#if RELEASE
+            services.AddLettuceEncrypt();
+#endif
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
