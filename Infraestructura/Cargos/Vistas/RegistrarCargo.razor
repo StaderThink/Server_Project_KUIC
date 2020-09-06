@@ -7,6 +7,16 @@
 @page "/cargo/registrar"
 @layout AppLayout
 
+<nav class="breadcrumb">
+    <ul>
+        <li><a href="/cargo">Cargo</a></li>
+        <li class="is-active"><a href="#">Registrar</a></li>
+    </ul>
+</nav>
+
+<h3 class="title is-3">Registrar cargo</h3>
+<hr />
+
 <EditForm Model="Cargo" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
@@ -47,8 +57,8 @@
     </FormField>
 
     <FormField IsLoading="Cargando">
-        <SubmitButton>Registrar</SubmitButton>
         <CancelButton To="/cargo">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
     </FormField>
 </EditForm>
 

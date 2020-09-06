@@ -10,7 +10,16 @@
 @page "/notificacion/registrar"
 @layout AppLayout
 
-<h3 class="title is-3">Registrar nueva notificacion</h3>
+<nav class="breadcrumb">
+    <ul>
+        <li><a href="/notificacion">Notificación</a></li>
+        <li class="is-active"><a href="#">Registrar</a></li>
+    </ul>
+</nav>
+
+<h3 class="title is-3">Registrar Notificación</h3>
+<hr />
+
 <EditForm Model="notificacion" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <FormField>
@@ -42,8 +51,8 @@
     </FormField>
 
     <FormField IsLoading="cargando">
-        <SubmitButton>Registrar</SubmitButton>
         <CancelButton To="/notificacion">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
     </FormField>
 </EditForm>
 

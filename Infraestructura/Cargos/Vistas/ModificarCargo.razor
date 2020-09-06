@@ -7,6 +7,16 @@
 @page "/cargo/modificar/{Id:int}"
 @layout AppLayout
 
+<nav class="breadcrumb">
+    <ul>
+        <li><a href="/cargo">Cargo</a></li>
+        <li class="is-active"><a href="#">Modificar</a></li>
+    </ul>
+</nav>
+
+<h3 class="title is-3">Modificar cargo</h3>
+<hr />
+
 <EditForm Model="Cargo" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
@@ -85,9 +95,9 @@
         catch
         {
             toaster.ShowError("Hubo un error desconocido, intenta nuevamente más tarde");
-            #if DEBUG
+#if DEBUG
             throw;
-            #endif
+#endif
         }
 
         finally
