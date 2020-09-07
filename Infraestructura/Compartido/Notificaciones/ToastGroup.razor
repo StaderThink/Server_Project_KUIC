@@ -17,8 +17,6 @@
 
     private void AddNotification(Toast toast)
     {
-        toast.Id = Guid.NewGuid();
-
         Toasts.Add(toast);
         StateHasChanged();
     }

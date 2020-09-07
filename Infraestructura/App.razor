@@ -3,7 +3,9 @@
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData">
                 <NotAuthorized>
-                    <NoAutorizado />
+                    <LayoutView Layout="@typeof(BaseLayout)">
+                        <NoAutorizado />
+                    </LayoutView>
                 </NotAuthorized>
 
                 <Authorizing>
@@ -13,9 +15,7 @@
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(BaseLayout)">
-                <div class="container">
-                    <Error />
-                </div>
+                <Error />
             </LayoutView>
         </NotFound>
     </Router>

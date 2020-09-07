@@ -35,7 +35,7 @@ namespace Infraestructura.Compartido.Notificaciones
                 Type = type
             };
 
-            OnShow.Invoke(toast);
+            OnShow?.Invoke(toast);
         }
     }
 }
