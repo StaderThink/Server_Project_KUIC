@@ -17,6 +17,22 @@
 
     .dropdown {
         height: 100%;
+
+        hr {
+            margin: 0.5rem 0;
+        }
+
+        &-menu {
+            margin-right: 1rem;
+            min-width: 15rem;
+        }
+
+        &-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.6rem 1rem;
+        }
     }
 
     menu {
@@ -28,16 +44,11 @@
         align-items: center;
         margin: 0;
         padding: 0 1rem;
-        border-left: 1px solid #eee;
         cursor: pointer;
         user-select: none;
         
         .user-data {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-    }
-
-    .dropdown hr {
-        margin: 0.5rem 0;
     }
 }

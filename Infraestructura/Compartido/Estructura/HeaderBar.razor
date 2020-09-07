@@ -43,7 +43,7 @@
                 <a href="/perfil" class="dropdown-item">Mi cuenta</a>
                 <a href="/bandeja" class="dropdown-item">
                     <span>Mis notificaciones</span>
-                    <div class="tag is-light">99+</div>
+                    <div class="tag is-light">@contadorNotificaciones</div>
                 </a>
 
                 <hr />
@@ -61,6 +61,8 @@
     private Usuario usuario;
     private Cargo cargo;
 
+    private string contadorNotificaciones = "0";
+
     protected override async Task OnInitializedAsync()
     {
         try
@@ -69,6 +71,11 @@
             usuario = await provider.GetUserAsync();
 
             cargo = await http.GetFromJsonAsync<Cargo>($"/api/cargo/{usuario.Cargo}");
+
+            // contador de notificaciones
+
+            var notificaciones = await http.GetFromJsonAsync<Notificacion[]>("/api/notificacion");
+            contadorNotificaciones = notificaciones.Length > 9 ? "+9" : notificaciones.Length.ToString();
         }
 
         catch

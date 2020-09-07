@@ -7,6 +7,7 @@ using Infraestructura.Sesiones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -54,15 +55,19 @@ namespace Infraestructura
                 .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(ConfigurarAutenticacion);
 
-            services.AddScoped<IToastService, ToastService>();
-
-            services.AddSingleton(service => // agregar cliente http
-                new HttpClient
+            services.AddSingleton(
+                service =>
                 {
-                    BaseAddress = new Uri("https://localhost:5001")
+                    string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5000";
+
+                    return new HttpClient
+                    {
+                        BaseAddress = new Uri(baseUrl)
+                    };
                 }
             );
 
+            services.AddScoped<IToastService, ToastService>();
             services.AddScoped<AuthenticationStateProvider, ProveedorAutenticacion>();
         }
 
