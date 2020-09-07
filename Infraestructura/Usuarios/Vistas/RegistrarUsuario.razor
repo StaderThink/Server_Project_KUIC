@@ -21,53 +21,77 @@
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
-    <FormField Label="Tipo de documento">
-        <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
-            <option value="@value">@value</option>
-        </SelectField>
-        <FormFeedback For="() => Usuario.TipoDocumento" />
-    </FormField>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Tipo de documento">
+                <SelectField @bind-Value="Usuario.TipoDocumento" Context="value" Data="TiposDeDocumento">
+                    <option value="@value">@value</option>
+                </SelectField>
+                <FormFeedback For="() => Usuario.TipoDocumento" />
+            </FormField>
+        </div>
 
-    <FormField Label="Documento">
-        <NumberField id="documento" @bind-Value="Usuario.Documento" />
-        <FormFeedback For="() => Usuario.Documento" />
-    </FormField>
+        <div class="column is-half">
+            <FormField Label="Documento">
+                <NumberField id="documento" @bind-Value="Usuario.Documento" />
+                <FormFeedback For="() => Usuario.Documento" />
+            </FormField>
+        </div>
+    </div>
 
-    <FormField Label="Nombre">
-        <TextField id="nombre" @bind-Value="Usuario.Nombre" />
-        <FormFeedback For="() => Usuario.Nombre" />
-    </FormField>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Nombre">
+                <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+                <FormFeedback For="() => Usuario.Nombre" />
+            </FormField>
+        </div>
 
-    <FormField Label="Apellido">
-        <TextField id="apellido" @bind-Value="Usuario.Apellido" />
-        <FormFeedback For="() => Usuario.Apellido" />
-    </FormField>
+        <div class="column is-half">
+            <FormField Label="Apellido">
+                <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+                <FormFeedback For="() => Usuario.Apellido" />
+            </FormField>
+        </div>
+    </div>
 
-    <FormField Label="Correo">
-        <EmailField id="correo" @bind-Value="Usuario.Correo" />
-        <FormFeedback For="() => Usuario.Correo" />
-    </FormField>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Correo Electrónico">
+                <EmailField id="correo" @bind-Value="Usuario.Correo" />
+                <FormFeedback For="() => Usuario.Correo" />
+            </FormField>
+        </div>
 
-    <FormField Label="Telefono">
+        <div class="column is-half">
+            <FormField Label="Cargo">
+                <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
+                    <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
+                </SelectField>
+                <FormFeedback Help="Esto define los accesos que tendrá el usuario" For="() => Usuario.Cargo" />
+            </FormField>
+        </div>
+    </div>
+
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Fecha de nacimiento">
+                <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
+                <FormFeedback For="() => Usuario.Nacimiento" />
+            </FormField>
+        </div>
+
+        <div class="column is-half">
+            <FormField Label="Fecha de expedición">
+                <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
+                <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
+            </FormField>
+        </div>
+    </div>
+    
+    <FormField Label="Teléfono">
         <PhoneField id="telefono" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
-    </FormField>
-
-    <FormField Label="Cargo">
-        <SelectField id="cargo" @bind-Value="Usuario.Cargo" Context="value" Data="ListadoCargos">
-            <option value="@value.Id">@value.Nombre.ToCapitalize()</option>
-        </SelectField>
-        <FormFeedback Help="Esto define los accesos que tendra el usuario" For="() => Usuario.Cargo" />
-    </FormField>
-
-    <FormField Label="Fecha de nacimiento">
-        <DateField id="fechaNacimiento" @bind-Value="Usuario.Nacimiento" />
-        <FormFeedback For="() => Usuario.Nacimiento" />
-    </FormField>
-
-    <FormField Label="Fecha de expedición">
-        <DateField id="fechaExpedicion" @bind-Value="Usuario.Expedicion" />
-        <FormFeedback For="() => Usuario.Expedicion" Help="Fecha de expedición del documento" />
     </FormField>
 
     <FormButtons IsLoading="Cargando">

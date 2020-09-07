@@ -5,25 +5,36 @@
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
-    <FormField Label="Nombre">
-        <TextField id="nombre" @bind-Value="Usuario.Nombre" />
-        <FormFeedback For="() => Usuario.Nombre" />
-    </FormField>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Nombre">
+                <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+                <FormFeedback For="() => Usuario.Nombre" />
+            </FormField>
+        </div>
+        <div class="column is-half">
+            <FormField Label="Apellido">
+                <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+                <FormFeedback For="() => Usuario.Apellido" />
+            </FormField>
+        </div>
+    </div>
 
-    <FormField Label="Apellido">
-        <TextField id="apellido" @bind-Value="Usuario.Apellido" />
-        <FormFeedback For="() => Usuario.Apellido" />
-    </FormField>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Correo Electrónico">
+                <EmailField id="correo" @bind-Value="Usuario.Correo" />
+                <FormFeedback For="() => Usuario.Correo" />
+            </FormField>
+        </div>
+        <div class="column is-half">
+            <FormField Label="Teléfono">
+                <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
+                <FormFeedback For="() => Usuario.Telefono" />
+            </FormField>
+        </div>
+    </div>
 
-    <FormField Label="Correo">
-        <EmailField id="correo" @bind-Value="Usuario.Correo" />
-        <FormFeedback For="() => Usuario.Correo" />
-    </FormField>
-
-    <FormField Label="Correo">
-        <NumberField id="telefono" @bind-Value="Usuario.Telefono" />
-        <FormFeedback For="() => Usuario.Telefono" />
-    </FormField>
 
     <FormButtons IsLoading="Guardando">
         <SubmitButton>Actualizar perfil</SubmitButton>

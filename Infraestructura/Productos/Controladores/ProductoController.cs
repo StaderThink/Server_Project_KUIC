@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Infraestructura.Productos.Controladores
 {
     [Route("api/[controller]")]
-    [Authorize(Roles = "logistica")]
+    [Authorize]
     public class ProductoController : Controller
     {
         private readonly RepositorioProducto repositorio;

@@ -11,7 +11,15 @@
 @page "/pedido/registrar"
 @layout AppLayout
 
+<nav class="breadcrumb">
+    <ul>
+        <li><a href="/pedido">Solicitar</a></li>
+        <li class="is-active"><a href="#">Registrar</a></li>
+    </ul>
+</nav>
+
 <h3 class="title is-3">Solicitar Pedido</h3>
+<hr />
 
 <EditForm Model="pedido" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -35,7 +43,7 @@
         <FormFeedback For="() => pedido.Cliente"></FormFeedback>
     </FormField>
 
-    <FormField Label="Fecha">
+    <FormField Label="Fecha de entrega">
         <DateField id="fecha" @bind-Value="pedido.Fecha" />
         <FormFeedback For="() => pedido.Fecha"></FormFeedback>
     </FormField>

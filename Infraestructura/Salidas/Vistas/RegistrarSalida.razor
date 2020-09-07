@@ -7,7 +7,15 @@
 @page "/salida/registrar"
 @attribute [Authorize(Roles = "logistica")] 
 
+    <nav class="breadcrumb">
+        <ul>
+            <li><a href="/salida">Egresos</a></li>
+            <li class="is-active"><a href="#">Registrar</a></li>
+        </ul>
+    </nav>
+
     <h3 class="title is-3">Registrar Salida</h3>
+    <hr />
 
     @if (mensaje is string)
     {

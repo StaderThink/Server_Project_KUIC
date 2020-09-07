@@ -3,9 +3,17 @@
 
 @page "/categoria/registrar"
 @layout AppLayout
-@attribute [Authorize(Roles = "logistica")] 
+@attribute [Authorize(Roles = "logistica")]
+    
+<nav class="breadcrumb">
+        <ul>
+            <li><a href="/categoria">Categoría</a></li>
+            <li class="is-active"><a href="#">Registrar</a></li>
+        </ul>
+    </nav> 
 
     <h3 class="title is-3">Registrar nueva categoría</h3>
+    <hr />
 
     <EditForm Model="categoria" OnValidSubmit="Enviar">
         <DataAnnotationsValidator></DataAnnotationsValidator>

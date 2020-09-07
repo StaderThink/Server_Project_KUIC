@@ -7,7 +7,16 @@
 @using Aplicacion.Entradas.Formularios
 @page "/entrada/registrar"
 
+    <nav class="breadcrumb">
+        <ul>
+            <li><a href="/entrada">Ingreso</a></li>
+            <li class="is-active"><a href="#">Registrar</a></li>
+        </ul>
+    </nav>
+
 <h3 class="title is-3">Registrar entrada</h3>
+
+<hr />
 
 <EditForm Model="entrada" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -30,8 +39,8 @@
     </FormField>
 
     <FormField IsLoading="cargando">
-        <SubmitButton>Registrar</SubmitButton>
         <CancelButton To="/entrada">Cancelar</CancelButton>
+        <SubmitButton>Registrar</SubmitButton>
     </FormField>
 
 </EditForm>
