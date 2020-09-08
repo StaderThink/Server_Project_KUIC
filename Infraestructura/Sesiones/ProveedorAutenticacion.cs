@@ -38,11 +38,16 @@ namespace Infraestructura.Sesiones
                 {
                     http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", token);
 
-                    var user = await http.GetFromJsonAsync<Usuario>("/api/sesion");
-                    var service = new ServicioSesion();
+                    var response = await http.GetAsync("/api/sesion");
 
-                    var identity = service.GenerarIdentidad(user);
-                    status = new AuthenticationState(identity);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var user = await response.Content.ReadFromJsonAsync<Usuario>();
+                        var service = new ServicioSesion();
+
+                        var identity = service.GenerarIdentidad(user);
+                        status = new AuthenticationState(identity);
+                    }
                 }
             }
 

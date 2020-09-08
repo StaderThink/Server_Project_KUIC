@@ -7,7 +7,6 @@ using Infraestructura.Sesiones;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,17 +29,16 @@ namespace Infraestructura
         private void ConfigurarAutenticacion(JwtBearerOptions opciones)
         {
             var token = Environment.GetEnvironmentVariable("TOKEN");
-            var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token));
 
             opciones.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
-                ValidateIssuerSigningKey = true,
                 ValidIssuer = token,
                 ValidAudience = token,
-                IssuerSigningKey = llave,
-                ValidateLifetime = true
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token)),
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
             };
         }
 
@@ -58,7 +56,7 @@ namespace Infraestructura
             services.AddSingleton(
                 service =>
                 {
-                    string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "http://localhost:5000";
+                    string baseUrl = Environment.GetEnvironmentVariable("BASE_URL") ?? "https://localhost:5001/";
 
                     return new HttpClient
                     {
