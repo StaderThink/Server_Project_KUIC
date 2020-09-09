@@ -64,18 +64,23 @@
 
         <div class="columns is-mobile">
             <div class="column is-half">
-                <div class="column">
-                    <FormField Label="Peso">
-                        <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
-                        <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
-                    </FormField>
-                </div>
+                <div class="field">
+                    <label class="label">Peso</label>
+                    <div class="columns">
+                        <div class="column">
+                            <FormField>
+                                <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
+                                <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
+                            </FormField>
+                        </div>
 
-                <div class="column">
-                    <FormField>
-                        <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
-                        <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
-                    </FormField>
+                        <div class="column">
+                            <FormField>
+                                <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
+                                <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
+                            </FormField>
+                        </div>
+                    </div>
                 </div>
             </div>
 

@@ -19,8 +19,13 @@
     @if (categorias.Length == 0)
     {
         <blockquote class="is-warn">
-            <p>@noExistenCategorias</p>
-            <a href="/categoria/registrar" class="button is-primary">Agregar Categoria</a>
+            <h4 class="subtitle is-4">@noExistenCategorias</h4>
+            <a href="/categoria/registrar" class="button is-primary">
+                <span class="icon">
+                    <box-icon name='plus'></box-icon>
+                </span>
+                <span>Categoría</span>
+            </a>
         </blockquote>
     }
 
@@ -83,18 +88,23 @@
 
             <div class="columns is-mobile">
                 <div class="column is-half">
-                    <div class="column">
-                        <FormField Label="Peso">
-                            <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
-                            <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
-                        </FormField>
-                    </div>
+                    <div class="field">
+                        <label class="label">Peso</label>
+                        <div class="columns">
+                            <div class="column">
+                                <FormField>
+                                    <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
+                                    <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
+                                </FormField>
+                            </div>
 
-                    <div class="column">
-                        <FormField>
-                            <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
-                            <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
-                        </FormField>
+                            <div class="column">
+                                <FormField>
+                                    <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
+                                    <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
+                                </FormField>
+                            </div>
+                        </div>
                     </div>
                 </div>
 

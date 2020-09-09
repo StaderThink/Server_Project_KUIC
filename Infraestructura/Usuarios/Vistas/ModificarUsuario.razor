@@ -37,7 +37,7 @@ else
 
         <div class="column is-half">
             <FormField Label="Documento">
-                <NumberField id="documento" @bind-Value="Usuario.Documento" disabled />
+                <NumberField id="documento" placeholder="#########" @bind-Value="Usuario.Documento" disabled />
                 <FormFeedback For="() => Usuario.Documento" />
             </FormField>
         </div>
@@ -46,14 +46,14 @@ else
     <div class="columns is-mobile">
         <div class="column is-half">
             <FormField Label="Nombre">
-                <TextField id="nombre" @bind-Value="Usuario.Nombre" />
+                <TextField id="nombre" placeholder="Juan Pablo" @bind-Value="Usuario.Nombre" />
                 <FormFeedback For="() => Usuario.Nombre" />
             </FormField>
         </div>
 
         <div class="column is-half">
             <FormField Label="Apellido">
-                <TextField id="apellido" @bind-Value="Usuario.Apellido" />
+                <TextField id="apellido" placeholder="Ramirez Velasquez" @bind-Value="Usuario.Apellido" />
                 <FormFeedback For="() => Usuario.Apellido" />
             </FormField>
         </div>
@@ -62,7 +62,7 @@ else
     <div class="columns is-mobile">
         <div class="column is-half">
             <FormField Label="Correo Electrónico">
-                <EmailField id="correo" @bind-Value="Usuario.Correo" />
+                <EmailField id="correo" placeholder="ejemplo@ejemplo.com" @bind-Value="Usuario.Correo" />
                 <FormFeedback For="() => Usuario.Correo" />
             </FormField>
         </div>
@@ -78,7 +78,7 @@ else
     </div>
 
     <FormField Label="Teléfono">
-        <PhoneField id="telefono" @bind-Value="Usuario.Telefono" />
+        <PhoneField id="telefono" placeholder="######" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
