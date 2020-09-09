@@ -34,10 +34,11 @@ namespace Infraestructura
             {
                 ValidateIssuer = true,
                 ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
                 ValidIssuer = token,
                 ValidAudience = token,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(token)),
-                ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };
         }

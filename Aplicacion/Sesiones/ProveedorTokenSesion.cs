@@ -15,8 +15,7 @@ namespace Aplicacion.Sesiones
             var llave = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenSecreto));
             var credenciales = new SigningCredentials(llave, SecurityAlgorithms.HmacSha256);
 
-            var token = new JwtSecurityToken
-            (
+            var token = new JwtSecurityToken(
                 issuer: tokenSecreto,
                 audience: tokenSecreto,
                 claims: identidad.Claims,

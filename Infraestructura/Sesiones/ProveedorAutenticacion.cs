@@ -28,7 +28,7 @@ namespace Infraestructura.Sesiones
 
         private async Task<AuthenticationState> GetAuthenticationState()
         {
-            var status = new AuthenticationState(new ClaimsPrincipal());
+            var emptyStatus = new AuthenticationState(new ClaimsPrincipal());
 
             try
             {
@@ -46,32 +46,22 @@ namespace Infraestructura.Sesiones
                         var service = new ServicioSesion();
 
                         var identity = service.GenerarIdentidad(user);
-                        status = new AuthenticationState(identity);
+                        return new AuthenticationState(identity);
                     }
                 }
+
+                return emptyStatus;
             }
 
             catch
             {
-#if DEBUG
-                throw;
-#endif
+                return emptyStatus;
             }
-
-            return status;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            try
-            {
-                return await GetAuthenticationState();
-            }
-
-            catch
-            {
-                return new AuthenticationState(new ClaimsPrincipal());
-            }
+            return await GetAuthenticationState();
         }
 
         public async Task SignIn(string documento, string clave)
