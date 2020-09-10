@@ -8,9 +8,9 @@ namespace Dominio.Productos
         {
             using Conexion conexion = new Conexion();
             string consulta = @$"
-				insert into producto (nombre, descripcion, codigo, precio, min_cantidad, min_peso, max_peso, magnitud, presentacion, categoria) 
+				insert into producto (nombre, descripcion, codigo, precio, min_cantidad, existencias, min_peso, max_peso, magnitud, presentacion, categoria) 
 				values (
-					@Nombre, @Descripcion, @Codigo, @Precio, @MinCantidad,
+					@Nombre, @Descripcion, @Codigo, @Precio, @MinCantidad, 0,
 					@MinPeso, @MaxPeso, '{entidad.Magnitud}', '{entidad.Presentacion}', @Categoria
 				)
 			";
