@@ -1,4 +1,5 @@
 ﻿using System;
+using Aplicacion.Mailer;
 using Dominio.Clientes;
 
 namespace Aplicacion.Clientes
@@ -10,11 +11,20 @@ namespace Aplicacion.Clientes
             RepositorioCliente repoCliente = new RepositorioCliente();
 
             // valores por defecto
-            cliente.Activo = true;
+            cliente.Activo = false;
             cliente.Actualizado = DateTime.Now;
             cliente.Creado = DateTime.Now;
 
-            return repoCliente.Insertar(cliente);
+
+            if (repoCliente.Insertar(cliente))
+            {
+                var correspondencia = new Correspondence();
+                correspondencia.SendMessageClient(cliente);
+
+                return true;
+            }
+
+            return false;
         }
     }
 }

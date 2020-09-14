@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Infraestructura.Controladores.Pedidos
 {
-    [Authorize(Roles = "pedidos")]
+    [Authorize]
     [Route("api/[controller]")]
     public class DetallePedidoController : Controller
     {

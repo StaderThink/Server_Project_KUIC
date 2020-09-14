@@ -12,12 +12,15 @@
     </div>
     <div class="level-right">
         <div class="buttons">
-            <a href="/pedido/registrar" class="button is-primary">
-                <span class="icon">
-                    <box-icon name='plus'></box-icon>
-                </span>
-                <span>Nuevo</span>
-            </a>
+            <AuthorizeView Roles="solicitar" Context="auth">
+
+                <a href="/pedido/registrar" class="button is-primary">
+                    <span class="icon">
+                        <box-icon name='plus'></box-icon>
+                    </span>
+                    <span>Nuevo</span>
+                </a>
+            </AuthorizeView>
         </div>
     </div>
 </div>

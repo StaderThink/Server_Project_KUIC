@@ -8,18 +8,18 @@
             {
                 <p>Espere...</p>
             }
-
             else
             {
-                <p>@detalles.Count() Productos(s). <button class="button is-small" @onclick="AbrirModal">Ver detalle</button></p>
+                <p>@detalles.Count() Productos(s). <button class="button is-small is-primary is-outlined" @onclick="AbrirModal">Ver detalle</button></p>
             }
+
             @if (mostrarModal)
             {
                 <div class="modal is-active">
                     <div class="modal-background"></div>
-                    <div class="modal-card">
+                    <div class="modal-card message is-primary">
                         <header class="modal-card-head">
-                            <span class="modal-card-title">Detalle de pedido #@pedido.Id</span>
+                            <span class="modal-card-title"><h5 class="title is-5">Detalle de pedido #@pedido.Id</h5></span>
                             <button class="delete" @onclick="CerrarModal" aria-label="close"></button>
                         </header>
                         <section class="modal-card-body">
@@ -45,10 +45,27 @@
                     <span>@usuario.Nombre</span>
                 }
             </p>
-
-            <div class="control">
-                <div class="tag is-dark">@(pedido.Estado.ToString())</div>
-            </div>
+            @if (pedido.Estado == Estado.Pendiente)
+            {
+                <div class="control">
+                    <span class="tag is-ligth">@(pedido.Estado.ToString())</span>
+                </div>
+            } @if (pedido.Estado == Estado.Autorizado)
+            {
+                <div class="control">
+                    <span class="tag is-dark">@(pedido.Estado.ToString())</span>
+                </div>
+            } @if (pedido.Estado == Estado.Despachado)
+            {
+                <div class="control">
+                    <span class="tag is-info">@(pedido.Estado.ToString())</span>
+                </div>
+            }@if (pedido.Estado == Estado.Entregado)
+            {
+                <div class="control">
+                    <span class="tag is-success">@(pedido.Estado.ToString())</span>
+                </div>
+            }
             <br />
             <div class="card-footer">
                 @if (cargando)
