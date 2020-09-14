@@ -1,23 +1,22 @@
 ﻿@inject HttpClient http 
 
-    <div class="field">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <div class="field is-grouped">
-            <div class="control is-expanded">
-                <FormField>
-                    <SelectField @bind-Value="segmento.Cargo" Context="cargo" Data="cargos">
-                        <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
-                    </SelectField>
-                    <FormFeedback For="() => segmento.Cargo" Help="Esto define a quien se dirijirá la notificación" />
-                </FormField>
-            </div>
-            <div class="control">
-                <a class="button is-primary is-light" @onclick="Eliminar">
-                    <box-icon name="trash"></box-icon>
-                </a>
-            </div>
+<div class="field">
+    <div class="field is-grouped">
+        <div class="control is-expanded">
+            <FormField>
+                <SelectField @bind-Value="segmento.Cargo" Context="cargo" Data="cargos">
+                    <option value="@cargo.Id">@(cargo.Nombre.ToCapitalize())</option>
+                </SelectField>
+                <FormFeedback For="() => segmento.Cargo" Help="Esto define a quien se dirijirá la notificación" />
+            </FormField>
+        </div>
+        <div class="control">
+            <a class="button is-primary is-light" @onclick="Eliminar">
+                <box-icon name="trash"></box-icon>
+            </a>
         </div>
     </div>
+</div>
 
 @code {
     [Parameter]
