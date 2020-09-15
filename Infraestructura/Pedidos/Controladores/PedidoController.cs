@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Aplicacion.Pedidos;
 using Aplicacion.Pedidos.Formularios;
 using Dominio.Pedidos;
@@ -22,6 +23,17 @@ namespace Infraestructura.Controladores.Pedidos
         public IEnumerable<Pedido> Listar()
         {
             return repositorio.Listar();
+        }
+
+        [HttpGet("pendiente")]
+        public IEnumerable<Pedido> ListarPendientes()
+        {
+            var listado = repositorio.Listar();
+
+            return
+                from pedido in listado
+                where pedido.Estado == Estado.Pendiente
+                select pedido;
         }
 
         [HttpGet("{id}")]

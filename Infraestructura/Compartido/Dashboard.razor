@@ -1,17 +1,220 @@
 ﻿@layout AppLayout
 
 @inject AuthenticationStateProvider authProvider
+@inject HttpClient http
 
 @using Infraestructura.Sesiones
 
-<h1>Hola @(Usuario?.Nombre ?? "anonimo")!</h1>
+<h1 class="subtitle is-1">Hola <b>@(Usuario?.Nombre ?? "humano")</b>!</h1>
+
+<div class="columns">
+    <AuthorizeView Roles="pedidos">
+        <div class="column">
+            <div class="box">
+                <div class="heading">Pedidos pendientes</div>
+                <div class="media">
+                    <div class="media-left">
+                        <box-icon name="purchase-tag" size="2.6em"></box-icon>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-1">@textoPedidosPendientes</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+
+    <div class="column">
+        <div class="box">
+            <div class="heading">Bandeja de entrada</div>
+            <div class="media">
+                <div class="media-left">
+                    <box-icon name="notification" size="2.6em"></box-icon>
+                </div>
+                <div class="media-content">
+                    <p class="title is-1">@textoNotificaciones</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <AuthorizeView Roles="logistica">
+        <div class="column">
+            <div class="box">
+                <div class="heading">Último ingreso (días)</div>
+                <div class="media">
+                    <div class="media-left">
+                        <box-icon name="history" size="2.6em"></box-icon>
+                    </div>
+                    <div class="media-content">
+                        <p class="title is-1">@textoUltimoIngreso</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </AuthorizeView>
+</div>
+
+<AuthorizeView Roles="logistica">
+    <div class="level">
+        <span></span>
+        <div class="level-right">
+            <a href="/inventario">Ir a inventario</a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nombre</th>
+                    <th>Existencias</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (!(productosConMenosExistencias is null))
+                {
+                    @foreach (var producto in productosConMenosExistencias)
+                    {
+                        <tr>
+                            <td>@producto.Codigo</td>
+                            <td>@producto.Nombre</td>
+                            <td><b>@producto.Existencias</b></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</AuthorizeView>
+
+<AuthorizeView Roles="pedidos">
+    <div class="level">
+        <span></span>
+        <div class="level-right">
+            <a href="/pedido">Ir a pedidos</a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table class="table is-fullwidth is-hoverable">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Estado</th>
+                    <th>Observacion</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (!(pedidosPendientes is null))
+                {
+                    @foreach (var pedido in pedidosPendientes)
+                    {
+                        <tr>
+                            <td>@pedido.Fecha</td>
+                            <td>@pedido.Estado</td>
+                            <td>@pedido.Observacion</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</AuthorizeView>
 
 @code {
     private Usuario Usuario;
+
+    private string textoPedidosPendientes = "-";
+    private string textoNotificaciones = "-";
+    private string textoUltimoIngreso = "-";
+
+    private Producto[] productosConMenosExistencias;
+    private Pedido[] pedidosPendientes;
 
     protected override async Task OnInitializedAsync()
     {
         var provider = (ProveedorAutenticacion) authProvider;
         Usuario = await provider.GetUserAsync();
+
+        await EscribirPedidosPendientes();
+        await EscribirProductosConMenosExistencias();
+        await EscribirNotificacionesEntrada();
+        await EscribirDiasUltimoIngreso();
+    }
+
+    private async Task EscribirProductosConMenosExistencias()
+    {
+        try
+        {
+            var listado = await http.GetFromJsonAsync<Producto[]>("/api/producto");
+            productosConMenosExistencias = listado.Where(p => p.Existencias < 50).ToArray();
+        }
+
+        catch
+        {
+            productosConMenosExistencias = new Producto[0];
+        }
+    }
+
+    private async Task EscribirPedidosPendientes()
+    {
+        try
+        {
+            pedidosPendientes = await http.GetFromJsonAsync<Pedido[]>("/api/pedido/pendiente");
+            textoPedidosPendientes = pedidosPendientes.Length.ToString();
+        }
+
+        catch
+        {
+            pedidosPendientes = new Pedido[0];
+            textoPedidosPendientes = "-";
+        }
+    }
+
+    private async Task EscribirNotificacionesEntrada()
+    {
+        try
+        {
+            var notificaciones = await http.GetFromJsonAsync<Notificacion[]>("/api/notificacion");
+            textoNotificaciones = notificaciones.Length.ToString();
+        }
+
+        catch
+        {
+            textoNotificaciones = "-";
+        }
+    }
+
+    private async Task EscribirDiasUltimoIngreso()
+    {
+        try
+        {
+            var ingresos = await http.GetFromJsonAsync<Entrada[]>("/api/entrada");
+            var ultimoIngreso = ingresos.Last();
+
+            if (ultimoIngreso is Entrada)
+            {
+                var diferencia = ultimoIngreso.Fecha - DateTime.Now;
+
+                if (diferencia.Days <= 0)
+                {
+                    textoUltimoIngreso = "Hoy";
+                }
+
+                else
+                {
+                    textoUltimoIngreso = diferencia.Days.ToString();
+                }
+            }
+        }
+
+        catch
+        {
+            textoUltimoIngreso = "-";
+        }
     }
 }
