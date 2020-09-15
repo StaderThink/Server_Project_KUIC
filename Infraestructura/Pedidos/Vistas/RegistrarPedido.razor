@@ -11,24 +11,34 @@
 @page "/pedido/registrar"
 @layout AppLayout
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/pedido">Solicitar</a></li>
-        <li class="is-active"><a href="#">Registrar</a></li>
-    </ul>
-</nav>
-
-<h3 class="title is-3">Solicitar Pedido</h3>
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Solicitar Pedido</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb is-small">
+                <ul>
+                    <li><a href="/pedido">Solicitar</a></li>
+                    <li class="is-active"><a href="#">Registrar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 <hr />
 
 <EditForm Model="pedido" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <FormField>
-        <div class="control">
-            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
-        </div>
-    </FormField>
 
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField>
+                <div class="control">
+                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+                </div>
+            </FormField>
+        </div>
+    </div>
     <FormField>
         @foreach (var detalle in detalles)
         {
@@ -58,10 +68,15 @@
         <FormFeedback For="() => pedido.Observacion" Help="Opcional"></FormFeedback>
     </FormField>
 
-    <FormField IsLoading="cargando">
-        <CancelButton To="/pedido">Cancelar</CancelButton>
-        <SubmitButton>Registrar</SubmitButton>
-    </FormField>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <CancelButton To="/pedido">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
+        </div>
+    </div>
 </EditForm>
 
 @code {

@@ -6,14 +6,20 @@
 @inject HttpClient http
 @inject IToastService toaster
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/usuario">Usuario</a></li>
-        <li class="is-active"><a href="#">Modificar</a></li>
-    </ul>
-</nav>
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Modificar los datos #@Id</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb is-small">
+                <ul>
+                    <li><a href="/usuario">Usuario</a></li>
+                    <li class="is-active"><a href="#">Modificar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
-<h3 class="title is-3">Modificar los datos #@Id</h3>
 <hr />
 
 @if (Usuario is null)
@@ -88,10 +94,15 @@ else
         </CheckboxField>
     </FormField>
 
-    <FormButtons IsLoading="saving">
-        <CancelButton To="/usuario">Cancelar</CancelButton>
-        <SubmitButton>Guardar</SubmitButton>
-    </FormButtons>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormButtons IsLoading="saving">
+                <CancelButton To="/usuario">Cancelar</CancelButton>
+                <SubmitButton>Guardar</SubmitButton>
+            </FormButtons>
+        </div>
+    </div>
 </EditForm>
 }
 

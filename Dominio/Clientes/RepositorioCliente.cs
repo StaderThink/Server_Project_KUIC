@@ -45,7 +45,7 @@ namespace Dominio.Clientes
         public IEnumerable<Cliente> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Cliente>("select * from cliente");
+            return conexion.Seleccionar<Cliente>("select * from cliente order by nombre desc");
         }
 
         public Cliente PorId(int id)

@@ -39,7 +39,7 @@ namespace Dominio.Pedidos
         public IEnumerable<Pedido> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Pedido>("select * from pedido");
+            return conexion.Seleccionar<Pedido>("select * from pedido order by fecha desc");
         }
 
         public Pedido PorId(int id)

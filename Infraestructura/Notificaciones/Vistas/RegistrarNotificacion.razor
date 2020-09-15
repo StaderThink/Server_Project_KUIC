@@ -10,23 +10,35 @@
 @page "/notificacion/registrar"
 @layout AppLayout
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/notificacion">Notificación</a></li>
-        <li class="is-active"><a href="#">Registrar</a></li>
-    </ul>
-</nav>
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Registrar Notificación</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb">
+                <ul>
+                    <li><a href="/notificacion">Notificación</a></li>
+                    <li class="is-active"><a href="#">Registrar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
-<h3 class="title is-3">Registrar Notificación</h3>
 <hr />
 
 <EditForm Model="notificacion" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <FormField>
-        <div class="control">
-            <button type="button" class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
+
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField>
+                <div class="control">
+                    <button type="button" class="button is-primary" @onclick="AgregarElemento">+ Segmento</button>
+                </div>
+            </FormField>
         </div>
-    </FormField>
+    </div>
 
     <FormField>
         @foreach (var segmento in segmentos)
@@ -50,10 +62,15 @@
         <FormFeedback For="() => notificacion.FechaFin"></FormFeedback>
     </FormField>
 
-    <FormField IsLoading="cargando">
-        <CancelButton To="/notificacion">Cancelar</CancelButton>
-        <SubmitButton>Registrar</SubmitButton>
-    </FormField>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <CancelButton To="/notificacion">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
+        </div>
+    </div>
 </EditForm>
 
 @code {

@@ -36,7 +36,7 @@ namespace Dominio.Salidas
         public IEnumerable<Salida> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Salida>("select * from salida");
+            return conexion.Seleccionar<Salida>("select * from salida order by fecha desc");
         }
         public Salida PorId(int id)
         {

@@ -5,13 +5,19 @@
 @layout AppLayout
 @attribute [Authorize(Roles = "logistica")]
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/categoria">Categoría</a></li>
-        <li class="is-active"><a href="#">Registrar</a></li>
-    </ul>
-</nav>
-<h3 class="title is-3">Editar categoría</h3>
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Editar categoría</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb is-small">
+                <ul>
+                    <li><a href="/categoria">Categoría</a></li>
+                    <li class="is-active"><a href="#">Modificar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 <hr />
 
 <EditForm Model="categoria" OnValidSubmit="Enviar">
@@ -26,10 +32,15 @@
         <FormFeedback For="() => categoria.Descripcion" Help="Opcional"></FormFeedback>
     </FormField>
 
-    <FormField IsLoading="cargando">
-        <CancelButton To="/categoria">Cancelar</CancelButton>
-        <SubmitButton>Registrar</SubmitButton>
-    </FormField>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <CancelButton To="/categoria">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
+        </div>
+    </div>
 </EditForm>
 
 @code {

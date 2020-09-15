@@ -7,14 +7,20 @@
 @page "/cargo/modificar/{Id:int}"
 @layout AppLayout
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/cargo">Cargo</a></li>
-        <li class="is-active"><a href="#">Modificar</a></li>
-    </ul>
-</nav>
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Modificar cargo</h3>
+    </div>
+    <div class="level-right">
+        <nav class="breadcrumb is-small">
+            <ul>
+                <li><a href="/cargo">Cargo</a></li>
+                <li class="is-active"><a href="#">Modificar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
-<h3 class="title is-3">Modificar cargo</h3>
 <hr />
 
 <EditForm Model="Cargo" OnValidSubmit="Enviar">
@@ -33,9 +39,9 @@
 
     <FormField>
         <CheckboxField @bind-Value="Cargo.Usuarios">
-            <span>Puede crear usuarios y asignar cargos</span>
+            <span>Puede crear usuarios y asignar cargos. (También creará notificaciones para el personal)</span>
         </CheckboxField>
-        <FormFeedback For="() => Cargo.Usuarios" Help="También creará notificaciones para el personal" />
+        <FormFeedback For="() => Cargo.Usuarios"/>
     </FormField>
 
     <FormField>
@@ -56,10 +62,17 @@
         </CheckboxField>
     </FormField>
 
-    <FormButtons IsLoading="Cargando">
-        <CancelButton To="/cargo">Cancelar</CancelButton>
-        <SubmitButton>Modificar</SubmitButton>
-    </FormButtons>
+    <div class="level">
+        <div class="level-left">
+            <span></span>
+        </div>
+        <div class="level-right">
+            <FormButtons IsLoading="Cargando">
+                <CancelButton To="/cargo">Cancelar</CancelButton>
+                <SubmitButton>Modificar</SubmitButton>
+            </FormButtons>
+        </div>
+    </div>
 </EditForm>
 
 @code {

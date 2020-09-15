@@ -6,104 +6,123 @@
 @layout AppLayout
 @attribute [Authorize(Roles = "logistica")]
 
-    <h3 class="title is-3">Actualizar producto</h3>
-    <EditForm Model="producto" OnValidSubmit="Enviar">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Actualizar producto</h3>
+    </div>
+    <div class="level-right">
+        <nav class="breadcrumb is-small">
+            <ul>
+                <li><a href="/producto">Producto</a></li>
+                <li class="is-active"><a href="#">Modificar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
-        <div class="columns is-mobile">
-            <div class="column is-half">
-                <FormField Label="Nombre">
-                    <TextField id="texto" placeholder="Ej. Pollo" @bind-Value="producto.Nombre" />
-                    <FormFeedback For="() => producto.Nombre"></FormFeedback>
-                </FormField>
-            </div>
+<hr />
+<EditForm Model="producto" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
 
-            <div class="column is-half">
-                <FormField Label="Código">
-                    <NumberField id="codigo" @bind-Value="producto.Codigo" disabled readonly />
-                    <FormFeedback For="() => producto.Codigo" Help="Código de 5 digitos"></FormFeedback>
-                </FormField>
-            </div>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Nombre">
+                <TextField id="texto" placeholder="Ej. Pollo" @bind-Value="producto.Nombre" />
+                <FormFeedback For="() => producto.Nombre"></FormFeedback>
+            </FormField>
         </div>
 
-        <div class="columns is-mobile">
-            <div class="column is-half">
-                <FormField Label="Precio">
-                    <NumberField id="precio" placeholder="$##.#" @bind-Value="producto.Precio" required />
-                    <FormFeedback For="() => producto.Precio"></FormFeedback>
-                </FormField>
-            </div>
+        <div class="column is-half">
+            <FormField Label="Código">
+                <NumberField id="codigo" @bind-Value="producto.Codigo" disabled readonly />
+                <FormFeedback For="() => producto.Codigo" Help="Código de 5 digitos"></FormFeedback>
+            </FormField>
+        </div>
+    </div>
 
-            <div class="column is-half">
-                <FormField Label="Presentación">
-                    <SelectField @bind-Value="producto.Presentacion" Context="presentacion" Data="presentaciones">
-                        <option value="@presentacion">@presentacion</option>
-                    </SelectField>
-                    <FormFeedback For="() => producto.Presentacion"></FormFeedback>
-                </FormField>
-            </div>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Precio">
+                <NumberField id="precio" placeholder="$##.#" @bind-Value="producto.Precio" required />
+                <FormFeedback For="() => producto.Precio"></FormFeedback>
+            </FormField>
         </div>
 
-        <div class="columns is-mobile">
-            <div class="column is-half">
-                <FormField Label="Cantidad mínima">
-                    <NumberField id="min_cantidad" placeholder="###" @bind-Value="producto.MinCantidad" />
-                    <FormFeedback For="() => producto.MinCantidad"></FormFeedback>
-                </FormField>
-            </div>
+        <div class="column is-half">
+            <FormField Label="Presentación">
+                <SelectField @bind-Value="producto.Presentacion" Context="presentacion" Data="presentaciones">
+                    <option value="@presentacion">@presentacion</option>
+                </SelectField>
+                <FormFeedback For="() => producto.Presentacion"></FormFeedback>
+            </FormField>
+        </div>
+    </div>
 
-            <div class="column is-half">
-                <FormField Label="Magnitud">
-                    <SelectField Context="magnitud" Data="magnitudes" @bind-Value="producto.Magnitud">
-                        <option value="@magnitud">@magnitud</option>
-                    </SelectField>
-                    <FormFeedback For="() => producto.Magnitud"></FormFeedback>
-                </FormField>
-            </div>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <FormField Label="Cantidad mínima">
+                <NumberField id="min_cantidad" placeholder="###" @bind-Value="producto.MinCantidad" />
+                <FormFeedback For="() => producto.MinCantidad"></FormFeedback>
+            </FormField>
         </div>
 
-        <div class="columns is-mobile">
-            <div class="column is-half">
-                <div class="field">
-                    <label class="label">Peso</label>
-                    <div class="columns">
-                        <div class="column">
-                            <FormField>
-                                <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
-                                <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
-                            </FormField>
-                        </div>
+        <div class="column is-half">
+            <FormField Label="Magnitud">
+                <SelectField Context="magnitud" Data="magnitudes" @bind-Value="producto.Magnitud">
+                    <option value="@magnitud">@magnitud</option>
+                </SelectField>
+                <FormFeedback For="() => producto.Magnitud"></FormFeedback>
+            </FormField>
+        </div>
+    </div>
 
-                        <div class="column">
-                            <FormField>
-                                <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
-                                <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
-                            </FormField>
-                        </div>
+    <div class="columns is-mobile">
+        <div class="column is-half">
+            <div class="field">
+                <label class="label">Peso</label>
+                <div class="columns">
+                    <div class="column">
+                        <FormField>
+                            <NumberField id="min_peso" placeholder="Min" @bind-Value="producto.MinPeso" />
+                            <FormFeedback For="() => producto.MinPeso" Help="Mínimo de peso"></FormFeedback>
+                        </FormField>
+                    </div>
+
+                    <div class="column">
+                        <FormField>
+                            <NumberField id="max_peso" placeholder="Max" @bind-Value="producto.MaxPeso" />
+                            <FormFeedback For="() => producto.MaxPeso" Help="Máximo de peso"></FormFeedback>
+                        </FormField>
                     </div>
                 </div>
             </div>
-
-            <div class="column is-half">
-                <FormField Label="Categoria">
-                    <SelectField @bind-Value="producto.Categoria" Context="categoria" Data="categorias">
-                        <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
-                    </SelectField>
-                    <FormFeedback For="() => producto.Categoria"></FormFeedback>
-                </FormField>
-            </div>
         </div>
 
-        <FormField Label="Descripción">
-            <TextField id="descripcion" placeholder="Ej. Presas de pollo" @bind-Value="producto.Descripcion"></TextField>
-            <FormFeedback For="() => producto.Descripcion" Help="Opcional"></FormFeedback>
-        </FormField>
-        
-        <FormField IsLoading="cargando">
-            <SubmitButton>Registrar</SubmitButton>
-            <CancelButton To="/inventario">Cancelar</CancelButton>
-        </FormField>
-    </EditForm>
+        <div class="column is-half">
+            <FormField Label="Categoria">
+                <SelectField @bind-Value="producto.Categoria" Context="categoria" Data="categorias">
+                    <option value="@categoria.Id">@(categoria.Nombre.ToCapitalize())</option>
+                </SelectField>
+                <FormFeedback For="() => producto.Categoria"></FormFeedback>
+            </FormField>
+        </div>
+    </div>
+
+    <FormField Label="Descripción">
+        <TextField id="descripcion" placeholder="Ej. Presas de pollo" @bind-Value="producto.Descripcion"></TextField>
+        <FormFeedback For="() => producto.Descripcion" Help="Opcional"></FormFeedback>
+    </FormField>
+
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <SubmitButton>Registrar</SubmitButton>
+                <CancelButton To="/inventario">Cancelar</CancelButton>
+            </FormField>
+        </div>
+    </div>
+</EditForm>
 
 @code {
     [Parameter]

@@ -14,48 +14,12 @@
                     <box-icon name='edit-alt' color='#a69f99'></box-icon>
                 </span>
             </a>
-
-            @if (cargando)
-            {
-                <a class="card-footer-item" disabled>
-                    <span class="icon">
-                        <box-icon name='trash' color='#a69f99'></box-icon>
-                    </span>
-                </a>
-            }
-
-            else
-            {
-                <a class="card-footer-item" @onclick="Eliminar">
-                    <span class="icon">
-                        <box-icon name='trash' color='#a69f99'></box-icon>
-                    </span>
-                </a>
-            }
         </div>
     </div>
 
 @code {
     [Parameter]
     public Categoria categoria { get; set; }
-
-    [Parameter]
-    public EventCallback<Categoria> OnCategoriaEliminada { get; set; }
-
-    bool cargando = false;
-
-    async Task Eliminar()
-    {
-        cargando = true;
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/categoria/{categoria.Id}");
-
-        if (respuesta.IsSuccessStatusCode && OnCategoriaEliminada.HasDelegate)
-        {
-            await OnCategoriaEliminada.InvokeAsync(categoria);
-        }
-
-        cargando = false;
-    }
 
     void Editar()
     {

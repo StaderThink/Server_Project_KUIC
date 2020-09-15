@@ -34,7 +34,7 @@ namespace Dominio.Productos
         public IEnumerable<Categoria> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Categoria>("select * from categoria");
+            return conexion.Seleccionar<Categoria>("select * from categoria order by nombre desc");
         }
         public Categoria PorId(int id)
         {

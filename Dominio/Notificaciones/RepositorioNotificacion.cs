@@ -31,7 +31,7 @@ namespace Dominio.Notificaciones
         public IEnumerable<Notificacion> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Notificacion>("select * from notificacion");
+            return conexion.Seleccionar<Notificacion>("select * from notificacion orden by fecha_inicio desc");
         }
         public Notificacion PorId(int id)
         {
@@ -43,7 +43,8 @@ namespace Dominio.Notificaciones
         public IEnumerable<Notificacion> PorAutor (int usuario)
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Notificacion>("select * from notificacion where autor = @usuario", new { usuario } );
+            string consulta = "select * from notificacion where autor = @usuario";
+            return conexion.Seleccionar<Notificacion>( consulta, new { usuario } );
         }
 
         public int PorUltimoId()

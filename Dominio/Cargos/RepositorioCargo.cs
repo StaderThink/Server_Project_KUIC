@@ -36,7 +36,7 @@ namespace Dominio.Cargos
         public IEnumerable<Cargo> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Cargo>("select * from cargo");
+            return conexion.Seleccionar<Cargo>("select * from cargo order by nombre desc");
         }
 
         public Cargo PorId(int id)

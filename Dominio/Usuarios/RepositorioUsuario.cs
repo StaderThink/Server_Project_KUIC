@@ -60,7 +60,7 @@ namespace Dominio.Usuarios
         public IEnumerable<Usuario> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Usuario>("select * from usuario");
+            return conexion.Seleccionar<Usuario>("select * from usuario order by nombre desc");
         }
 
         public Usuario PorId(int id)

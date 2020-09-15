@@ -7,14 +7,20 @@
 @page "/salida/registrar"
 @attribute [Authorize(Roles = "logistica")] 
 
-    <nav class="breadcrumb">
-        <ul>
-            <li><a href="/salida">Egresos</a></li>
-            <li class="is-active"><a href="#">Registrar</a></li>
-        </ul>
-    </nav>
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Registrar Salida</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb is-small">
+                <ul>
+                    <li><a href="/salida">Egresos</a></li>
+                    <li class="is-active"><a href="#">Registrar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 
-    <h3 class="title is-3">Registrar Salida</h3>
     <hr />
 
     @if (mensaje is string)
@@ -24,32 +30,42 @@
         </blockquote>
     }
 
-    <EditForm Model="salida" OnValidSubmit="Enviar">
-        <DataAnnotationsValidator></DataAnnotationsValidator>
-        <FormField>
-            <div class="control">
-                <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
-            </div>
-        </FormField>
+<EditForm Model="salida" OnValidSubmit="Enviar">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField>
+                <div class="control">
+                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+                </div>
+            </FormField>
+        </div>
+    </div>
 
-        <FormField>
-            @foreach (var detalle in detalles)
-            {
-                <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
-            }
-        </FormField>
+    <FormField>
+        @foreach (var detalle in detalles)
+        {
+            <CartItem Detail="@detalle" Products="listaProductos" OnDelete="EliminarElemento" UseStockOnly />
+        }
+    </FormField>
 
-        <FormField Label="Observación">
-            <TextField id="observacion" @bind-Value="salida.Observacion"></TextField>
-            <FormFeedback For="() => salida.Observacion"></FormFeedback>
-        </FormField>
+    <FormField Label="Observación">
+        <TextField id="observacion" @bind-Value="salida.Observacion"></TextField>
+        <FormFeedback For="() => salida.Observacion"></FormFeedback>
+    </FormField>
 
-        <FormField IsLoading="cargando">
-            <CancelButton To="/salida">Cancelar</CancelButton>
-            <SubmitButton>Registrar</SubmitButton>
-        </FormField>
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <CancelButton To="/salida">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
+        </div>
+    </div>
 
-    </EditForm>
+</EditForm>
 
 @code {
     bool cargando = false;

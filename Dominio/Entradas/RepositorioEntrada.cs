@@ -35,7 +35,7 @@ namespace Dominio.Entradas
         public IEnumerable<Entrada> Listar()
         {
             using Conexion conexion = new Conexion();
-            return conexion.Seleccionar<Entrada>("select * from entrada");
+            return conexion.Seleccionar<Entrada>("select * from entrada order by fecha desc");
         }
         public Entrada PorId(int id)
         {

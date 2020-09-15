@@ -7,24 +7,38 @@
 @using Aplicacion.Entradas.Formularios
 @page "/entrada/registrar"
 
-    <nav class="breadcrumb">
-        <ul>
-            <li><a href="/entrada">Ingreso</a></li>
-            <li class="is-active"><a href="#">Registrar</a></li>
-        </ul>
-    </nav>
-
-<h3 class="title is-3">Registrar entrada</h3>
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Registrar entrada</h3>
+    </div>
+    <div class="level-right">
+        <nav class="breadcrumb is-small">
+            <ul>
+                <li><a href="/entrada">Ingreso</a></li>
+                <li class="is-active"><a href="#">Registrar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
 <hr />
 
 <EditForm Model="entrada" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <FormField>
-        <div class="control">
-            <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+
+    <div class="level">
+        <div class="level-left">
+            <span></span>
         </div>
-    </FormField>
+        <div class="level-right">
+            <FormField>
+                <div class="control">
+                    <button class="button is-primary" type="button" @onclick="AgregarElemento">+ Producto</button>
+                </div>
+            </FormField>
+        </div>
+    </div>
+    
 
     <FormField>
         @foreach (var detalle in detalles)
@@ -38,11 +52,15 @@
         <FormFeedback For="() => entrada.Observacion" Help="Opcional"></FormFeedback>
     </FormField>
 
-    <FormField IsLoading="cargando">
-        <CancelButton To="/entrada">Cancelar</CancelButton>
-        <SubmitButton>Registrar</SubmitButton>
-    </FormField>
-
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormField IsLoading="cargando">
+                <CancelButton To="/entrada">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormField>
+        </div>
+    </div>
 </EditForm>
 
 @code {

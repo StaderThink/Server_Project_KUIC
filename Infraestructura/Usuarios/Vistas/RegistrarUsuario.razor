@@ -7,15 +7,19 @@
 @inject NavigationManager navegador
 @inject IToastService toaster
 
-<nav class="breadcrumb">
-    <ul>
-        <li><a href="/usuario">Usuario</a></li>
-        <li class="is-active"><a href="#">Registrar</a></li>
-    </ul>
-</nav>
-
-<h3 class="title is-3">Registrar usuario</h3>
-
+    <div class="level">
+        <div class="level-left">
+            <h3 class="title is-3">Registrar usuario</h3>
+        </div>
+        <div class="level-right">
+            <nav class="breadcrumb is-small">
+                <ul>
+                    <li><a href="/usuario">Usuario</a></li>
+                    <li class="is-active"><a href="#">Registrar</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
 <hr />
 
 <EditForm Model="Usuario" OnValidSubmit="Enviar">
@@ -88,16 +92,25 @@
             </FormField>
         </div>
     </div>
-    
+
     <FormField Label="Teléfono">
         <PhoneField id="telefono" placeholder="######" @bind-Value="Usuario.Telefono" />
         <FormFeedback For="() => Usuario.Telefono" />
     </FormField>
 
-    <FormButtons IsLoading="Cargando">
-        <CancelButton To="/usuario">Cancelar</CancelButton>
-        <SubmitButton>Registrar</SubmitButton>
-    </FormButtons>
+    <div class="content">
+        <h6 class="subtitle is-6">Al registrar aceptas nuestros <a href="/terminos">Términos y condiciones de privacidad</a></h6>
+    </div>
+
+    <div class="level">
+        <div class="level-left"><span></span></div>
+        <div class="level-right">
+            <FormButtons IsLoading="Cargando">
+                <CancelButton To="/usuario">Cancelar</CancelButton>
+                <SubmitButton>Registrar</SubmitButton>
+            </FormButtons>
+        </div>
+    </div>
 </EditForm>
 
 @code {
