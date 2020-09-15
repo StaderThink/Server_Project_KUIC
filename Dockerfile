@@ -22,7 +22,7 @@ RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
 WORKDIR /app
-ENV ASPNETCORE_URLS=http://+;https://+
+ENV ASPNETCORE_URLS=http://+
 ENV ASPNETCORE_ENVIRONMENT=Production
 COPY --from=build /app/out .
 
