@@ -1,28 +1,30 @@
-﻿@using System.Security.Claims
-@using Aplicacion.Notificaciones
+﻿@attribute [Authorize(Roles = "usuarios")]
 
 @inject HttpClient http
 @inject NavigationManager navegador
 @inject AuthenticationStateProvider autentificacion
 @inject IToastService toaster
-@attribute [Authorize(Roles = "usuarios")]
 
 @page "/notificacion/registrar"
 @layout AppLayout
 
-    <div class="level">
-        <div class="level-left">
-            <h3 class="title is-3">Registrar Notificación</h3>
-        </div>
-        <div class="level-right">
-            <nav class="breadcrumb">
-                <ul>
-                    <li><a href="/notificacion">Notificación</a></li>
-                    <li class="is-active"><a href="#">Registrar</a></li>
-                </ul>
-            </nav>
-        </div>
+@using System.Security.Claims
+@using Aplicacion.Notificaciones
+@using Infraestructura.Sesiones
+
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Registrar Notificación</h3>
     </div>
+    <div class="level-right">
+        <nav class="breadcrumb">
+            <ul>
+                <li><a href="/notificacion">Notificación</a></li>
+                <li class="is-active"><a href="#">Registrar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
 <hr />
 
@@ -115,55 +117,52 @@
     {
         try
         {
-            foreach (var segmento in segmentos)
+            if (notificacion.FechaFin <= notificacion.FechaInicio)
             {
-                if (notificacion.FechaFin < notificacion.FechaInicio)
-                {
-                    toaster.ShowWarning("La fecha de caducidad no puede ser menor a 1 día despues del inicio");
-                }
+                toaster.ShowWarning("La fecha de caducidad no puede ser menor a 1 día después del inicio");
+            }
 
-                else if (segmento.Cargo == 0)
+            if (segmentos.Any() && segmentos.All(s => s.Cargo != 0))
+            {
+                cargando = true;
+
+                var proveedor = (ProveedorAutenticacion)autentificacion;
+
+                if (await proveedor.GetUserAsync() is Usuario usuario)
                 {
-                    toaster.ShowWarning("Te falta especificar el segmento");
+                    notificacion.Autor = usuario.Id;
+
+                    var formulario = new FormularioRegistrarNotificacion()
+                    {
+                        Notificacion = notificacion,
+                        Segmentos = segmentos
+                    };
+
+                    var respuesta = await http.PostAsJsonAsync("/api/notificacion", formulario);
+
+                    if (respuesta.IsSuccessStatusCode)
+                    {
+                        navegador.NavigateTo("/notificacion");
+                    }
                 }
 
                 else
                 {
-                    cargando = true;
-
-                    var estado = await autentificacion.GetAuthenticationStateAsync();
-                    var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
-
-                    if (serial is null)
-                    {
-                        // TODO
-                    }
-
-                    else
-                    {
-                        int id = int.Parse(serial.Value);
-                        notificacion.Autor = id;
-
-                        var formulario = new FormularioRegistrarNotificacion()
-                        {
-                            Notificacion = notificacion,
-                            Segmentos = segmentos
-                        };
-
-                        var respuesta = await http.PostAsJsonAsync("/api/notificacion", formulario);
-
-                        if (respuesta.IsSuccessStatusCode)
-                        {
-                            navegador.NavigateTo("/notificacion");
-                        }
-                    }
+                    toaster.ShowError("No estas autenticado en el sistema");
                 }
+            }
+
+            else
+            {
+                toaster.ShowWarning("Completa correctamente los segmentos de la notificación");
             }
         }
 
         catch
         {
-            // TODO
+#if DEBUG
+            throw;
+#endif
         }
 
         finally

@@ -38,7 +38,7 @@
             <div class="level">
                 <div class="level-left"><span></span></div>
                 <div class="level-right">
-                    <FormButtons>
+                    <FormButtons IsLoading="Cargando">
                         <CancelButton To="/">Cancelar</CancelButton>
                         <SubmitButton>Reestablecer clave</SubmitButton>
                     </FormButtons>
@@ -74,9 +74,9 @@
         catch
         {
             toaster.ShowError("Hubo un error desconocido, intenta más tarde");
-            #if DEBUG
+#if DEBUG
             throw;
-            #endif
+#endif
         }
 
         finally

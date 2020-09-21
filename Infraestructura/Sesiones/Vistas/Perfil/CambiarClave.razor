@@ -7,6 +7,8 @@
 <EditForm Model="Formulario" OnValidSubmit="Enviar">
     <DataAnnotationsValidator />
 
+    <p>Al cambiar tu contraseña, tu sesión será cerrada para que vuelvas a ingresar tus credenciales.</p>
+
     <FormField Label="Contraseña actual">
         <PasswordField id="claveActual" @bind-Value="Formulario.ClaveAnterior" HiddenOnly />
         <FormFeedback For="() => Formulario.ClaveAnterior" />
@@ -48,19 +50,35 @@
 
         try
         {
-            var respuesta = await http.PutAsJsonAsync("/api/sesion/cambiar_clave", Formulario);
-
-            if (respuesta.IsSuccessStatusCode)
+            if (Formulario.ConfirmacionClave == Formulario.NuevaClave)
             {
-                var proveedor = (ProveedorAutenticacion) autentificacion;
-                await proveedor.SignOut();
+                var respuesta = await http.PutAsJsonAsync("/api/sesion/cambiar_clave", Formulario);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    var proveedor = (ProveedorAutenticacion)autentificacion;
+                    await proveedor.SignOut();
+                }
+
+                else
+                {
+                    toaster.ShowWarning("Revisa tus credenciales");
+                }
+            }
+
+            else
+            {
+                toaster.ShowWarning("Las contraseñas no coinciden");
             }
         }
 
         catch
         {
             toaster.ShowError("Hubo un error en el proceso, recarga la página e intenta nuevamente");
+
+#if DEBUG
             throw;
+#endif
         }
 
         finally

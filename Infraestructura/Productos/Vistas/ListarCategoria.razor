@@ -37,7 +37,7 @@ else
         @foreach (Categoria categoria in categoria)
         {
             <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
-                <TarjetaCategoria categoria="categoria" OnCategoriaEliminada="ObtenerListado"></TarjetaCategoria>
+                <TarjetaCategoria categoria="categoria"></TarjetaCategoria>
             </div>
         }
     </div>
@@ -45,12 +45,13 @@ else
 
 @code {
     Categoria[] categoria { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await ObtenerListado();
     }
 
-    async Task ObtenerListado()
+    private async Task ObtenerListado()
     {
         categoria = await http.GetFromJsonAsync<Categoria[]>("/api/categoria");
     }

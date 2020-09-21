@@ -1,63 +1,57 @@
 ﻿@inject HttpClient http
 
-    <div class="card">
-        <div class="card-content">
-            <div class="content">
-                <h6 class="title is-6">@(cliente.Nombre.ToCapitalize())</h6>
+<div class="card">
+    <div class="card-content">
+        <div class="content">
+            <h6 class="title is-6">@(cliente.Nombre.ToCapitalize())</h6>
 
-                <div class="field is-grouped is-grouped-multiline">
-                    <div class="control">
-                        <div class="tags has-addons">
-                            <div class="tag is-dark">RUT</div>
-                            <div class="tag is-light">@cliente.Rut</div>
-                        </div>
+            <div class="field is-grouped is-grouped-multiline">
+                <div class="control">
+                    <div class="tags has-addons">
+                        <div class="tag is-dark">RUT</div>
+                        <div class="tag is-light">@cliente.Rut</div>
                     </div>
+                </div>
 
-                    <div class="content">
-                        <div class="tags">
-                            @if (cliente.Activo)
-                            {
-                                <div class="tag is-success">Activo</div>
-                            }
+                <div class="content">
+                    <div class="tags">
+                        @if (cliente.Activo)
+                        {
+                            <div class="tag is-success">Activo</div>
+                        }
 
-                            else
-                            {
-                                <div class="tag is-warning">Inactivo</div>
-                            }
-                        </div>
-                        </div>
+                        else
+                        {
+                            <div class="tag is-warning">Inactivo</div>
+                        }
                     </div>
-            </div>
-        </div>
-        <div class="card-footer">
-            <a href="/cliente/modificar/@cliente.Id" class="card-footer-item">
-                <span class="icon">
-                    <box-icon name='edit-alt' color='#a69f99'></box-icon>
-                </span>
-            </a>
+                    </div>
+                </div>
         </div>
     </div>
+    <div class="card-footer">
+        <a href="/cliente/modificar/@cliente.Id" class="card-footer-item">
+            <span class="icon">
+                <box-icon name='edit-alt' color='#a69f99'></box-icon>
+            </span>
+        </a>
+    </div>
+</div>
 
 @code {
     [Parameter]
-    public Cliente cliente { get; set; }
+    public Cliente cliente { get; set; } = new Cliente();
 
     [Parameter]
     public EventCallback onDeleted { get; set; }
 
-    bool cargando = false;
-
-    async Task Eliminar()
+    private async Task Eliminar()
     {
-        cargando = true;
-
-        HttpResponseMessage respuesta = await http.DeleteAsync($"/api/cliente/{cliente.Id}");
+        var respuesta = await http.DeleteAsync($"/api/cliente/{cliente.Id}");
 
         if (respuesta.IsSuccessStatusCode && onDeleted.HasDelegate)
         {
             await onDeleted.InvokeAsync(null);
         }
-
-        cargando = false;
     }
 }

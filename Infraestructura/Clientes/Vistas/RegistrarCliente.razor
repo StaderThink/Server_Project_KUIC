@@ -66,12 +66,6 @@
         <PhoneField id="telefono" @bind-Value="Cliente.Telefono" placeholder="######" />
         <FormFeedback For="() => Cliente.Telefono" Help="Dato de contacto" />
     </FormField>
-  
-    <FormField>
-        <CheckboxField @bind-Value="Cliente.Activo">
-            <span>¿Va a estar activo en el sistema?</span>
-        </CheckboxField>
-    </FormField>
 
     <div class="content">
         <h6 class="subtitle is-6">Al registrar aceptas nuestros <a href="/terminos">Términos y condiciones de privacidad</a></h6>

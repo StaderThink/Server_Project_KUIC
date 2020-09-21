@@ -1,29 +1,31 @@
-﻿@using System.Security.Claims
-@using static System.Globalization.CultureInfo
-@using Aplicacion.Pedidos.Formularios
+﻿@attribute [Authorize(Roles = "solicitar")]
 
 @inject HttpClient http
 @inject NavigationManager navegador
 @inject AuthenticationStateProvider autentificacion
 @inject IToastService toaster
-@attribute [Authorize(Roles = "solicitar")]
 
 @page "/pedido/registrar"
 @layout AppLayout
 
-    <div class="level">
-        <div class="level-left">
-            <h3 class="title is-3">Solicitar Pedido</h3>
-        </div>
-        <div class="level-right">
-            <nav class="breadcrumb is-small">
-                <ul>
-                    <li><a href="/pedido">Solicitar</a></li>
-                    <li class="is-active"><a href="#">Registrar</a></li>
-                </ul>
-            </nav>
-        </div>
+@using System.Security.Claims
+@using Aplicacion.Pedidos.Formularios
+@using Infraestructura.Sesiones
+
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Solicitar Pedido</h3>
     </div>
+    <div class="level-right">
+        <nav class="breadcrumb is-small">
+            <ul>
+                <li><a href="/pedido">Solicitar</a></li>
+                <li class="is-active"><a href="#">Registrar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
 <hr />
 
 <EditForm Model="pedido" OnValidSubmit="Enviar">
@@ -80,10 +82,15 @@
 </EditForm>
 
 @code {
-    Array estados = Enum.GetValues(typeof(Estado));
-    Cliente[] cliente { get; set; } = new Cliente[0];
-    Usuario[] usuarios { get; set; } = new Usuario[0];
-    Producto[] listaProductos { get; set; }
+    private Array estados = Enum.GetValues(typeof(Estado));
+    private Cliente[] cliente { get; set; } = new Cliente[0];
+    private Usuario[] usuarios { get; set; } = new Usuario[0];
+    private Producto[] listaProductos { get; set; }
+
+    private List<DetallePedido> detalles = new List<DetallePedido>();
+
+    private Pedido pedido { get; set; } = new Pedido();
+    private bool cargando = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -111,60 +118,56 @@
         detalles.Remove((DetallePedido)detalle);
     }
 
-    List<DetallePedido> detalles = new List<DetallePedido>();
-
-    Pedido pedido { get; set; } = new Pedido();
-    bool cargando = false;
-
-    async Task Enviar()
+    private async Task Enviar()
     {
         cargando = true;
 
         try
         {
-            foreach (var detalle in detalles)
+            if (detalles.Any() && detalles.All(d => d.Producto != 0 && d.Cantidad != 0))
             {
-                if (detalle.Producto == 0 || detalle.Cantidad == 0)
+                cargando = true;
+
+                var proveedor = (ProveedorAutenticacion)autentificacion;
+
+                if (await proveedor.GetUserAsync() is Usuario usuario)
                 {
-                    toaster.ShowWarning("Falta algún valor del detalle, favor verificar");
-                }
-                else
-                {
-                    cargando = true;
-                    var estado = await autentificacion.GetAuthenticationStateAsync();
-                    var serial = estado.User.FindFirst(ClaimTypes.SerialNumber);
+                    pedido.Asesor = usuario.Id;
+
                     var formulario = new FormularioRegistrarPedido()
                     {
                         Pedido = pedido,
                         Detalles = detalles
                     };
-                    if (serial is null)
+
+                    var respuesta = await http.PostAsJsonAsync("/api/pedido", formulario);
+
+                    if (respuesta.IsSuccessStatusCode)
                     {
-                        // TODO
+                        navegador.NavigateTo("/pedido");
+                        toaster.ShowSuccess("Registro realizado de forma exitosa");
                     }
 
-                    else
-                    {
-                        int id = int.Parse(serial.Value);
-                        pedido.Asesor = id;
-
-                        var respuesta = await http.PostAsJsonAsync("/api/pedido", formulario);
-
-                        if (respuesta.IsSuccessStatusCode)
-                        {
-                            navegador.NavigateTo("/pedido");
-                            toaster.ShowSuccess("Registro realizado de forma exitosa");
-                        }
-                        cargando = false;
-                    }
+                    cargando = false;
                 }
 
+                else
+                {
+                    toaster.ShowError("No estas autenticado en el sistema");
+                }
+            }
+
+            else
+            {
+                toaster.ShowWarning("Falta algún valor del detalle");
             }
         }
 
         catch
         {
-            // TODO
+#if DEBUG
+            throw;
+#endif
         }
 
         finally

@@ -33,9 +33,7 @@
     [Parameter]
     public EventCallback<Producto> OnProductoEliminado { get; set; }
 
-    Categoria categoria { get; set; }
-
-    bool cargando = false;
+    private Categoria categoria { get; set; }
 
     protected override async Task OnInitializedAsync()
     {

@@ -64,21 +64,21 @@
 </EditForm>
 
 @code {
-        Entrada entrada { get; set; } = new Entrada();
+    Entrada entrada { get; set; } = new Entrada();
 
-        bool cargando = false;
+    bool cargando = false;
 
-        List<DetalleEntrada> detalles = new List<DetalleEntrada>();
+    List<DetalleEntrada> detalles = new List<DetalleEntrada>();
 
-        Producto[] listaProductos = new Producto[0];
+    Producto[] listaProductos = new Producto[0];
 
-        bool deshabilitar
+    bool deshabilitar
     {
-            get
+        get
         {
-                return listaProductos.Length == 0;
-            }
+            return listaProductos.Length == 0;
         }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -104,39 +104,44 @@
         detalles.Remove((DetalleEntrada) detalle);
     }
 
-    async Task Enviar()
+    private async Task Enviar()
     {
         try
         {
-            foreach (var detalle in detalles)
+            if (detalles.Any() && detalles.All(d => d.Producto != 0 && d.Cantidad != 0))
             {
-                if (detalle.Producto == 0 || detalle.Cantidad == 0)
-                {
-                    toaster.ShowWarning("Falta algún valor del detalle");
-                }
-                else
-                {
-                    cargando = true;
-                    var formulario = new FormularioRegistrarEntrada()
-                    {
-                        Entrada = entrada,
-                        Detalles = detalles
-                    };
+                cargando = true;
 
-                    var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
+                var formulario = new FormularioRegistrarEntrada()
+                {
+                    Entrada = entrada,
+                    Detalles = detalles
+                };
 
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        navegador.NavigateTo("/entrada");
-                    }
-                    cargando = false;
+                var respuesta = await http.PostAsJsonAsync("/api/entrada", formulario);
+
+                if (respuesta.IsSuccessStatusCode)
+                {
+                    navegador.NavigateTo("/entrada");
                 }
+            }
+
+            else
+            {
+                toaster.ShowWarning("Falta algún valor del detalle");
             }
         }
 
         catch
         {
-            throw; // TODO
+#if DEBUG
+            throw;
+#endif
+        }
+
+        finally
+        {
+            cargando = false;
         }
     }
 }

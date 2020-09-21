@@ -7,28 +7,21 @@
 @page "/salida/registrar"
 @attribute [Authorize(Roles = "logistica")] 
 
-    <div class="level">
-        <div class="level-left">
-            <h3 class="title is-3">Registrar Salida</h3>
-        </div>
-        <div class="level-right">
-            <nav class="breadcrumb is-small">
-                <ul>
-                    <li><a href="/salida">Egresos</a></li>
-                    <li class="is-active"><a href="#">Registrar</a></li>
-                </ul>
-            </nav>
-        </div>
+<div class="level">
+    <div class="level-left">
+        <h3 class="title is-3">Registrar Salida</h3>
     </div>
+    <div class="level-right">
+        <nav class="breadcrumb is-small">
+            <ul>
+                <li><a href="/salida">Egresos</a></li>
+                <li class="is-active"><a href="#">Registrar</a></li>
+            </ul>
+        </nav>
+    </div>
+</div>
 
-    <hr />
-
-    @if (mensaje is string)
-    {
-        <blockquote class="is-warn">
-            <p>@mensaje</p>
-        </blockquote>
-    }
+<hr />
 
 <EditForm Model="salida" OnValidSubmit="Enviar">
     <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -68,14 +61,12 @@
 </EditForm>
 
 @code {
-    bool cargando = false;
+    private bool cargando = false;
 
-    string mensaje;
+    private Salida salida { get; set; } = new Salida();
 
-    Salida salida { get; set; } = new Salida();
-
-    List<DetalleSalida> detalles = new List<DetalleSalida>();
-    Producto[] listaProductos { get; set; }
+    private List<DetalleSalida> detalles = new List<DetalleSalida>();
+    private Producto[] listaProductos;
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,39 +91,42 @@
         detalles.Remove((DetalleSalida) detalle);
     }
 
-    async Task Enviar()
+    private async Task Enviar()
     {
         try
         {
-            foreach (var detalle in detalles)
+            if (detalles.Any() && detalles.All(d => d.Producto != 0 && d.Cantidad != 0))
             {
-                if (detalle.Producto == 0 || detalle.Cantidad == 0)
+                cargando = true;
+                var formulario = new FormularioRegistrarSalida()
                 {
-                    toaster.ShowWarning("Falta algún valor del detalle");
-                }
+                    Salida = salida,
+                    Detalles = detalles
+                };
 
-                else
+                var respuesta = await http.PostAsJsonAsync("/api/salida", formulario);
+
+                if (respuesta.IsSuccessStatusCode)
                 {
-                    cargando = true;
-                    var formulario = new FormularioRegistrarSalida()
-                    {
-                        Salida = salida,
-                        Detalles = detalles
-                    };
-
-                    var respuesta = await http.PostAsJsonAsync("/api/salida", formulario);
-
-                    if (respuesta.IsSuccessStatusCode)
-                    {
-                        navegador.NavigateTo("/salida");
-                    }
-                    cargando = false;
+                    navegador.NavigateTo("/salida");
                 }
+            }
+
+            else
+            {
+                toaster.ShowWarning("Falta algún valor del detalle");
             }
         }
         catch
         {
-            mensaje = "Hubo un error al insertar";
+#if DEBUG
+            throw;
+#endif
+        }
+
+        finally
+        {
+            cargando = false;
         }
     }
 }
