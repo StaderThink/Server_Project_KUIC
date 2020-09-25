@@ -5,7 +5,7 @@
 
 @using Infraestructura.Sesiones
 
-<h1 class="subtitle is-1">Hola <b>@(Usuario?.Nombre ?? "humano")</b>!</h1>
+<h1 class="subtitle is-1">Hola <b style="color: #F1BB6A">@(Usuario?.Nombre ?? "humano")</b>!</h1>
 
 <div class="columns">
     <AuthorizeView Roles="pedidos">
@@ -14,7 +14,7 @@
                 <div class="heading">Pedidos pendientes</div>
                 <div class="media">
                     <div class="media-left">
-                        <box-icon name="purchase-tag" size="2.6em"></box-icon>
+                        <box-icon name="purchase-tag" size="2.6em" color="#F1BB6A"></box-icon>
                     </div>
                     <div class="media-content">
                         <p class="title is-1">@textoPedidosPendientes</p>
@@ -29,7 +29,7 @@
             <div class="heading">Bandeja de entrada</div>
             <div class="media">
                 <div class="media-left">
-                    <box-icon name="notification" size="2.6em"></box-icon>
+                    <box-icon name="notification" size="2.6em" color="#F1BB6A"></box-icon>
                 </div>
                 <div class="media-content">
                     <p class="title is-1">@textoNotificaciones</p>
@@ -44,7 +44,7 @@
                 <div class="heading">Último ingreso (días)</div>
                 <div class="media">
                     <div class="media-left">
-                        <box-icon name="history" size="2.6em"></box-icon>
+                        <box-icon name="history" size="2.6em" color="#F1BB6A"></box-icon>
                     </div>
                     <div class="media-content">
                         <p class="title is-1">@textoUltimoIngreso</p>
